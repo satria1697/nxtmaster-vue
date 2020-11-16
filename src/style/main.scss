@@ -1,0 +1,77 @@
+@import "../style/abstracts/variables.scss";
+
+@import "../style/page/detail.scss";
+@import "../style/page/modal.scss";
+@import "../style/page/table.scss";
+@import "../style/page/form.scss";
+
+@import "../style/base/reset.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto");
+
+html {
+  font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, Arial, sans-serif !important;
+  font-size: 13px !important;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.1em !important;
+  letter-spacing: -0.4px !important;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+}
+
+#app {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: lightgray !important;
+}
+
+.main {
+  margin-left: 265px !important;
+  // background: lightgray !important;
+}
+.closeSideMain {
+  margin-left: 60px !important;
+}
+
+table {
+  width: 90%;
+  margin-left: 20px;
+  margin-right: 60px;
+  border-spacing: 0.5rem;
+  border-collapse: collapse;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 15px;
+  align-items: center;
+  .grid-item {
+    align-self: center;
+  }
+  .right {
+    justify-self: end;
+  }
+  .center {
+    justify-self: center;
+  }
+}
+.pointer {
+  cursor: pointer;
+}
+.not-allowed {
+  cursor: not-allowed;
+}
+.notFound {
+  margin: 50px 40px;
+  span {
+    font-size: 48px;
+    font-weight: bold;
+  }
+}

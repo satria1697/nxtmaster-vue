@@ -1,32 +1,57 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <NavBar v-if="this.$router.currentRoute.name !== 'login'" />
+    <SideBar v-if="this.$router.currentRoute.name !== 'login'" />
+    <Sesi v-if="this.$store.state.isExpired === true" />
+    <Tab v-if="this.$router.currentRoute.name !== 'login'" />
     <router-view />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+// @ is an alias to /src
+import NavBar from "@/components/NavBar.vue";
+import SideBar from "@/components/SideBar.vue";
+import Tab from "@/components/Tab.vue";
+import Sesi from "../src/components/AuthorizationExpired.vue";
+// import Api from "./api";
+import store from "./store";
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  name: "Home",
+  components: {
+    NavBar,
+    SideBar,
+    Tab,
+    Sesi
+  },
+  mounted() {
+    if (localStorage.token) {
+      let self = this;
+      console.log('login');
+      store.commit("authenChange");
+      const secretKey =
+        "TtGYMF5mRwzAPEJKQ7eYDB0mAQnbdW4ijXBmZMHvpAy5a78dQ4z2lzDDF65uEhQ1";
+      const jwtDecode = self.$jwt.decode(
+        localStorage.getItem("token"),
+        secretKey
+      );
+      let username = jwtDecode.username;
+      let fullname = jwtDecode.fullname;
+      let levelid = jwtDecode.levelid;
+      let id = jwtDecode.sub;
+      store.commit("setLogin", { username, fullname, levelid, id });
+      try {
+        var storedTab = JSON.parse(localStorage.getItem("tabState"));
+        self.$router.push({ name: storedTab[0].name });
+      } catch {
+        self.$router.push("/");
+      }
     }
   }
-}
+};
+</script>
+
+<style lang="scss">
+@import "../src/style/main.scss";
 </style>
