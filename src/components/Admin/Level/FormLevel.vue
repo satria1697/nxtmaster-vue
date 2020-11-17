@@ -221,7 +221,7 @@ export default {
           self.berhasil = true;
           self.deleted = true;
           self.isDeleteModal = false;
-          self.$emit('modal-closed');
+          self.$emit("modal-closed");
         })
         .catch(err => {
           console.log(err);

@@ -1,7 +1,8 @@
 const api = {
   auth: {
     login: "/api/v1/auth/login",
-    logout: "/api/v1/auth/logout"
+    logout: "/api/v1/auth/logout",
+    loginconfirm: "/api/v1/auth/loginconfirmation"
   },
   person: "/api/person",
   person_detail: "/api/person/{id}",
@@ -58,7 +59,8 @@ const api = {
     GetId: "/api/v1/auth/modul/{id}",
     Register: "/api/v1/auth/modul/register",
     Update: "/api/v1/auth/modul/update/{id}",
-    Delete: "/api/v1/auth/modul/delete/{id}"
+    Delete: "/api/v1/auth/modul/delete/{id}",
+    GetApp: "/api/v1/auth/modul/data/app"
   },
   akses: {
     Get: "/api/v1/auth/akses/data",
@@ -76,7 +78,11 @@ const api = {
     GetRoot: "/api/v1/auth/aksesmanager/data/root",
     GetRootId: "/api/v1/auth/aksesmanager/data/root/{id}",
     GetParent: "/api/v1/auth/aksesmanager/data/parent",
-    GetChild: "/api/v1/auth/aksesmanager/data/child"
+    GetChild: "/api/v1/auth/aksesmanager/data/child",
+    GetChildId: "/api/v1/auth/aksesmanager/data/child/{id}"
+  },
+  rolelevel: {
+    Get: "/api/v1/auth/rolelevel/data"
   }
 };
 

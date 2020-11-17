@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="main detail"
-    :class="{ closeSideMain: this.$store.state.isSideBar }"
-  >
+  <div class="detail" :class="{ closeSideMain: this.$store.state.isSideBar }">
     <Form
       v-if="isModal"
       :editIdProps="editId"
@@ -12,7 +9,9 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h3>Tabel {{ this.$store.getters.tabRouteName(this.$route.name).label }}</h3>
+          <h3>
+            Tabel {{ this.$store.getters.tabRouteName(this.$route.name).label }}
+          </h3>
         </div>
         <div class="col-2">
           <i

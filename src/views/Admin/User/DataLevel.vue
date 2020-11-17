@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="main detail"
-    :class="{ closeSideMain: this.$store.state.isSideBar }"
-  >
+  <div class="detail" :class="{ closeSideMain: this.$store.state.isSideBar }">
     <Form
       v-if="isModal"
       :editIdProps="editId"

@@ -1,28 +1,12 @@
 <template>
   <div class="sidenav" :class="{ closeSide: isSideBar }">
-    <!-- <div class="user">
-      <div class="img-container">
-        <img
-          v-if="avatar === null"
-          src="@/assets/image/table/blank_avatar.png"
-        />
-        <img v-else :src="avatar" />
-      </div>
-      <div class="user-name"><span v-if="!isSideBar">{{ fullname }}</span></div>
-    </div> -->
-    <div class="sidenav-list" :class="computedClass('Home')">
+    <!-- <div class="sidenav-list" :class="computedClass('Home')">
       <router-link to="/">
         <span class="span-side">
           <i class="fas fa-home"></i>
           <span class="" v-if="!isSideBar"> Home</span>
         </span>
       </router-link>
-    </div>
-    <!-- <div class="sidenav-list" :class="computedClass('datauser')">
-      <router-link :to="{ name: 'datauser' }"
-        ><i class="fas fa-caret-square-right"></i>
-        <span v-if="!isSideBar"> Data User</span></router-link
-      >
     </div> -->
     <div class="sidenav-list" v-for="sb in sideBar" :key="sb.id">
       <div class="sidenav-list" :class="computedClass(sb.path)">

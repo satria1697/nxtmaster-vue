@@ -116,6 +116,7 @@ export default {
                   localStorage.getItem("token"),
                   secretKey
                 );
+                console.log(self.$jwt);
                 let username = jwtDecode.username;
                 let fullname = jwtDecode.fullname;
                 let levelid = jwtDecode.levelid;

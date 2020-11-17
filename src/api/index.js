@@ -2,8 +2,8 @@ import Axios from "axios";
 import Path from "../api/const";
 import store from "../store";
 
-Axios.defaults.baseURL = "http://192.168.2.107:8000";
-// Axios.defaults.baseURL = "http://127.0.0.1:8000";
+// Axios.defaults.baseURL = "http://192.168.2.107:8000";
+Axios.defaults.baseURL = "http://127.0.0.1:8000";
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 Axios.defaults.headers.post["Accept"] = "application/json";
 // Axios.defaults.headers.common["Authorization"] =
@@ -18,11 +18,11 @@ export const setupInterceptors = () => {
     };
     return config;
   });
-  Axios.interceptors.response.use(undefined, function(error) {
+  Axios.interceptors.response.use(undefined, error => {
     if (error.response.status === 400) {
       store.commit("openExpired");
-      return Promise.reject(error);
     }
+    return Promise.reject(error);
   });
 };
 
@@ -32,6 +32,9 @@ const api = {
   auth: {
     login: user => {
       return Axios.post(Path.auth.login, user);
+    },
+    loginconfirm: user => {
+      return Axios.post(Path.auth.loginconfirm, user);
     },
     logout: () => {
       return Axios.post(Path.auth.logout);
@@ -205,6 +208,11 @@ const api = {
     },
     delete: id => {
       return Axios.delete(Path.modul.Delete.replace("{id}", id));
+    },
+    filterApp: params => {
+      return Axios.get(Path.modul.GetApp, {
+        params: params
+      });
     }
   },
   akses: {
@@ -261,6 +269,16 @@ const api = {
     },
     findRoot: id => {
       return Axios.get(Path.aksesmanager.GetRootId.replace("{id}", id));
+    },
+    findChild: id => {
+      return Axios.get(Path.aksesmanager.GetChildId.replace("{id}", id));
+    }
+  },
+  rolelevel: {
+    filter: params => {
+      return Axios.get(Path.rolelevel.Get, {
+        params: params
+      });
     }
   }
 };

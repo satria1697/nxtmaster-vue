@@ -41,8 +41,7 @@
                 v-if="isDeleteModal"
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
-              >
-              </delete-modal
+              />
               <div class="container">
                 <div class="row">
                   <div v-if="editId !== null" class="form form-group col4">

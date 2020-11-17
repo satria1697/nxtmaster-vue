@@ -66,7 +66,7 @@
                 class="content-theme text-black-50 pointer"
                 @click="goTo('dataaksesmanager')"
               >
-                <i class="fas fa-puzzle-piece"></i> Pengaturan Akses
+                <i class="fas fa-universal-access"></i> Pengaturan Akses
               </div>
 
               <div class="font-weight-bold text-dark">Manajemen Aplikasi</div>
@@ -74,7 +74,7 @@
                 class="content-theme text-black-50 pointer"
                 @click="goTo('dataaplikasi')"
               >
-                <i class="fas fa-th "></i> Data Aplikasi
+                <i class="fas fa-th"></i> Data Aplikasi
               </div>
               <div
                 class="content-theme text-black-50 pointer"
@@ -239,7 +239,16 @@ export default {
           if (resp.data.status === "success") {
             store.commit("authenChange");
             if (store.state.isAuthenticated === false) {
-              store.commit("emptyTab");
+              // store.commit("emptyTab");
+              // if (localStorage.tabState + ":" + store.getters["getUsername"]) {
+              //   localStorage.removeItem(
+              //     "tabState" + ":" + store.getters["getUsername"]
+              //   );
+              // }
+              // localStorage.setItem(
+              //   "tabState" + ":" + store.getters["getUsername"],
+              //   this.$tab.routerTab.ActiveTab
+              // );
               store.commit("setToken", "");
               localStorage.removeItem("token");
               let username = "";

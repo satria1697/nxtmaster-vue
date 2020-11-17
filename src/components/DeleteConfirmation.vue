@@ -10,8 +10,12 @@
               </span>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-seconday" @click="closeModal()">Cancel</button>
-              <button class="btn btn-danger" @click="deleteYes()">Delete</button>
+              <button class="btn btn-seconday" @click="closeModal()">
+                Cancel
+              </button>
+              <button class="btn btn-danger" @click="deleteYes()">
+                Delete
+              </button>
             </div>
           </div>
         </div>

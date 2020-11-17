@@ -1,5 +1,8 @@
 <template>
-  <div class="main detail" :class="{ closeSideMain: this.$store.state.sideBarClose }">
+  <div
+    class="detail"
+    :class="{ closeSideMain: this.$store.state.sideBarClose }"
+  >
     <div class="row align-items-center justify-content-center">
       <h1 class="display-1">Page not Found</h1>
     </div>

@@ -56,18 +56,24 @@
                   </div>
                 </div>
                 <div class="row">
-        <div class="form form-group col">
-          <label for="formStructureLevel" class="top">Nama Aplikasi</label>
-          <select class="form-control bottom" id="formStructureLevel" v-model="appSelect">
-            <option
-              :value="data.id"
-              v-for="data in dataApp"
-              :key="data.id"
-              >{{ data.description }}</option
-            >
-          </select>
-        </div>
-      </div>
+                  <div class="form form-group col">
+                    <label for="formStructureLevel" class="top"
+                      >Nama Aplikasi</label
+                    >
+                    <select
+                      class="form-control bottom"
+                      id="formStructureLevel"
+                      v-model="appSelect"
+                    >
+                      <option
+                        :value="data.id"
+                        v-for="data in dataApp"
+                        :key="data.id"
+                        >{{ data.description }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formName" class="top">Nama Modul</label>
@@ -263,7 +269,7 @@ export default {
           self.berhasil = true;
           self.deleted = true;
           self.isDeleteModal = false;
-          self.$emit('modal-closed');
+          self.$emit("modal-closed");
         })
         .catch(err => {
           console.log(err);
@@ -272,12 +278,15 @@ export default {
     },
     getDataApp(params) {
       let self = this;
-      Api.application.filter(params).then(resp => {
-        self.dataApp = resp.data.data;
-      }).catch(err => {
-        console.log(err);
-      })
-    },
+      Api.application
+        .filter(params)
+        .then(resp => {
+          self.dataApp = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>

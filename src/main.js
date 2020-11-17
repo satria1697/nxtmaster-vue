@@ -5,13 +5,16 @@ import store from "./store";
 import "bootstrap/dist/css/bootstrap.css";
 import VueJWT from "vuejs-jwt";
 import DataTable from "laravel-vue-datatable";
+import RouterTab from "vue-router-tab";
+import "vue-router-tab/dist/lib/vue-router-tab.css";
 
 Vue.config.productionTip = false;
 
-Vue.use(VueJWT);
+Vue.use(VueJWT, { ignoreNotBefore: true, keyName: "token" });
 
 Vue.use(DataTable);
-// Vue.component('datatable', require('./components/DataTable').default);
+
+Vue.use(RouterTab);
 
 new Vue({
   router,

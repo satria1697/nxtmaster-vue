@@ -57,11 +57,10 @@ export default new Vuex.Store({
         state.isAuthenticated = false;
       }
     },
-    emptyTab: state => {
-      localStorage.removeItem("tabState");
-      localStorage.setItem("tabState", JSON.stringify(state.tabState));
-      state.tabState = [];
-    },
+    // emptyTab: (state, getters) => {
+
+    //   state.tabState = [];
+    // },
     setToken: (state, token) => {
       state.token = token;
     },
