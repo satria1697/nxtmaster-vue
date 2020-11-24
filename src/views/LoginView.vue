@@ -14,6 +14,7 @@
             type="text"
             v-model="username"
             @keyup.enter="login()"
+            @blur="getDataAkses()"
           />
         </div>
       </div>
@@ -29,19 +30,20 @@
           />
         </div>
       </div>
-      <!-- <div class="row">
+      <div class="row">
         <div class="form form-group col">
-          <label for="formStructureLevel" class="top">Structure Level</label>
-          <select class="form-control bottom" id="formStructureLevel">
-            <option
-              :value="data.id"
-              v-for="data in dataSLevel"
-              :key="data.id"
-              >{{ data.description }}</option
-            >
+          <label for="formAkses" class="top">Akses</label>
+          <select
+            class="form-control bottom custom-select"
+            id="formAkses"
+            v-model="akses"
+          >
+            <option :value="data.id" v-for="data in dataAkses" :key="data.id">{{
+              data.description
+            }}</option>
           </select>
         </div>
-      </div> -->
+      </div>
       <div class="row align-content-center justify-content-center">
         <div v-if="masuk" class="spinner-border center span-theme">
           <span class="sr-only"></span>
@@ -53,7 +55,7 @@
         </div>
       </div>
       <div v-if="!berhasil" class="text-danger">
-        <span>Username atau password yang dimasukan salah</span>
+        <span>{{ errorText }}</span>
       </div>
       <div v-if="empty" class="text-danger">
         <span>Masukan username dan password</span>
@@ -66,17 +68,21 @@
 </template>
 
 <script>
+import api from "../api";
 import Api from "../api";
 import store from "../store";
+
 export default {
   data() {
     return {
       username: "",
       password: "",
+      akses: null,
       berhasil: true,
       masuk: false,
       empty: false,
-      dataApp: []
+      dataAkses: [],
+      errorText: ""
     };
   },
   mounted() {},
@@ -91,7 +97,8 @@ export default {
         self.masuk = true;
         let rawData = {
           username: self.username,
-          password: self.password
+          password: self.password,
+          akses: self.akses
         };
         const formData = new FormData();
         for (let key in rawData) {
@@ -107,7 +114,6 @@ export default {
                 localStorage.removeItem("token");
               }
               localStorage.setItem("token", resp.headers.authorization);
-              store.commit("authenChange");
               if (localStorage.token) {
                 const secretKey =
                   "TtGYMF5mRwzAPEJKQ7eYDB0mAQnbdW4ijXBmZMHvpAy5a78dQ4z2lzDDF65uEhQ1";
@@ -121,7 +127,15 @@ export default {
                 let fullname = jwtDecode.fullname;
                 let levelid = jwtDecode.levelid;
                 let id = jwtDecode.sub;
-                store.commit("setLogin", { username, fullname, levelid, id });
+                let akses = jwtDecode.akses;
+                store.commit("setLogin", {
+                  username,
+                  fullname,
+                  levelid,
+                  id,
+                  akses
+                });
+                store.commit("authenChange");
                 if (store.state.isAuthenticated === true) {
                   try {
                     var storedTab = JSON.parse(
@@ -142,17 +156,38 @@ export default {
             }
           })
           .catch(err => {
-            console.log(err);
+            console.log(err.response.data);
+            if (err.response.data.error === "akses_required") {
+              self.errorText = "Tidak Memiliki Akses";
+            } else {
+              self.errorText = "ID atau Password yang dimasukan salah";
+            }
             self.berhasil = false;
             self.masuk = false;
           });
       }
     },
-    getDataApp() {
+    getDataAkses() {
       let self = this;
-      Api.application.filter().then(resp => {
-        self.dataApp = resp.data.data;
-      });
+      let params = {
+        username: self.username
+      };
+      api.auth
+        .akses(params)
+        .then(resp => {
+          self.dataAkses = resp.data.data[0].akses;
+          if (self.dataAkses.length === 0) {
+            self.dataAkses = [
+              {
+                id: 0,
+                description: "#Tidak ada akses"
+              }
+            ];
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

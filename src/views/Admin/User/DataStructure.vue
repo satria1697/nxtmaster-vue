@@ -1,5 +1,5 @@
 <template>
-  <div class="detail" :class="{ closeSideMain: this.$store.state.isSideBar }">
+  <div class="detail">
     <Form
       v-if="isModal"
       :editIdProps="editId"
@@ -41,6 +41,7 @@ import edit from "../../../components/Table/ActionEdit";
 import actiondelete from "../../../components/Table/ActionDelete";
 // import avatar from "../../components/Table/Avatar";
 import store from "../../../store";
+
 export default {
   components: {
     Form

@@ -51,8 +51,11 @@
               v-if="active == '2nd'"
             >
               <div class="font-weight-bold text-dark">Pengaturan</div>
-              <div class="content-theme text-black-50 not-allowed">
-                <i class="fas fa-home"></i> Umum
+              <div
+                class="content-theme text-black-50 pointer"
+                @click="goTo('umum')"
+              >
+                <i class="fas fa-house-damage"></i> Umum
               </div>
 
               <div class="font-weight-bold text-dark">Manajemen Akses</div>
@@ -188,6 +191,7 @@
 import Api from "../api";
 import store from "../store";
 import Form from "../components/Admin/FormDataUser";
+
 export default {
   components: {
     Form

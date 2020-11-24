@@ -1,16 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Login from "../views/LoginView.vue";
-import Home from "../views/Home.vue";
-import DataUser from "../views/Admin/DataUser.vue";
-import DataLevel from "../views/Admin/User/DataLevel.vue";
-import DataStructure from "../views/Admin/User/DataStructure.vue";
-import DataStructureLevel from "../views/Admin/User/DataStructureLevel.vue";
-import DataRank from "../views/Admin/User/DataRank.vue";
-import DataAplikasi from "../views/Admin/User/DataAplikasi.vue";
-import DataModul from "../views/Admin/User/DataModul.vue";
-import DataAkses from "../views/Admin/User/DataAkses.vue";
-import DataAksesManager from "../views/Admin/User/DataAksesManager.vue";
 
 import NotFound from "../views/notfound.vue";
 
@@ -21,6 +10,9 @@ import Frame from "../components/Frame";
 
 Vue.use(VueRouter);
 
+const importPage = view => () =>
+  import(/* webpackChunkName: "p-[request]" */ `../views/${view}.vue`);
+
 const routes = [
   {
     path: "/",
@@ -30,28 +22,29 @@ const routes = [
       {
         path: "/",
         name: "Home",
-        component: Home,
+        component: importPage("Home"),
         meta: {
           requireAuth: true,
           title: "Home",
-          icon: "fas fa-home",
-          closable: false
+          icon: "fas fa-home"
+          // closable: false
         }
       },
       {
         path: "/admin/datauser",
         name: "datauser",
-        component: DataUser,
+        component: importPage("Admin/DataUser"),
         meta: {
           requireAuth: true,
           title: "Manajemen Pengguna",
           icon: "fas fa-user-friends"
+          // closable: false
         }
       },
       {
         path: "/admin/datalevel",
         name: "datalevel",
-        component: DataLevel,
+        component: importPage("Admin/User/DataLevel"),
         meta: {
           requireAuth: true,
           title: "Manajemen Level",
@@ -61,7 +54,7 @@ const routes = [
       {
         path: "/admin/datarank",
         name: "datarank",
-        component: DataRank,
+        component: importPage("Admin/User/DataRank"),
         meta: {
           requireAuth: true,
           title: "Manajemen Pangkat",
@@ -71,7 +64,7 @@ const routes = [
       {
         path: "/admin/datastructure",
         name: "datastructure",
-        component: DataStructure,
+        component: importPage("Admin/User/DataStructure"),
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Organisasi",
@@ -81,7 +74,7 @@ const routes = [
       {
         path: "/admin/datastructurelevel",
         name: "datastructurelevel",
-        component: DataStructureLevel,
+        component: importPage("Admin/User/DataStructureLevel"),
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Level",
@@ -91,7 +84,7 @@ const routes = [
       {
         path: "/admin/dataaplikasi",
         name: "dataaplikasi",
-        component: DataAplikasi,
+        component: importPage("Admin/User/DataAplikasi"),
         meta: {
           requireAuth: true,
           title: "Manajemen Aplikasi",
@@ -101,7 +94,7 @@ const routes = [
       {
         path: "/admin/datamodul",
         name: "datamodul",
-        component: DataModul,
+        component: importPage("Admin/User/DataModul"),
         meta: {
           requireAuth: true,
           title: "Manajemen Modul",
@@ -111,7 +104,7 @@ const routes = [
       {
         path: "/admin/dataakses",
         name: "dataakses",
-        component: DataAkses,
+        component: importPage("Admin/User/DataAkses"),
         meta: {
           requireAuth: true,
           title: "Hak Akses",
@@ -121,11 +114,40 @@ const routes = [
       {
         path: "/admin/dataaksesmanager",
         name: "dataaksesmanager",
-        component: DataAksesManager,
+        component: importPage("Admin/User/DataAksesManager"),
         meta: {
           requireAuth: true,
           title: "Manajemen Data Akses",
           icon: "fas fa-universal-access"
+        }
+      },
+      {
+        path: "admin/umum",
+        name: "umum",
+        component: importPage("Admin/User/Umum"),
+        meta: {
+          requireAuth: true,
+          title: "Manajemen Umum",
+          icon: "fas fa-house-damage"
+        }
+      },
+      {
+        path: "admin/profile",
+        name: "profile",
+        component: importPage("Admin/User/Profile"),
+        meta: {
+          requireAuth: true,
+          title: "Profil",
+          icon: "fa fa-user-circle"
+        }
+      },
+      {
+        path: "/404",
+        name: "NotFound",
+        component: NotFound,
+        meta: {
+          title: "Not Found",
+          icon: "fas fa-exclamation-triangle"
         }
       }
     ]
@@ -133,92 +155,15 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: Login
+    component: importPage("LoginView")
   },
   {
     path: "*",
-    redirect: "/404"
-  },
-  {
-    path: "/404",
-    component: NotFound
+    name: "*",
+    redirect: { name: "NotFound" }
+    // component: NotFound
   }
 ];
-// const routes = [
-//   {
-//     path: "/login",
-//     name: "login",
-//     component: Login
-//   },
-//   {
-//     path: "/",
-//     name: "Home",
-//     component: Home,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datauser",
-//     name: "datauser",
-//     component: DataUser,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datalevel",
-//     name: "datalevel",
-//     component: DataLevel,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datarank",
-//     name: "datarank",
-//     component: DataRank,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datastructure",
-//     name: "datastructure",
-//     component: DataStructure,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datastructurelevel",
-//     name: "datastructurelevel",
-//     component: DataStructureLevel,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/dataaplikasi",
-//     name: "dataaplikasi",
-//     component: DataAplikasi,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/datamodul",
-//     name: "datamodul",
-//     component: DataModul,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/dataakses",
-//     name: "dataakses",
-//     component: DataAkses,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "/admin/dataaksesmanager",
-//     name: "dataaksesmanager",
-//     component: DataAksesManager,
-//     meta: { requireAuth: true }
-//   },
-//   {
-//     path: "*",
-//     redirect: "/404"
-//   },
-//   {
-//     path: "/404",
-//     component: NotFound
-//   }
-// ];
 
 const router = new VueRouter({
   mode: "history",

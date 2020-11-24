@@ -16,19 +16,19 @@
               <data-table-level
                 titleProps="User Level"
                 v-if="isLevelModal"
-                @id-selected="getLevelId"
+                @id-selected="levelSelected"
                 @modal-closed="findLevel"
               />
               <data-table-structure
                 titleProps="User Structure"
                 v-if="isStructureModal"
-                @id-selected="getStructureId"
+                @id-selected="structureSelected"
                 @modal-closed="findStructure"
               />
               <data-table-rank
                 titleProps="User Rank"
                 v-if="isRankModal"
-                @id-selected="getRankId"
+                @id-selected="rankSelected"
                 @modal-closed="findRank"
               />
               <user-modal
@@ -134,7 +134,7 @@
                           type="text"
                           class="form-control bottom"
                           id="formLvlid"
-                          v-model="levelname"
+                          v-model="dataAll.level.description"
                         />
                         <div class="input-group-append">
                           <button
@@ -187,7 +187,7 @@
                           type="text"
                           class="form-control bottom"
                           id="formStrcId"
-                          v-model="structurename"
+                          v-model="dataAll.structure.description"
                         />
                         <div class="input-group-append">
                           <button
@@ -205,7 +205,7 @@
                           type="text"
                           class="form-control bottom"
                           id="formRankid"
-                          v-model="rankname"
+                          v-model="dataAll.rank.description"
                         />
                         <div class="input-group-append">
                           <button
@@ -289,6 +289,30 @@
                         />
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="form form-group col">
+                        <label for="formRole" class="top">Akses</label>
+                        <div id="formRole" class="bottom form-control">
+                          <div class="row">
+                            <div
+                              class="form-check col-5"
+                              v-for="data in dataAkses"
+                              :key="data.id"
+                            >
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :value="data.id"
+                                v-model="confirmedAkses"
+                              />
+                              <label class="form-check-label">{{
+                                data.description
+                              }}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -303,7 +327,10 @@
               <button class="btn btn-warning" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-primary" v-on:click="submit()">
+              <button
+                class="btn btn-primary"
+                v-on:click="register('submit', null)"
+              >
                 <i class="fas fa-save"></i> Submit
               </button>
             </div>
@@ -313,7 +340,7 @@
               </button>
               <button
                 class="btn btn-primary"
-                v-on:click="update(dataAll.editId)"
+                v-on:click="register('update', dataAll.id)"
               >
                 Update
               </button>
@@ -332,6 +359,40 @@ import DataTableStructure from "../Admin/DataTableStructure.vue";
 import DataTableRank from "../Admin/DataTableRank.vue";
 import UserModal from "../Admin/UserModal.vue";
 import DeleteModal from "../DeleteConfirmation";
+
+function initialDataAll() {
+  return {
+    id: null,
+    fullname: "",
+    address: "",
+    city: "",
+    email: "",
+    empid: "",
+    phone: null,
+    levelid: null,
+    level: {
+      id: null,
+      description: ""
+    },
+    structureid: null,
+    structure: {
+      id: null,
+      description: ""
+    },
+    rankid: null,
+    rank: {
+      id: null,
+      description: ""
+    },
+    akses: [],
+    username: "",
+    active: false,
+    password: "",
+    password_confirmation: "",
+    avatar: null
+  };
+}
+
 export default {
   components: {
     "data-table-level": DataTableLevel,
@@ -346,32 +407,17 @@ export default {
     },
     titleProps: {
       type: String
+    },
+    dataAkses: {
+      type: Array
     }
   },
   data() {
     let self = this;
     return {
       newForm: true,
-      dataAll: {
-        id: null,
-        fullname: "",
-        address: "",
-        city: "",
-        email: "",
-        empid: "",
-        phone: null,
-        levelid: null,
-        structureid: null,
-        rankid: null,
-        username: "",
-        active: false,
-        password: "",
-        password_confirmation: "",
-        avatar: null
-      },
-      levelname: "",
-      structurename: "",
-      rankname: "",
+      dataAll: initialDataAll(),
+      confirmedAkses: [],
       berhasil: true,
       nikEn: true,
       image: null,
@@ -389,9 +435,13 @@ export default {
   },
   mounted() {
     let self = this;
-    self.checkEdit();
+    self.init();
   },
   methods: {
+    init() {
+      let self = this;
+      self.checkEdit();
+    },
     findLevel() {
       let self = this;
       if (self.isLevelModal === false) {
@@ -400,16 +450,17 @@ export default {
         self.isLevelModal = false;
       }
     },
-    getLevelId(id) {
+    levelSelected(id) {
       let self = this;
       self.dataAll.levelid = id;
+      self.getLevelData();
     },
     getLevelData() {
       let self = this;
       Api.level
         .find(self.dataAll.levelid)
         .then(resp => {
-          self.levelname = resp.data.data.description;
+          self.dataAll.level = resp.data.data;
         })
         .catch(err => {
           console.log(err);
@@ -423,16 +474,17 @@ export default {
         self.isStructureModal = false;
       }
     },
-    getStructureId(id) {
+    structureSelected(id) {
       let self = this;
       self.dataAll.structureid = id;
+      self.getStructureData();
     },
     getStructureData() {
       let self = this;
       Api.structure
         .find(self.dataAll.structureid)
         .then(resp => {
-          self.structurename = resp.data.data.description;
+          self.dataAll.structure = resp.data.data;
         })
         .catch(err => {
           console.log(err);
@@ -446,16 +498,17 @@ export default {
         self.isRankModal = false;
       }
     },
-    getRankId(id) {
+    rankSelected(id) {
       let self = this;
       self.dataAll.rankid = id;
+      self.getRankData();
     },
     getRankData() {
       let self = this;
       Api.rank
         .find(self.dataAll.rankid)
         .then(resp => {
-          self.rankname = resp.data.data.description;
+          self.dataAll.rank = resp.data.data;
         })
         .catch(err => {
           console.log(err);
@@ -474,15 +527,8 @@ export default {
     },
     reset() {
       let self = this;
-      self.dataAll = {};
-      self.dataAll.levelid = null;
-      self.dataAll.rankid = null;
-      self.dataAll.structureid = null;
-      self.rankname = "";
-      self.structurename = "";
-      self.levelname = "";
-      self.berhasil = true;
-      self.unauthorized = false;
+      self.dataAll = initialDataAll();
+      self.confirmedAkses = [];
     },
     checkEdit() {
       let self = this;
@@ -491,9 +537,9 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
-            self.getLevelData();
-            self.getStructureData();
-            self.getRankData();
+            self.dataAll.akses.forEach(data => {
+              self.confirmedAkses.push(data.id);
+            });
           })
           .catch(error => {
             console.log(error);
@@ -510,7 +556,7 @@ export default {
         self.closeModal();
       });
     },
-    submit() {
+    register(setup, id) {
       let self = this;
       let rawData = {
         username: self.dataAll.username,
@@ -533,59 +579,37 @@ export default {
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      Api.user
-        .register(formData)
-        .then(resp => {
-          if (resp.data.status === "success") {
-            // self.reset();
-            self.berhasil = true;
-            self.uploaded = true;
-          } else {
+      if (setup === "submit") {
+        Api.user
+          .register(formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.berhasil = true;
+              self.uploaded = true;
+            } else {
+              self.berhasil = false;
+            }
+          })
+          .catch(err => {
+            console.log(err.response);
             self.berhasil = false;
-          }
-        })
-        .catch(err => {
-          console.log(err.response);
-          self.berhasil = false;
-        });
-    },
-    update(id) {
-      let self = this;
-      let rawData = {
-        username: self.dataAll.username,
-        password: self.dataAll.password,
-        password_confirmation: self.dataAll.password_confirmation,
-        empid: self.dataAll.empid,
-        fullname: self.dataAll.fullname,
-        rankid: self.dataAll.rankid,
-        city: self.dataAll.city,
-        address: self.dataAll.address,
-        email: self.dataAll.email,
-        phone: self.dataAll.phone,
-        levelid: self.dataAll.levelid,
-        neverexpired: 1,
-        active: self.dataAll.active,
-        structureid: self.dataAll.structureid,
-        avatar: self.dataAll.avatar
-      };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
+          });
+      } else {
+        Api.user
+          .update(id, formData)
+          .then(resp => {
+            if (resp.status === "error") {
+              self.berhasil = false;
+            } else {
+              self.berhasil = true;
+              self.uploaded = true;
+            }
+          })
+          .catch(err => {
+            self.berhasil = false;
+            console.log(err);
+          });
       }
-      Api.user
-        .update(id, formData)
-        .then(resp => {
-          if (resp.status === "error") {
-            self.berhasil = false;
-          } else {
-            self.berhasil = true;
-            self.uploaded = true;
-          }
-        })
-        .catch(err => {
-          self.berhasil = false;
-          console.log(err);
-        });
     },
     selectImage(e) {
       let self = this;
@@ -596,26 +620,6 @@ export default {
         self.dataAll.avatar = image64;
       };
       reader.readAsDataURL(image);
-    }
-  },
-  watch: {
-    "dataAll.levelid": function() {
-      let self = this;
-      if (self.dataAll.levelid !== null) {
-        self.getLevelData();
-      }
-    },
-    "dataAll.structureid": function() {
-      let self = this;
-      if (self.dataAll.structureid !== null) {
-        self.getStructureData();
-      }
-    },
-    "dataAll.rankid": function() {
-      let self = this;
-      if (self.dataAll.rankid !== null) {
-        self.getRankData();
-      }
     }
   }
 };
@@ -640,7 +644,14 @@ export default {
     height: 200px;
   }
 }
-.pull-right {
-  margin: 8px 10px 0 0;
+#formRole {
+  height: 150px;
+  .form-check {
+    margin: 5px 10px;
+    &-label {
+      color: black;
+      font-size: 13px;
+    }
+  }
 }
 </style>

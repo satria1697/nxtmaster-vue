@@ -2,13 +2,10 @@ import Axios from "axios";
 import Path from "../api/const";
 import store from "../store";
 
-// Axios.defaults.baseURL = "http://192.168.2.107:8000";
-Axios.defaults.baseURL = "http://127.0.0.1:8000";
+Axios.defaults.baseURL = "http://192.168.2.107:8000";
+// Axios.defaults.baseURL = "http://127.0.0.1:8000";
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 Axios.defaults.headers.post["Accept"] = "application/json";
-// Axios.defaults.headers.common["Authorization"] =
-//   "Bearer " + localStorage.getItem("token");
-//   // "Bearer " + store.getters["getToken"];
 
 export const setupInterceptors = () => {
   Axios.interceptors.request.use(function(config) {
@@ -38,6 +35,11 @@ const api = {
     },
     logout: () => {
       return Axios.post(Path.auth.logout);
+    },
+    akses: params => {
+      return Axios.get(Path.auth.akses, {
+        params: params
+      });
     }
   },
   person: {
@@ -279,6 +281,44 @@ const api = {
       return Axios.get(Path.rolelevel.Get, {
         params: params
       });
+    }
+  },
+  umum: {
+    filter: params => {
+      return Axios.get(Path.umum.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(Path.umum.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(Path.umum.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(Path.umum.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(Path.umum.Delete.replace("{id}", id));
+    }
+  },
+  aksesuser: {
+    filter: params => {
+      return Axios.get(Path.aksesuser.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(Path.aksesuser.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(Path.aksesuser.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(Path.aksesuser.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(Path.aksesuser.Delete.replace("{id}", id));
     }
   }
 };

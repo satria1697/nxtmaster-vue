@@ -44,7 +44,7 @@
               />
               <div class="container">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col4">
+                  <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -80,7 +80,11 @@
                     <label for="formStructureLevel" class="top"
                       >Structure Level</label
                     >
-                    <select class="form-control bottom" id="formStructureLevel">
+                    <select
+                      class="form-control bottom"
+                      id="formStructureLevel"
+                      v-model="dataAll.structurelevelid"
+                    >
                       <option
                         :value="data.id"
                         v-for="data in dataSLevel"
@@ -93,12 +97,17 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formParentId" class="top">Parent ID</label>
-                    <select class="form-control bottom" id="formParentId">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
+                    <select
+                      class="form-control bottom"
+                      id="formParentId"
+                      v-model="dataAll.parentid"
+                    >
+                      <option
+                        v-for="data in dataS"
+                        :key="data.id"
+                        :value="data.id"
+                        >{{ data.id }} - {{ data.description }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -108,7 +117,10 @@
               <button class="btn btn-warning" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-primary" v-on:click="submit()">
+              <button
+                class="btn btn-primary"
+                v-on:click="submit('register', null)"
+              >
                 <i class="fas fa-save"></i> Submit
               </button>
             </div>
@@ -116,7 +128,10 @@
               <button class="btn btn-danger" v-on:click="deleteData(editId)">
                 <i class="fas fa-trash"></i> Delete
               </button>
-              <button class="btn btn-primary" v-on:click="update(editId)">
+              <button
+                class="btn btn-primary"
+                v-on:click="submit('update', editId)"
+              >
                 Update
               </button>
             </div>
@@ -131,6 +146,7 @@
 import UserModal from "../../Admin/UserModal.vue";
 import DeleteModal from "../../DeleteConfirmation";
 import Api from "../../../api";
+
 export default {
   components: {
     "user-modal": UserModal,
@@ -149,7 +165,10 @@ export default {
     return {
       dataAll: {
         id: null,
-        description: ""
+        description: "",
+        structurelevelid: null,
+        parentid: null,
+        signability: null
       },
       filter: {
         page: null,
@@ -164,7 +183,8 @@ export default {
       updated: false,
       deleted: false,
       isDeleteModal: false,
-      dataSLevel: []
+      dataSLevel: [],
+      dataS: []
     };
   },
   mounted() {
@@ -176,6 +196,7 @@ export default {
       let self = this;
       self.checkEdit();
       self.getDataSLevel();
+      self.getDataS();
     },
     closeModal() {
       let self = this;
@@ -196,6 +217,8 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
+            self.dataAll.signability =
+              self.dataAll.signability === 1 ? true : false;
           })
           .catch(error => {
             console.log(error);
@@ -203,56 +226,52 @@ export default {
           });
       }
     },
-    submit() {
+    submit(state, id) {
       let self = this;
+      let signability = self.dataAll.signability === true ? 1 : 0;
       let rawData = {
-        id: self.dataAll.id,
-        description: self.dataAll.description
+        description: self.dataAll.description,
+        signability: signability,
+        structurelevelid: self.dataAll.structurelevelid,
+        parentid: self.dataAll.parentid
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      Api.structure
-        .register(formData)
-        .then(resp => {
-          if (resp.data.status === "success") {
-            self.reset();
-            self.berhasil = true;
-            self.uploaded = true;
-          } else {
+      if (state === "register") {
+        Api.structure
+          .register(formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.reset();
+              self.berhasil = true;
+              self.uploaded = true;
+            } else {
+              self.berhasil = false;
+            }
+          })
+          .catch(err => {
+            console.log(err);
             self.berhasil = false;
-          }
-        })
-        .catch(err => {
-          console.log(err.response);
-          self.berhasil = false;
-        });
-    },
-    update(id) {
-      let self = this;
-      let rawData = {
-        id: self.dataAll.id,
-        description: self.dataAll.description
-      };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
+          });
+      } else {
+        Api.structure
+          .update(id, formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.reset();
+              self.berhasil = true;
+              self.uploaded = true;
+            } else {
+              self.berhasil = false;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            self.berhasil = false;
+          });
       }
-      Api.structure
-        .update(id, formData)
-        .then(resp => {
-          if (resp.status === "error") {
-            self.berhasil = false;
-          } else {
-            self.berhasil = true;
-            self.updated = true;
-          }
-        })
-        .catch(err => {
-          self.berhasil = false;
-          console.log(err);
-        });
     },
     deleteData(id) {
       let self = this;
@@ -274,6 +293,17 @@ export default {
         .filter(params)
         .then(resp => {
           self.dataSLevel = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getDataS(params) {
+      let self = this;
+      Api.structure
+        .filter(params)
+        .then(resp => {
+          self.dataS = resp.data.data;
         })
         .catch(err => {
           console.log(err);

@@ -45,33 +45,22 @@ a {
     color: $theme;
   }
 }
-// .page-item {
-  // .page-item .active{
-  //   .page-link {
-  //     background-color: $theme;
-  //     color: $text-theme;
-  //     &:hover {
-  //       color: $text-theme;
-  //     }
-  //   }
-  li {
-    &.page-item {
-      &.active {
-        // background-color: $theme;
-        .page-link {
-          // background-color: $theme !important;
-          color: $text-theme;
-          background-color: $theme;
-          border-color: $theme;
-        }
-      }
+li {
+  &.page-item {
+    &.active {
+      // background-color: $theme;
       .page-link {
-        color: $theme;
+        // background-color: $theme !important;
+        color: $text-theme;
+        background-color: $theme;
+        border-color: $theme;
       }
     }
+    .page-link {
+      color: $theme;
+    }
   }
-    
-  // }
-  
-  
-// }
+}
+.pull-right {
+  margin: 8px 10px 0 0;
+}

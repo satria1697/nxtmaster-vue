@@ -44,6 +44,7 @@
 
 <script>
 import pdf from "vue-pdf";
+
 export default {
   props: ["src"],
   components: {

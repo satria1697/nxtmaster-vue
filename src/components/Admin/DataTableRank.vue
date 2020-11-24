@@ -32,6 +32,7 @@
 <script>
 import Api from "../../api";
 import button from "../../components/Table/ActionButton";
+
 export default {
   props: {
     titleProps: {

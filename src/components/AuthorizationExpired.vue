@@ -20,6 +20,7 @@
 <script>
 import router from "../router";
 import store from "../store";
+
 export default {
   mounted() {
     // console.log("ok");
@@ -28,7 +29,7 @@ export default {
     goTo() {
       store.commit("authenChange");
       store.commit("closeExpired");
-      return router.push("/login");
+      router.push({ name: "login" });
     }
   }
 };

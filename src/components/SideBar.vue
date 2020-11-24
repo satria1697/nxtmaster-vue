@@ -1,28 +1,26 @@
 <template>
   <div class="sidenav" :class="{ closeSide: isSideBar }">
-    <!-- <div class="sidenav-list" :class="computedClass('Home')">
-      <router-link to="/">
-        <span class="span-side">
-          <i class="fas fa-home"></i>
-          <span class="" v-if="!isSideBar"> Home</span>
-        </span>
-      </router-link>
-    </div> -->
-    <div class="sidenav-list" v-for="sb in sideBar" :key="sb.id">
-      <div class="sidenav-list" :class="computedClass(sb.path)">
-        <router-link :to="{ name: sb.path }">
-          <i class="fas fa-caret-square-right span-theme"></i
-          ><span v-if="!isSideBar"> {{ sb.name }} </span></router-link
-        >
-      </div>
+    <div v-if="!isSideBar" class="sidenav-list pointer">
+      <span class="float-right" v-on:click="sidebar()"
+        ><i class="fas fa-thumbtack"></i
+      ></span>
+      <v-jstree :data="dataSidebar" whole-row @item-click="goTo"></v-jstree>
+    </div>
+    <div v-else class="sidenav-list pointer" v-on:click="sidebar()">
+      <span class="menu">Menu</span>
     </div>
   </div>
 </template>
 
 <script>
-import Axios from "axios";
 import store from "../store";
+import api from "../api";
+import VJstree from "vue-jstree";
+
 export default {
+  components: {
+    VJstree
+  },
   props: {
     avatarProps: {
       type: String
@@ -35,7 +33,9 @@ export default {
       fullname: store.getters["getFullname"],
       isSideBar: false,
       isActive: false,
-      sideBar: []
+      dataRoot: {},
+      dataParent: [],
+      dataSidebar: []
     };
   },
   created() {
@@ -54,9 +54,13 @@ export default {
   },
   mounted() {
     let self = this;
-    self.getSidebar();
+    let id = store.getters["getAkses"];
+    self.getDataRootId(id);
   },
   methods: {
+    sidebar() {
+      store.commit("sideBarChange");
+    },
     computedClass(routeName) {
       let className = "isActive";
       let self = this;
@@ -64,15 +68,41 @@ export default {
         return className;
       }
     },
-    getSidebar() {
+    getDataRootId(id) {
       let self = this;
-      Axios.get("http://127.0.0.1:8000/api/sidebar")
+      api.aksesmanager
+        .findRoot(id)
         .then(resp => {
-          self.sideBar = resp.data;
+          self.dataSidebar = resp.data.data;
+          self.dataSidebar.forEach(data => {
+            data.children.forEach(data => {
+              data.children.forEach(leaf => {
+                if (leaf.icon === "") {
+                  leaf.icon = "fa fa-file";
+                }
+              });
+            });
+          });
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    getDataFolder(params) {
+      let self = this;
+      api.aksesmanager
+        .filterParent(params)
+        .then(resp => {
+          self.dataSidebar = resp.data.data;
+          // self.dataChild = resp.data.dataChild;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    goTo(payload) {
+      let self = this;
+      self.$router.push({ name: payload.data.modul.path });
     }
   },
   watch: {
@@ -88,36 +118,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/style/abstracts/_variables";
 .sidenav {
   height: 100vh;
-  width: 250px;
+  width: 230px;
   position: fixed;
+  overflow-y: auto;
   z-index: 1;
-  top: 0;
-  left: 0;
-  // background-color: rgba($color: black, $alpha: 0.5);
-  background-color: #222222;
+  background-color: #a9a9a9;
   overflow-x: hidden;
-  padding-top: 50px;
-  margin-right: 15px;
-  // margin-top: 50px;
+  color: $text-theme-alt;
+  border-right: 2px solid black;
+  padding: 0px;
+  overflow-y: auto;
+  overflow-x: scroll;
   &-list {
-    margin: 10px 5px;
+    margin: 5px;
   }
   transition: 0.2s;
+  /deep/ span {
+    margin: 0;
+    font-size: 12px;
+  }
+  /deep/ .tree-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  /deep/ .tree-icon.tree-ocl {
+    width: 24px !important;
+    height: 24px !important;
+  }
 }
 .span-side {
   color: white;
 }
-.closeSide {
-  width: 45px;
+.sidenav.closeSide {
+  width: 30px;
+  padding: 0;
+  background-color: $theme;
   .sidenav-list {
-    a {
-      .fas {
-        text-align: center;
-        width: 100%;
-      }
-    }
+    margin: 2px;
+  }
+  .menu {
+    margin: 0;
+    padding: 3px;
+    font-size: 14px;
+    border-bottom: 2px solid black;
+    background-color: white;
+    -ms-writing-mode: tb-rl;
+    writing-mode: tb-rl;
   }
 }
 .user {

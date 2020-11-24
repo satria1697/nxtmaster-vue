@@ -5,6 +5,7 @@
 
 <script>
 import blankAvatar from "../../assets/image/table/blank_avatar.png";
+
 export default {
   props: {
     data: {}

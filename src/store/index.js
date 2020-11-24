@@ -78,7 +78,8 @@ export default new Vuex.Store({
         username: "",
         fullname: "",
         levelid: null,
-        id: null
+        id: null,
+        akses: null
       }),
       getters: {
         getUsername(state) {
@@ -92,14 +93,18 @@ export default new Vuex.Store({
         },
         getId(state) {
           return state.id;
+        },
+        getAkses(state) {
+          return state.akses;
         }
       },
       mutations: {
-        setLogin(state, { username, fullname, levelid, id }) {
+        setLogin(state, { username, fullname, levelid, id, akses }) {
           state.username = username;
           state.fullname = fullname;
           state.levelid = levelid;
           state.id = id;
+          state.akses = akses;
         }
       }
     }

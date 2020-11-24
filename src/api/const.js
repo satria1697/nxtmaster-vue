@@ -2,7 +2,8 @@ const api = {
   auth: {
     login: "/api/v1/auth/login",
     logout: "/api/v1/auth/logout",
-    loginconfirm: "/api/v1/auth/loginconfirmation"
+    loginconfirm: "/api/v1/auth/loginconfirmation",
+    akses: "/api/v1/auth/akses"
   },
   person: "/api/person",
   person_detail: "/api/person/{id}",
@@ -20,11 +21,11 @@ const api = {
     userDelete: "/api/v1/auth/user/delete/{id}"
   },
   level: {
-    Get: "/api/v1/auth/level/data",
-    GetId: "api/v1/auth/level/{id}",
-    Register: "/api/v1/auth/level/register",
-    Update: "/api/v1/auth/level/update/{id}",
-    Delete: "/api/v1/auth/level/delete/{id}"
+    Get: "/api/admin/level/data",
+    GetId: "api/admin/level/{id}",
+    Register: "/api/admin/level/register",
+    Update: "/api/admin/level/update/{id}",
+    Delete: "/api/admin/level/delete/{id}"
   },
   structure: {
     Get: "/api/v1/auth/structure/data",
@@ -34,18 +35,18 @@ const api = {
     Delete: "/api/v1/auth/structure/delete/{id}"
   },
   rank: {
-    Get: "/api/v1/auth/rank/data",
-    GetId: "api/v1/auth/rank/{id}",
-    Register: "/api/v1/auth/rank/register",
-    Update: "/api/v1/auth/rank/update/{id}",
-    Delete: "/api/v1/auth/rank/delete/{id}"
+    Get: "/api/admin/rank/data",
+    GetId: "api/admin/rank/{id}",
+    Register: "/api/admin/rank/register",
+    Update: "/api/admin/rank/update/{id}",
+    Delete: "/api/admin/rank/delete/{id}"
   },
   structurelevel: {
-    Get: "/api/v1/auth/structurelevel/data",
-    GetId: "/api/v1/auth/structurelevel/{id}",
-    Register: "/api/v1/auth/structurelevel/register",
-    Update: "/api/v1/auth/structurelevel/update/{id}",
-    Delete: "/api/v1/auth/structurelevel/delete/{id}"
+    Get: "/api/admin/structurelevel/data",
+    GetId: "/api/admin/structurelevel/{id}",
+    Register: "/api/admin/structurelevel/register",
+    Update: "/api/admin/structurelevel/update/{id}",
+    Delete: "/api/admin/structurelevel/delete/{id}"
   },
   application: {
     Get: "/api/v1/auth/application/data",
@@ -83,6 +84,20 @@ const api = {
   },
   rolelevel: {
     Get: "/api/v1/auth/rolelevel/data"
+  },
+  umum: {
+    Get: "/api/v1/auth/option/data",
+    GetId: "/api/v1/auth/option/{id}",
+    Register: "/api/v1/auth/option/register",
+    Update: "/api/v1/auth/option/update/{id}",
+    Delete: "/api/v1/auth/option/delete/{id}"
+  },
+  aksesuser: {
+    Get: "/api/admin/aksesuser/data",
+    GetId: "/api/admin/aksesuser/{id}",
+    Register: "/api/admin/aksesuser/register",
+    Update: "/api/admin/aksesuser/update/{id}",
+    Delete: "/api/admin/aksesuser/delete/{id}"
   }
 };
 

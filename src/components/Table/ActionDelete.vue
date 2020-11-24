@@ -14,6 +14,7 @@
 
 <script>
 import DeleteConfirmation from "../DeleteConfirmation.vue";
+
 export default {
   props: {
     data: {},

@@ -33,11 +33,14 @@ body {
 }
 
 .main {
-  margin-left: 265px !important;
+  margin-left: 230px !important;
+  .container {
+    margin: 0;
+  }
   // background: lightgray !important;
 }
 .closeSideMain {
-  margin-left: 60px !important;
+  margin-left: 30px !important;
 }
 
 table {

@@ -114,6 +114,7 @@
 import UserModal from "../../Admin/UserModal.vue";
 import DeleteModal from "../../DeleteConfirmation";
 import Api from "../../../api";
+
 export default {
   components: {
     "user-modal": UserModal,

@@ -1,8 +1,9 @@
 <template>
-  <div class="detail" :class="{ closeSideMain: this.$store.state.isSideBar }">
+  <div class="detail">
     <Form
       v-if="isModal"
       :editIdProps="editId"
+      :dataAkses="dataAkses"
       titleProps="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
@@ -10,7 +11,7 @@
       <div class="row">
         <div class="col">
           <h3>
-            Tabel {{ this.$store.getters.tabRouteName(this.$route.name).label }}
+            Tabel Data pengguna
           </h3>
         </div>
         <div class="col-2">
@@ -42,7 +43,7 @@ import Form from "../../components/Admin/FormDataUser";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import avatar from "../../components/Table/Avatar";
-import store from "../../store";
+// import store from "../../store";
 export default {
   components: {
     Form
@@ -55,8 +56,8 @@ export default {
         page: null,
         find: "",
         length: null,
-        orderColumn: "",
-        orderBy: ""
+        column: "",
+        dir: ""
       },
       isLoading: false,
       columns: [
@@ -120,7 +121,8 @@ export default {
         }
       },
       isModal: false,
-      editId: null
+      editId: null,
+      dataAkses: []
     };
   },
   created() {
@@ -132,15 +134,26 @@ export default {
   methods: {
     init() {
       let self = this;
-      self.openTab(self.$route.name, self.$route.name);
       const params = {
         page: 1,
         find: "",
         length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        column: "id",
+        dir: "ASC"
       };
       self.getData(params);
+      self.getAksesData();
+    },
+    getAksesData(params) {
+      let self = this;
+      Api.akses
+        .filter(params)
+        .then(resp => {
+          self.dataAkses = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     getData(params) {
       let self = this;
@@ -148,8 +161,8 @@ export default {
       self.filter.page = params.page;
       self.filter.find = params.find;
       self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      self.filter.column = params.column;
+      self.filter.dir = params.dir;
       Api.user
         .filter(params)
         .then(res => {
@@ -190,22 +203,6 @@ export default {
         .catch(() => {
           window.alert("Tidak dapat menghapus Data");
         });
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
     }
   }
 };
