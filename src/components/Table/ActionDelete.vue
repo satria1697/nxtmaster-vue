@@ -4,6 +4,7 @@
       v-if="isModal"
       @modal-closed="changeModal"
       @delete-data="deleteData"
+      :data="data"
     >
     </delete-confirmation>
     <div class="pointer col-1" @click="changeModal()">
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+// import store from "../../store";
 import DeleteConfirmation from "../DeleteConfirmation.vue";
 
 export default {
@@ -51,3 +53,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/style/abstracts/_variables";
+.fa-trash {
+  color: $theme;
+}
+</style>

@@ -64,11 +64,11 @@ const api = {
     GetApp: "/api/v1/auth/modul/data/app"
   },
   akses: {
-    Get: "/api/v1/auth/akses/data",
-    GetId: "/api/v1/auth/akses/{id}",
-    Register: "/api/v1/auth/akses/register",
-    Update: "/api/v1/auth/akses/update/{id}",
-    Delete: "/api/v1/auth/akses/delete/{id}"
+    Get: "/api/admin/akses/data",
+    GetId: "/api/admin/akses/{id}",
+    Register: "/api/admin/akses/register",
+    Update: "/api/admin/akses/update/{id}",
+    Delete: "/api/admin/akses/delete/{id}"
   },
   aksesmanager: {
     Get: "/api/v1/auth/aksesmanager/data",

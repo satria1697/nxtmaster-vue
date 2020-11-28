@@ -45,7 +45,6 @@ import store from "../../../store";
 export default {
   components: {
     Form
-    // "delete-modal": deleteModal
   },
   data() {
     let self = this;

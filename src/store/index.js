@@ -14,15 +14,11 @@ export default new Vuex.Store({
     active: 0,
     editId: 0,
     tabState: [],
-    token: "" || localStorage.getItem("token")
+    token: "" || localStorage.getItem("token"),
+    isConfirmed: false,
+    isLoginConfirmed: false
   },
-  getters: {
-    tabState: state => state.tabState,
-    // tabRoute: state => state.
-    tabRouteName: state => name => {
-      return state.tabState.find(tab => tab.name === name);
-    }
-  },
+  getters: {},
   mutations: {
     sideBarChange: state => {
       if (state.isSideBar === true) {
@@ -30,13 +26,6 @@ export default new Vuex.Store({
       } else {
         state.isSideBar = true;
       }
-    },
-    openTab: (state, { name, label }) => {
-      let data = { name: name, label: label, tab: true };
-      state.tabState.push(data);
-    },
-    closeTab: (state, num) => {
-      state.tabState.splice(num, 1);
     },
     modalChange: state => {
       if (state.isModal === false) {
@@ -54,6 +43,7 @@ export default new Vuex.Store({
         state.isAuthenticated = true;
       } else {
         localStorage.removeItem("token");
+        state.isSideBar = false;
         state.isAuthenticated = false;
       }
     },
@@ -69,6 +59,20 @@ export default new Vuex.Store({
     },
     closeExpired: state => {
       state.isExpired = false;
+    },
+    confirmedChange: state => {
+      if (state.isConfirmed === false) {
+        state.isConfirmed = true;
+      } else {
+        state.isConfirmed = false;
+      }
+    },
+    loginConfirmedChange: state => {
+      if (state.isLoginConfirmed === false) {
+        state.isLoginConfirmed = true;
+      } else {
+        state.isLoginConfirmed = false;
+      }
     }
   },
   actions: {},

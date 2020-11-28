@@ -8,18 +8,18 @@
               <span>Konfirmasi Password</span>
             </div>
             <div class="modal-body">
-              <!-- <div class="row">
+              <div class="row" v-if="this.$store.getters['getLevelId'] > 3">
                 <div class="form form-group col-sm-12">
                   <label for="user" class="top">Username</label>
                   <input
                     id="user"
                     class="form-control bottom"
                     type="text"
-                    v-model="username"
+                    v-model="dataLogin.username"
                     @keyup.enter="login()"
                   />
                 </div>
-              </div> -->
+              </div>
               <div class="row">
                 <div class="form form-group col-sm-12">
                   <label for="password" class="top">Password</label>
@@ -27,7 +27,7 @@
                     id="password"
                     class="form-control bottom"
                     type="password"
-                    v-model="password"
+                    v-model="dataLogin.password"
                     @keyup.enter="login()"
                   />
                 </div>
@@ -58,11 +58,16 @@
 import api from "../../api";
 import store from "../../store";
 
+function initialDataLogin() {
+  return {
+    username: "",
+    password: ""
+  };
+}
 export default {
   data() {
     return {
-      username: "",
-      password: "",
+      dataLogin: initialDataLogin(),
       isLoading: false,
       berhasil: true
     };
@@ -75,9 +80,13 @@ export default {
         self.berhasil = false;
         self.isLoading = false;
       } else {
+        let user =
+          store.getters["getLevelId"] <= 3
+            ? store.getters["getUsername"]
+            : self.dataLogin.username;
         let rawData = {
-          username: store.getters["getUsername"],
-          password: self.password
+          username: user,
+          password: self.dataLogin.password
         };
         let formData = new FormData();
         for (let key in rawData) {
@@ -86,27 +95,35 @@ export default {
         api.auth
           .loginconfirm(formData)
           .then(resp => {
-            console.log(resp);
-            self.$emit("confirmed-login");
+            console.log(resp.data.status);
+            if (resp.data.status === "success") {
+              store.commit("confirmedChange");
+              store.commit("loginConfirmedChange");
+            }
           })
           .catch(error => {
             self.isLoading = false;
             self.berhasil = false;
-            console.log(error.response);
+            self.dataLogin = initialDataLogin();
+            console.log(error);
           });
       }
     },
     closeModal() {
-      let self = this;
-      self.$emit("modal-closed");
+      store.commit("loginConfirmedChange");
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.modal-content {
-  margin: 150px auto;
-  max-width: 300px;
+.modal {
+  &-mask {
+    z-index: 90999999;
+  }
+  &-content {
+    margin: 150px auto;
+    max-width: 300px;
+  }
 }
 </style>

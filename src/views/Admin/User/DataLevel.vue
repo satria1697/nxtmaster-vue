@@ -9,17 +9,14 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h3>Tabel {{ this.$route.name }}</h3>
-        </div>
-        <div class="col-2">
-          <i
-            v-on:click="changeModal(null)"
-            class="fas fa-plus-circle fa-2x pointer icon-top"
-          ></i>
-          <i
-            v-on:click="getData(filter)"
-            class="fas fa-sync fa-2x pointer icon-top"
-          ></i>
+          <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+            <i class="fas fa-sync"></i>
+            Perbaharui Data
+          </div>
+          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+            <i class="fas fa-plus-circle"></i>
+            Tambah
+          </div>
         </div>
       </div>
     </div>
@@ -45,7 +42,6 @@ import store from "../../../store";
 export default {
   components: {
     Form
-    // "delete-modal": deleteModal
   },
   data() {
     let self = this;

@@ -1,5 +1,5 @@
 <template>
-  <transition class="modal" tabindex="-1" role="dialog">
+  <transition class="modal fade" tabindex="-1" role="dialog" v-if="!isLoading">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-dialog modal-dialog-centered">
@@ -32,24 +32,20 @@
                 @modal-closed="findRank"
               />
               <user-modal
-                v-if="berhasil && uploaded"
-                tileProps="Data berhasil diunggah."
-                textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && updated"
-                titleProps="Data berhasil diperbaharui."
-                textSuccess="true"
+                v-if="userModal"
+                :title="textTitle"
+                :textSuccess="berhasil"
+                :textDanger="!berhasil"
                 @modal-closed="closeModal"
               />
               <user-modal
                 v-if="unauthorized"
-                titleProps="Tidak memiliki otoritas untuk merubah data."
-                textDanger="true"
+                title="Tidak memiliki otoritas untuk merubah data."
+                :textDanger="true"
                 @modal-closed="closeModal"
               />
               <delete-modal
+                :data="dataAll"
                 v-if="isDeleteModal"
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
@@ -103,17 +99,19 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div v-if="newForm" class="form form-group col">
+                      <div
+                        v-if="dataAll.id === null"
+                        class="form form-group col"
+                      >
                         <label for="formUsername" class="top">Username</label>
                         <input
                           id="formUsername"
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.username"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
-                      <div v-if="!newForm" class="form form-group col">
+                      <div v-else class="form form-group col">
                         <label for="formUsername" class="top top-disabled"
                           >Username</label
                         >
@@ -122,12 +120,11 @@
                           class="bottom form-control disabled"
                           type="text"
                           v-model="dataAll.username"
-                          v-on:focus="resetSpan()"
                           disabled
                         />
                       </div>
                       <div class="form form-group col input-group">
-                        <label for="formLvlid" class="top"
+                        <label for="formLvlid" class="top top-disabled"
                           >Level Pengguna</label
                         >
                         <input
@@ -135,14 +132,15 @@
                           class="form-control bottom"
                           id="formLvlid"
                           v-model="dataAll.level.description"
+                          disabled
                         />
                         <div class="input-group-append">
                           <button
-                            class="btn btn-outline-secondary"
+                            class="btn btn-default"
                             type="button"
                             v-on:click="findLevel()"
                           >
-                            Cari
+                            <i class="fas fa-search"></i> Cari
                           </button>
                         </div>
                       </div>
@@ -159,61 +157,65 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col-10">
+                      <div class="form form-group col-8">
                         <label for="formNama" class="top">Full Name</label>
                         <input
                           id="formNama"
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.fullname"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
-                      <div class="form form-group col-2">
+                      <div class="form form-group col-4">
                         <label for="formEmpid" class="top">Employment ID</label>
                         <input
                           id="formEmpid"
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.empid"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                     </div>
                     <div class="row">
                       <div class="form form-group col input-group">
-                        <label for="formStrcId" class="top">Structure</label>
+                        <label for="formStrcId" class="top top-disabled"
+                          >Structure</label
+                        >
                         <input
                           type="text"
                           class="form-control bottom"
                           id="formStrcId"
-                          v-model="dataAll.structure.description"
+                          v-model="dataAll.structure.label"
+                          disabled
                         />
                         <div class="input-group-append">
                           <button
-                            class="btn btn-outline-secondary"
+                            class="btn btn-default"
                             type="button"
                             v-on:click="findStructure()"
                           >
-                            Cari
+                            <i class="fas fa-search"></i> Cari
                           </button>
                         </div>
                       </div>
                       <div class="form form-group col input-group">
-                        <label for="formRankid" class="top">Tingkat</label>
+                        <label for="formRankid" class="top top-disabled"
+                          >Tingkat</label
+                        >
                         <input
                           type="text"
                           class="form-control bottom"
                           id="formRankid"
                           v-model="dataAll.rank.description"
+                          disabled
                         />
                         <div class="input-group-append">
                           <button
-                            class="btn btn-outline-secondary"
+                            class="btn btn-default"
                             type="button"
                             v-on:click="findRank()"
                           >
-                            Cari
+                            <i class="fas fa-search"></i> Cari
                           </button>
                         </div>
                       </div>
@@ -226,7 +228,6 @@
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.email"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                       <div class="form form-group col">
@@ -236,7 +237,6 @@
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.phone"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                     </div>
@@ -248,7 +248,6 @@
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.address"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                       <div class="form form-group col">
@@ -258,14 +257,10 @@
                           class="bottom form-control"
                           type="text"
                           v-model="dataAll.city"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                     </div>
-                    <div
-                      class="row"
-                      v-if="editId === this.$store.getters['getId']"
-                    >
+                    <div class="row">
                       <div class="form form-group col">
                         <label for="formPwd" class="top">Password</label>
                         <input
@@ -273,7 +268,6 @@
                           class="bottom form-control"
                           type="password"
                           v-model="dataAll.password"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                       <div class="form form-group col">
@@ -285,64 +279,52 @@
                           class="bottom form-control"
                           type="password"
                           v-model="dataAll.password_confirmation"
-                          v-on:focus="resetSpan()"
                         />
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col">
-                        <label for="formRole" class="top">Akses</label>
-                        <div id="formRole" class="bottom form-control">
-                          <div class="row">
-                            <div
-                              class="form-check col-5"
-                              v-for="data in dataAkses"
-                              :key="data.id"
-                            >
-                              <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :value="data.id"
-                                v-model="confirmedAkses"
-                              />
-                              <label class="form-check-label">{{
-                                data.description
-                              }}</label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <vue-list-picker
+                        :left-items="dataAkses"
+                        :right-items="confirmedAkses"
+                        title-left="Akses Tersedia"
+                        title-right="Akses Terpilih"
+                        content-key="id"
+                        content-attr="description"
+                        class="akses col"
+                        button-class="btn btn-default btn-sm"
+                        min-height="100px"
+                        height="100px"
+                        :titleCentered="false"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <span v-if="!berhasil" class="text-danger"
-              >Ada kesalahan pengisian data, silahkan mengulang kembali.</span
-            >
-            <span v-if="idnotfound" class="text-danger">
-              Id tidak ditemukan.
-            </span>
             <div v-if="editId === null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset()">
+              <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="register('submit', null)"
               >
-                <i class="fas fa-save"></i> Submit
+                <i class="fas fa-save"></i> Simpan
               </button>
             </div>
             <div v-if="editId !== null" class="modal-footer">
-              <button class="btn btn-danger" v-on:click="deleteData()">
+              <button
+                class="btn btn-default float-left"
+                v-on:click="deleteData(dataAll.id)"
+              >
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="register('update', dataAll.id)"
               >
-                Update
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
               </button>
             </div>
           </div>
@@ -377,7 +359,7 @@ function initialDataAll() {
     structureid: null,
     structure: {
       id: null,
-      description: ""
+      label: ""
     },
     rankid: null,
     rank: {
@@ -402,19 +384,17 @@ export default {
     "delete-modal": DeleteModal
   },
   props: {
-    editIdProps: {
+    editId: {
       type: Number
     },
     titleProps: {
       type: String
-    },
-    dataAkses: {
-      type: Array
     }
   },
   data() {
-    let self = this;
+    // let self = this;
     return {
+      isLoading: false,
       newForm: true,
       dataAll: initialDataAll(),
       confirmedAkses: [],
@@ -424,23 +404,39 @@ export default {
       levelData: [],
       updated: false,
       uploaded: false,
-      editId: self.editIdProps,
       isRankModal: false,
       isLevelModal: false,
       isStructureModal: false,
       idnotfound: false,
       unauthorized: false,
-      isDeleteModal: false
+      isDeleteModal: false,
+      textTitle: "",
+      userModal: false,
+      dataAkses: []
     };
   },
   mounted() {
     let self = this;
+    self.isLoading = true;
     self.init();
+    self.isLoading = false;
   },
   methods: {
     init() {
       let self = this;
+      self.getAksesData();
       self.checkEdit();
+    },
+    getAksesData(params) {
+      let self = this;
+      Api.akses
+        .filter(params)
+        .then(resp => {
+          self.dataAkses = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     findLevel() {
       let self = this;
@@ -450,21 +446,11 @@ export default {
         self.isLevelModal = false;
       }
     },
-    levelSelected(id) {
+    levelSelected(data) {
       let self = this;
-      self.dataAll.levelid = id;
-      self.getLevelData();
-    },
-    getLevelData() {
-      let self = this;
-      Api.level
-        .find(self.dataAll.levelid)
-        .then(resp => {
-          self.dataAll.level = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      self.dataAll.levelid = data.id;
+      self.dataAll.level.id = data.id;
+      self.dataAll.level.description = data.description;
     },
     findStructure() {
       let self = this;
@@ -474,21 +460,12 @@ export default {
         self.isStructureModal = false;
       }
     },
-    structureSelected(id) {
+    structureSelected(data) {
       let self = this;
-      self.dataAll.structureid = id;
-      self.getStructureData();
-    },
-    getStructureData() {
-      let self = this;
-      Api.structure
-        .find(self.dataAll.structureid)
-        .then(resp => {
-          self.dataAll.structure = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      console.log(data);
+      self.dataAll.structureid = data.id;
+      self.dataAll.structure.id = data.id;
+      self.dataAll.structure.label = data.label;
     },
     findRank() {
       let self = this;
@@ -498,32 +475,21 @@ export default {
         self.isRankModal = false;
       }
     },
-    rankSelected(id) {
+    rankSelected(data) {
       let self = this;
-      self.dataAll.rankid = id;
-      self.getRankData();
-    },
-    getRankData() {
-      let self = this;
-      Api.rank
-        .find(self.dataAll.rankid)
-        .then(resp => {
-          self.dataAll.rank = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    resetSpan() {
-      let self = this;
-      self.uploaded = false;
-      self.berhasil = true;
+      self.dataAll.rankid = data.id;
+      self.dataAll.rank.id = data.id;
+      self.dataAll.rank.description = data.description;
     },
     closeModal() {
       let self = this;
-      self.reset();
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      if (self.berhasil) {
+        self.reset();
+        self.$emit("get-data");
+        self.$emit("modal-closed");
+      } else {
+        self.userModal = false;
+      }
     },
     reset() {
       let self = this;
@@ -538,26 +504,30 @@ export default {
           .then(resp => {
             self.dataAll = resp.data.data;
             self.dataAll.akses.forEach(data => {
-              self.confirmedAkses.push(data.id);
+              self.confirmedAkses.push(data);
             });
+            self.dataAkses = self.dataAkses.filter(
+              elem => !self.confirmedAkses.find(({ id }) => elem.id === id)
+            );
           })
           .catch(error => {
             console.log(error);
-            self.reset();
-            self.unauthorized = true;
+            // self.reset();
+            // self.unauthorized = true;
           });
       }
     },
-    deleteData() {
+    deleteData(id) {
       let self = this;
-      console.log(self.editId);
-      Api.user.delete(self.editId).then(resp => {
+      Api.user.delete(id).then(resp => {
         console.log(resp);
         self.closeModal();
       });
     },
     register(setup, id) {
       let self = this;
+      let jsonAkses = JSON.stringify(self.confirmedAkses);
+      let active = self.dataAll.active === true ? 1 : 0;
       let rawData = {
         username: self.dataAll.username,
         password: self.dataAll.password,
@@ -571,9 +541,10 @@ export default {
         phone: self.dataAll.phone,
         levelid: self.dataAll.levelid,
         neverexpired: 1,
-        active: self.dataAll.active,
+        active: active,
         structureid: self.dataAll.structureid,
-        avatar: self.dataAll.avatar
+        avatar: self.dataAll.avatar,
+        akses: jsonAkses
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -584,29 +555,35 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
+              self.textTitle = "Data berhasil diunggah";
               self.berhasil = true;
-              self.uploaded = true;
+              self.userModal = true;
             } else {
               self.berhasil = false;
             }
           })
           .catch(err => {
-            console.log(err.response);
+            console.log(err);
+            self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
+            self.userModal = true;
           });
       } else {
         Api.user
           .update(id, formData)
           .then(resp => {
-            if (resp.status === "error") {
-              self.berhasil = false;
-            } else {
+            if (resp.data.status === "success") {
+              self.textTitle = "Data berhasil diperbaharui";
               self.berhasil = true;
-              self.uploaded = true;
+              self.userModal = true;
+            } else {
+              self.berhasil = false;
             }
           })
           .catch(err => {
+            self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
+            self.userModal = true;
             console.log(err);
           });
       }
@@ -626,11 +603,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal {
+  overflow-y: auto;
+}
 .modal-mask {
   z-index: 9900;
+  overflow-y: auto;
+  display: inline;
 }
 .modal-dialog {
   max-width: 1000px;
+  overflow-y: auto;
 }
 .img-container {
   text-align: center;
@@ -645,13 +628,21 @@ export default {
   }
 }
 #formRole {
-  height: 150px;
+  min-height: 200px;
+  height: auto;
   .form-check {
     margin: 5px 10px;
     &-label {
       color: black;
-      font-size: 13px;
+      // font-size: 12px;
+      padding-left: 2px;
     }
+  }
+}
+.akses {
+  /deep/ .list-picker-item {
+    border: none;
+    padding: 3px;
   }
 }
 </style>

@@ -18,3 +18,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/style/abstracts/_variables";
+.fa-edit {
+  color: $theme;
+}
+</style>

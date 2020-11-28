@@ -1,15 +1,30 @@
 <template>
   <div id="app">
-    <NavBar
+    <NavBarC
       v-if="
         this.$router.currentRoute.name !== 'login' &&
-          this.$store.state.isAuthenticated === true
+          this.$store.state.isAuthenticated === true &&
+          this.$store.getters['getLevelId'] <= 3
+      "
+    />
+    <NavBarL
+      v-if="
+        this.$router.currentRoute.name !== 'login' &&
+          this.$store.state.isAuthenticated === true &&
+          this.$store.getters['getLevelId'] > 3
       "
     />
     <SideBar
       v-if="
         this.$router.currentRoute.name !== 'login' &&
           this.$store.state.isAuthenticated === true
+      "
+    />
+    <LoginConfirmed
+      v-if="
+        this.$router.currentRoute.name !== 'login' &&
+          this.$store.state.isAuthenticated === true &&
+          this.$store.state.isLoginConfirmed === true
       "
     />
     <Sesi v-if="this.$store.state.isExpired === true" />
@@ -19,18 +34,21 @@
 </template>
 
 <script>
-import NavBar from "@/components/NavBarC.vue";
+import NavBarC from "@/components/NavBarC.vue";
+import NavBarL from "@/components/NavBarL.vue";
 import SideBar from "@/components/SideBar.vue";
 import Sesi from "../src/components/AuthorizationExpired.vue";
+import LoginConfirmed from "./components/Admin/LoginConfirmation.vue";
 // import Api from "./api";
 import store from "./store";
 
 export default {
   name: "Home",
   components: {
-    NavBar,
+    NavBarC,
+    NavBarL,
     SideBar,
-    // Tab,
+    LoginConfirmed,
     Sesi
   },
   // created() {
@@ -57,6 +75,9 @@ export default {
         let id = jwtDecode.sub;
         let akses = jwtDecode.akses;
         store.commit("setLogin", { username, fullname, levelid, id, akses });
+        if (akses === "0") {
+          store.commit("sideBarChange");
+        }
         // try {
         //   var storedTab = JSON.parse(localStorage.getItem("tabState"));
         //   self.$router.push({ name: storedTab[0].name });
@@ -64,7 +85,7 @@ export default {
         //   self.$router.push("/");
         // }
         store.commit("authenChange");
-        self.$router.push("/admin/datauser");
+        self.$router.push("/");
       }
     }
   }

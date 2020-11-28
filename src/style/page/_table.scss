@@ -2,70 +2,30 @@ th {
   cursor: pointer;
   padding: 2px;
 }
-td {
-  height: 1px;
-  padding: 6px;
+.table-responsive {
+  margin-bottom: 5px;
 }
-.table {
-  margin: 0;
-}
-table {
-  .buttonClass {
-    display: grid;
-    grid-template-columns: 20px 20px;
-    column-gap: 5px;
-  }
-}
-
 a {
   text-decoration: none;
-  color: black;
-}
-.route {
-  width: 300px;
-  margin: 20px 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  span {
-    margin: 0 auto;
-    cursor: pointer;
-  }
-}
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.grid-item {
-  &_left {
-    justify-self: start;
-  }
-  &_right {
-    justify-self: end;
-  }
-}
-.record {
-  margin: 20px;
+  color: $text-theme-alt;
 }
 span {
   margin: 5px;
   line-height: 1.4em;
 }
-.table {
+table.table {
   width: 100%;
-  // margin: 00;
+  margin: 0;
   vertical-align: middle;
+  border: none !important;
 }
-.top-right {
-  width: 400px;
-  justify-self: end;
-  margin: 0 30px 0 0;
-}
-.icon-top {
-  margin: 10px;
+.table td {
+  border: none !important;
+  height: 1px;
+  padding: 6px;
 }
 .outertable {
-  width: 95%;
-  margin: 10px 20px 10px 20px;
+  margin: 10px;
 }
 thead {
   border-top: 1px solid rgba($color: #219186, $alpha: 0.8);
@@ -73,5 +33,5 @@ thead {
   color: rgba($color: #219186, $alpha: 1);
 }
 tbody {
-  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.8);
+  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.2);
 }

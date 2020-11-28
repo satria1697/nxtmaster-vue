@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="btn btn-sm btn-theme" @click="click(data.id)">{{ name }}</div>
+    <div class="btn btn-sm btn-default" @click="click(data)">{{ name }}</div>
   </div>
 </template>
 

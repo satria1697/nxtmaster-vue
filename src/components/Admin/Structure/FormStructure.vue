@@ -38,6 +38,7 @@
                 @modal-closed="berhasil = true"
               />
               <delete-modal
+                :data="dataAll"
                 v-if="isDeleteModal"
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
@@ -114,14 +115,14 @@
               </div>
             </div>
             <div v-if="editId === null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset()">
+              <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="submit('register', null)"
               >
-                <i class="fas fa-save"></i> Submit
+                <i class="fas fa-save"></i> Simpan
               </button>
             </div>
             <div v-if="editId !== null" class="modal-footer">
@@ -129,10 +130,11 @@
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="submit('update', editId)"
               >
-                Update
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
               </button>
             </div>
           </div>

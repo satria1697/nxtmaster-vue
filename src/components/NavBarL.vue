@@ -17,7 +17,7 @@ export default {
         elemendId: "main-navbar",
         isUsingVueRouter: true,
         mobileBreakpoint: 992,
-        brandImage: require("@/assets/image/logo/nxtoffice-light.png"),
+        brandImage: require("@/assets/logo.png"),
         brandImageAltText: "brand-image",
         collapseButtonOpenColor: "#ffffff",
         collapseButtonCloseColor: "#ffffff",
@@ -26,98 +26,6 @@ export default {
         tooltipAnimationType: "shift-away",
         tooltipPlacement: "bottom",
         menuOptionsRight: [
-          {
-            type: "link",
-            iconLeft: '<i class="fas fa-cogs fa-2x"></i>',
-            arrowColor: "#ffffff",
-            subMenuOptions: [
-              {
-                type: "link",
-                text: "Umum",
-                path: { name: "umum" },
-                iconLeft: '<i class="fa fa-star fa-fw"></i>'
-              },
-              {
-                type: "hr"
-              },
-              {
-                type: "link",
-                text: "Hak Akses",
-                path: { name: "dataakses" },
-                iconLeft: '<i class="fas fa-puzzle-piece"></i>'
-              },
-              {
-                type: "link",
-                text: "Pengaturan Akses",
-                path: { name: "dataaksesmanager" },
-                iconLeft: '<i class="fas fa-universal-access"></i>'
-              },
-              {
-                type: "hr"
-              },
-              {
-                type: "link",
-                text: "Data Aplikasi",
-                path: { name: "dataaplikasi" },
-                iconLeft: '<i class="fas fa-th"></i>'
-              },
-              {
-                type: "link",
-                text: "Data Modul",
-                path: { name: "datamodul" },
-                iconLeft: '<i class="fas fa-box-open"></i>'
-              }
-              // {
-              //   type: "link",
-              //   text: "Api Klien",
-              //   path: { name: "dataapiklien" },
-              //   iconLeft: '<i class="fas fa-box"></i>'
-              // }
-            ]
-          },
-          {
-            type: "link",
-            iconLeft: '<i class="fas fa-users fa-2x"></i>',
-            arrowColor: "#ffffff",
-            subMenuOptions: [
-              {
-                type: "link",
-                text: "Data Pengguna",
-                path: { name: "datauser" },
-                iconLeft: '<i class="fas fa-user-friends"></i>'
-              },
-              {
-                type: "hr"
-              },
-              {
-                type: "link",
-                text: "Tingkatan Pengguna",
-                path: { name: "datalevel" },
-                iconLeft: '<i class="fas fa-users-cog"></i>'
-              },
-              {
-                type: "link",
-                text: "Pangkat dan Golongan",
-                path: { name: "datarank" },
-                iconLeft: '<i class="fas fa-map-marker-alt"></i>'
-              },
-              {
-                type: "hr"
-              },
-              {
-                type: "link",
-                text: "Struktur Organisasi",
-                path: { name: "datastructure" },
-                iconLeft: '<i class="fas fa-network-wired"></i>'
-              },
-              {
-                type: "link",
-                text: "Tingkatan Struktural",
-                path: { name: "datastructurelevel" },
-                iconLeft: '<i class="fas fa-project-diagram"></i>'
-              }
-            ]
-          },
           {
             type: "link",
             iconLeft: '<i class="fas fa-info-circle fa-2x"></i>',
@@ -232,7 +140,6 @@ nav {
   padding: 2px 0;
   -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  // box-shadow: 0px 0px 10px #000000;
   /deep/ .vnb__menu-options__option {
     margin: 0;
     &__link {

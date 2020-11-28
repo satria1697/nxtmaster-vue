@@ -37,6 +37,7 @@
       @modal-closed="closeModal"
     />
     <delete-modal
+      :data="dataAll"
       v-if="isDeleteModal"
       @modal-closed="isDeleteModal = false"
       @delete-data="deleteData"

@@ -14,35 +14,18 @@
             </div>
             <div class="modal-body">
               <user-modal
-                v-if="berhasil && uploaded"
-                titleProps="Data berhasil diunggah."
-                :textSuccess="true"
+                v-if="userModal"
+                :title="textTitle"
+                :textSuccess="berhasil"
+                :textDanger="!berhasil"
                 @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && updated"
-                titleProps="Data berhasil diperbaharui."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && deleted"
-                titleProps="Data berhasil dihapus."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="!berhasil"
-                titleProps="Terdapat Kesalahan Data"
-                :textDanger="true"
-                @modal-closed="berhasil = true"
               />
               <delete-modal
+                :data="dataAll"
                 v-if="isDeleteModal"
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
-              >
-              </delete-modal>
+              />
               <div class="container">
                 <div class="row">
                   <div v-if="editId === null" class="form form-group col-4">
@@ -76,19 +59,26 @@
               </div>
             </div>
             <div v-if="editId === null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset()">
+              <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-primary" v-on:click="submit()">
-                <i class="fas fa-save"></i> Submit
+              <button
+                class="btn btn-default"
+                v-on:click="register('submit', dataAll.id)"
+              >
+                <i class="fas fa-save"></i> Simpan
               </button>
             </div>
             <div v-if="editId !== null" class="modal-footer">
               <button class="btn btn-danger" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
-              <button class="btn btn-primary" v-on:click="update(editId)">
-                Update
+              <button
+                class="btn btn-default"
+                v-on:click="update('update', dataAll.id)"
+              >
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
               </button>
             </div>
           </div>
@@ -128,7 +118,8 @@ export default {
       uploaded: false,
       updated: false,
       deleted: false,
-      isDeleteModal: false
+      isDeleteModal: false,
+      userModal: false
     };
   },
   mounted() {
@@ -162,7 +153,7 @@ export default {
           });
       }
     },
-    submit() {
+    register(setup, id) {
       let self = this;
       let rawData = {
         id: self.dataAll.id,
@@ -172,57 +163,59 @@ export default {
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      Api.level
-        .register(formData)
-        .then(resp => {
-          if (resp.data.status === "success") {
-            self.reset();
-            self.berhasil = true;
-            self.uploaded = true;
-          } else {
+      if (setup === "submit") {
+        Api.level
+          .register(formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.textTitle = "Data berhasil diunggah";
+              self.berhasil = true;
+              self.userModal = true;
+            } else {
+              self.textTitle = "Input belum masuk database";
+              self.berhasil = false;
+              self.userModal = true;
+            }
+          })
+          .catch(err => {
+            self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
-          }
-        })
-        .catch(err => {
-          console.log(err.response);
-          self.berhasil = false;
-        });
-    },
-    update(id) {
-      let self = this;
-      let rawData = {
-        id: self.dataAll.id,
-        description: self.dataAll.description
-      };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
+            self.userModal = true;
+            console.log(err);
+          });
+      } else {
+        Api.level
+          .update(id, formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.textTitle = "Data berhasil diperbaharui";
+              self.berhasil = true;
+              self.userModal = true;
+            } else {
+              self.textTitle = "Input belum masuk database";
+              self.berhasil = false;
+              self.userModal = true;
+            }
+          })
+          .catch(err => {
+            self.textTitle = "Input data salah, silahkan cek kembali";
+            self.berhasil = false;
+            self.userModal = true;
+            console.log(err);
+          });
       }
-      Api.level
-        .update(id, formData)
-        .then(resp => {
-          if (resp.status === "error") {
-            self.berhasil = false;
-          } else {
-            self.berhasil = true;
-            self.updated = true;
-          }
-        })
-        .catch(err => {
-          self.berhasil = false;
-          console.log(err);
-        });
     },
     deleteData() {
       let self = this;
       Api.level
         .delete(self.dataAll.id)
         .then(resp => {
-          console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
-          self.isDeleteModal = false;
-          self.$emit("modal-closed");
+          if (resp.status === 204) {
+            self.berhasil = true;
+            self.deleted = true;
+            self.isDeleteModal = false;
+            self.$emit("modal-closed");
+          }
         })
         .catch(err => {
           console.log(err);
@@ -233,8 +226,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.pull-right {
-  margin: 8px 10px 0 0;
-}
-</style>
+<style lang="scss" scoped></style>

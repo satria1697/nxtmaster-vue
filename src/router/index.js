@@ -26,8 +26,8 @@ const routes = [
         meta: {
           requireAuth: true,
           title: "Home",
-          icon: "fas fa-home"
-          // closable: false
+          icon: "fas fa-home",
+          closable: false
         }
       },
       {

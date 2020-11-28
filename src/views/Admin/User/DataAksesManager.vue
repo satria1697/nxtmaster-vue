@@ -8,15 +8,16 @@
       @modal-closed="findModul"
     />
     <delete-modal
+      :data="dataAll"
       v-if="isDeleteModal"
       @modal-closed="isDeleteModal = false"
       @delete-data="(isDeletemodal = false), (isLoginModal = true)"
     />
-    <login-modal
+    <!-- <login-modal
       v-if="isLoginModal"
       @modal-closed="isLoginModal = false"
       @confirmed-login="deleteData(dataAll.id)"
-    />
+    /> -->
     <div class="container">
       <div class="row">
         <div class="col-3">
@@ -166,28 +167,29 @@
           </div>
           <div class="row">
             <div v-if="dataAll.id === null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset">
+              <button class="btn btn-default" v-on:click="reset">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="register('submit', null)"
               >
-                <i class="fas fa-save"></i> Submit
+                <i class="fas fa-save"></i> Simpan
               </button>
             </div>
             <div v-if="dataAll.id !== null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset">
+              <button class="btn btn-default" v-on:click="reset">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button class="btn btn-danger" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
-                class="btn btn-primary"
+                class="btn btn-default"
                 v-on:click="register('update', dataAll.id)"
               >
-                Update
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
               </button>
             </div>
           </div>
@@ -199,7 +201,7 @@
 
 <script>
 import DataModul from "../../../components/Admin/AksesManager/DataTableModul";
-import LoginModal from "../../../components/Admin/LoginConfirmation";
+// import LoginModal from "../../../components/Admin/LoginConfirmation";
 import DeleteModal from "../../../components/DeleteConfirmation";
 import api from "../../../api";
 // import store from "../../../store";
@@ -230,7 +232,7 @@ export default {
   components: {
     "data-modul": DataModul,
     "delete-modal": DeleteModal,
-    "login-modal": LoginModal,
+    // "login-modal": LoginModal,
     VJstree
   },
   data() {

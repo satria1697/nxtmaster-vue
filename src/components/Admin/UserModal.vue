@@ -12,7 +12,7 @@
                   'text-success': textSuccess
                 }"
               >
-                {{ titleProps }}
+                {{ title }}
               </span>
             </div>
             <div class="modal-footer">
@@ -30,7 +30,7 @@
 // import store from "../store";
 export default {
   props: {
-    titleProps: {
+    title: {
       type: String,
       required: true
     },

@@ -12,7 +12,7 @@
             id="user"
             class="form-control bottom"
             type="text"
-            v-model="username"
+            v-model="dataLogin.username"
             @keyup.enter="login()"
             @blur="getDataAkses()"
           />
@@ -25,7 +25,7 @@
             id="password"
             class="form-control bottom"
             type="password"
-            v-model="password"
+            v-model="dataLogin.password"
             @keyup.enter="login()"
           />
         </div>
@@ -36,7 +36,7 @@
           <select
             class="form-control bottom custom-select"
             id="formAkses"
-            v-model="akses"
+            v-model="dataLogin.akses"
           >
             <option :value="data.id" v-for="data in dataAkses" :key="data.id">{{
               data.description
@@ -72,12 +72,17 @@ import api from "../api";
 import Api from "../api";
 import store from "../store";
 
+function initialDataLogin() {
+  return {
+    username: "",
+    password: "",
+    akses: null
+  };
+}
 export default {
   data() {
     return {
-      username: "",
-      password: "",
-      akses: null,
+      dataLogin: initialDataLogin(),
       berhasil: true,
       masuk: false,
       empty: false,
@@ -89,16 +94,16 @@ export default {
   methods: {
     login() {
       let self = this;
-      if (self.username === "" || self.password === "") {
+      if (self.dataLogin.username === "" || self.dataLogin.password === "") {
         self.empty = true;
       } else {
         self.berhasil = true;
         self.empty = false;
         self.masuk = true;
         let rawData = {
-          username: self.username,
-          password: self.password,
-          akses: self.akses
+          username: self.dataLogin.username,
+          password: self.dataLogin.password,
+          akses: self.dataLogin.akses
         };
         const formData = new FormData();
         for (let key in rawData) {
@@ -122,7 +127,6 @@ export default {
                   localStorage.getItem("token"),
                   secretKey
                 );
-                console.log(self.$jwt);
                 let username = jwtDecode.username;
                 let fullname = jwtDecode.fullname;
                 let levelid = jwtDecode.levelid;
@@ -135,19 +139,23 @@ export default {
                   id,
                   akses
                 });
+                if (akses === "0") {
+                  store.commit("sideBarChange");
+                }
                 store.commit("authenChange");
                 if (store.state.isAuthenticated === true) {
-                  try {
-                    var storedTab = JSON.parse(
-                      localStorage.getItem("tabState")
-                    );
-                    self.$router.push({
-                      name: storedTab[0].name,
-                      label: storedTab[0].label
-                    });
-                  } catch {
-                    self.$router.push("/");
-                  }
+                  // try {
+                  //   var storedTab = JSON.parse(
+                  //     localStorage.getItem("tabState")
+                  //   );
+                  //   self.$router.push({
+                  //     name: storedTab[0].name,
+                  //     label: storedTab[0].label
+                  //   });
+                  // } catch {
+                  //   self.$router.push("/");
+                  // }
+                  self.$router.push("/");
                 }
               }
             } else {
@@ -155,22 +163,28 @@ export default {
               self.berhasil = false;
             }
           })
-          .catch(err => {
-            console.log(err.response.data);
-            if (err.response.data.error === "akses_required") {
-              self.errorText = "Tidak Memiliki Akses";
-            } else {
-              self.errorText = "ID atau Password yang dimasukan salah";
-            }
+          .catch(() => {
+            // console.log(err.response.data);
+            // if (err.response.data.error === "akses_required") {
+            //   self.errorText = "Tidak Memiliki Akses";
+            // } else if (err.response.data.error === "not_active") {
+            //   self.errorText =
+            //     "Username belum aktif, silahkan hubungi administrator";
+            // } else {
+            //   self.errorText = "Username atau Password yang dimasukan salah";
+            // }
+            self.errorText = "Akses Ditolak";
             self.berhasil = false;
             self.masuk = false;
+            self.dataLogin = initialDataLogin();
           });
       }
     },
     getDataAkses() {
       let self = this;
       let params = {
-        username: self.username
+        username: self.dataLogin.username,
+        login: true
       };
       api.auth
         .akses(params)
@@ -180,10 +194,15 @@ export default {
             self.dataAkses = [
               {
                 id: 0,
-                description: "#Tidak ada akses"
+                description: "#Tidak ada akses",
+                active: 1
               }
             ];
           }
+          self.dataAkses = self.dataAkses.filter(function(data) {
+            return data.active === 1;
+          });
+          self.dataLogin.akses = self.dataAkses[0].id;
         })
         .catch(err => {
           console.log(err);

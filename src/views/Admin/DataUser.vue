@@ -2,27 +2,21 @@
   <div class="detail">
     <Form
       v-if="isModal"
-      :editIdProps="editId"
-      :dataAkses="dataAkses"
+      :editId="editId"
       titleProps="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
     <div class="container">
       <div class="row">
-        <div class="col">
-          <h3>
-            Tabel Data pengguna
-          </h3>
-        </div>
-        <div class="col-2">
-          <i
-            v-on:click="changeModal(null)"
-            class="fas fa-plus-circle fa-2x pointer icon-top"
-          ></i>
-          <i
-            v-on:click="getData(filter)"
-            class="fas fa-sync fa-2x pointer icon-top"
-          ></i>
+        <div class="col-md">
+          <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+            <i class="fas fa-sync"></i>
+            Perbaharui Data
+          </div>
+          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+            <i class="fas fa-plus-circle"></i>
+            Tambah
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +79,7 @@ export default {
         },
         {
           label: "Pangkat",
-          name: "structure.description",
+          name: "structure.label",
           orderable: true
         },
         {
@@ -94,22 +88,22 @@ export default {
           orderable: true
         },
         {
-          label: "Edit",
+          label: "",
           name: "Edit",
           orderable: false,
           event: "click",
           handler: self.changeModal,
           component: edit,
-          width: 5
+          width: 1
         },
         {
-          label: "Delete",
+          label: "",
           name: "Delete",
           oderable: false,
           event: "click",
           handler: self.deleteData,
           component: actiondelete,
-          width: 5
+          width: 1
         }
       ],
       classes: {
@@ -142,18 +136,6 @@ export default {
         dir: "ASC"
       };
       self.getData(params);
-      self.getAksesData();
-    },
-    getAksesData(params) {
-      let self = this;
-      Api.akses
-        .filter(params)
-        .then(resp => {
-          self.dataAkses = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
     },
     getData(params) {
       let self = this;

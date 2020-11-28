@@ -16,7 +16,6 @@
                 :classes="classes"
                 :columns="columns"
                 :data="dataAll"
-                :per-page="['5']"
                 @on-table-props-changed="reloadTable"
                 class="outertable"
               >
@@ -90,7 +89,7 @@ export default {
       const params = {
         page: 1,
         find: "",
-        length: 5,
+        length: 10,
         orderColumn: "id",
         orderBy: "ASC"
       };
@@ -136,6 +135,6 @@ export default {
 <style lang="scss" scoped>
 .modal-dialog {
   margin-top: 100px;
-  max-width: 500px;
+  max-width: 640px;
 }
 </style>

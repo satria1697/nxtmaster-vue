@@ -9,28 +9,26 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h3>Tabel {{ this.$route.name }}</h3>
-        </div>
-        <div class="col-2">
-          <i
-            v-on:click="changeModal(null)"
-            class="fas fa-plus-circle fa-2x pointer icon-top"
-          ></i>
-          <i
-            v-on:click="getData(filter)"
-            class="fas fa-sync fa-2x pointer icon-top"
-          ></i>
+          <!-- <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+            <i class="fas fa-sync"></i>
+            Perbaharui Data
+          </div> -->
+          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+            <i class="fas fa-plus-circle"></i>
+            Tambah
+          </div>
         </div>
       </div>
     </div>
-    <data-table
+    <!-- <data-table
       :columns="columns"
       :data="dataAll"
       :classes="classes"
       @on-table-props-changed="reloadTable"
       class="outertable"
-    >
-    </data-table>
+    > -->
+    <h1 class="display-3">Struktur Organisasi</h1>
+    <vue2-org-tree :data="dataStructure" />
   </div>
 </template>
 
@@ -108,7 +106,8 @@ export default {
         }
       },
       isModal: false,
-      editId: null
+      editId: null,
+      dataStructure: {}
     };
   },
   created() {
@@ -120,11 +119,10 @@ export default {
   methods: {
     init() {
       let self = this;
-      self.openTab(self.$route.name, self.$route.name);
       const params = {
         page: 1,
         find: "",
-        length: 10,
+        // length: 10,
         orderColumn: "id",
         orderBy: "ASC"
       };
@@ -133,15 +131,16 @@ export default {
     getData(params) {
       let self = this;
       self.isLoading = true;
-      self.filter.page = params.page;
-      self.filter.find = params.find;
-      self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      // self.filter.page = params.page;
+      // self.filter.find = params.find;
+      // self.filter.length = params.length;
+      // self.filter.orderColumn = params.orderColumn;
+      // self.filter.orderBy = params.orderBy;
       Api.structure
         .filter(params)
         .then(res => {
-          self.dataAll = res.data;
+          // self.dataAll = res.data;
+          self.dataStructure = res.data.data;
           self.isLoading = false;
         })
         .catch(err => {
@@ -199,4 +198,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import url(https://unpkg.com/vue2-org-tree@1.3.4/dist/style.css);
+</style>

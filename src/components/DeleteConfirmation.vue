@@ -6,15 +6,15 @@
           <div class="modal-content">
             <div class="modal-body">
               <span class="font-weight-bold">
-                Apakah anda yakin akan menghapus entry ini?
+                Apakah anda yakin akan menghapus entry dengan ID {{ data.id }}?
               </span>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-seconday" @click="closeModal()">
-                Cancel
+              <button class="btn btn-default" @click="closeModal()">
+                <i class="fas fa-times"></i> Cancel
               </button>
-              <button class="btn btn-danger" @click="deleteYes()">
-                Delete
+              <button class="btn btn-default" @click="deleteYes()">
+                <i class="fas fa-trash"></i> Delete
               </button>
             </div>
           </div>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import store from "@/store";
 export default {
   props: {
     data: {}
@@ -32,11 +33,20 @@ export default {
   methods: {
     closeModal() {
       let self = this;
+      if (store.state.isConfirmed === true) {
+        store.commit("confirmedChange");
+      }
       self.$emit("modal-closed");
     },
     deleteYes() {
       let self = this;
-      self.$emit("delete-data");
+      if (store.state.isConfirmed === true) {
+        store.commit("confirmedChange");
+        self.$emit("delete-data");
+        self.closeModal();
+      } else {
+        store.commit("loginConfirmedChange");
+      }
     }
   }
 };

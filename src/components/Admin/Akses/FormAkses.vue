@@ -38,6 +38,7 @@
                 @modal-closed="berhasil = true"
               />
               <delete-modal
+                :data="dataAll"
                 v-if="isDeleteModal"
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
@@ -77,20 +78,30 @@
                 </div>
               </div>
             </div>
-            <div v-if="editId === null" class="modal-footer">
-              <button class="btn btn-warning" v-on:click="reset()">
+            <div v-if="dataAll.id === null" class="modal-footer">
+              <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-primary" v-on:click="submit()">
-                <i class="fas fa-save"></i> Submit
+              <button
+                class="btn btn-default"
+                v-on:click="register('submit', null)"
+              >
+                <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
-              <button class="btn btn-danger" v-on:click="deleteData(editId)">
+            <div v-if="dataAll.id !== null" class="modal-footer">
+              <button
+                class="btn btn-danger"
+                v-on:click="deleteData(dataAll.id)"
+              >
                 <i class="fas fa-trash"></i> Delete
               </button>
-              <button class="btn btn-primary" v-on:click="update(editId)">
-                Update
+              <button
+                class="btn btn-default"
+                v-on:click="register('update', dataAll.id)"
+              >
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
               </button>
             </div>
           </div>
@@ -165,56 +176,50 @@ export default {
           });
       }
     },
-    submit() {
+    register(status, id) {
       let self = this;
+      let active = self.dataAll.active === true ? 1 : 0;
       let rawData = {
         description: self.dataAll.description,
-        active: self.dataAll.active
+        active: active
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      Api.akses
-        .register(formData)
-        .then(resp => {
-          if (resp.data.status === "success") {
-            self.reset();
-            self.berhasil = true;
-            self.uploaded = true;
-          } else {
+      if (status === "register") {
+        Api.akses
+          .register(formData)
+          .then(resp => {
+            if (resp.data.status === "success") {
+              self.reset();
+              self.berhasil = true;
+              self.uploaded = true;
+            } else {
+              self.berhasil = false;
+            }
+          })
+          .catch(err => {
+            console.log(err.response);
             self.berhasil = false;
-          }
-        })
-        .catch(err => {
-          console.log(err.response);
-          self.berhasil = false;
-        });
-    },
-    update(id) {
-      let self = this;
-      let rawData = {
-        description: self.dataAll.description,
-        active: self.dataAll.active
-      };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
+          });
+      } else {
+        Api.akses
+          .update(id, formData)
+          .then(resp => {
+            if (resp.status === "error") {
+              self.berhasil = false;
+            } else {
+              self.berhasil = true;
+              self.updated = true;
+            }
+          })
+          .catch(err => {
+            if (err.response.error === "") {
+              self.berhasil = false;
+            }
+          });
       }
-      Api.akses
-        .update(id, formData)
-        .then(resp => {
-          if (resp.status === "error") {
-            self.berhasil = false;
-          } else {
-            self.berhasil = true;
-            self.updated = true;
-          }
-        })
-        .catch(err => {
-          self.berhasil = false;
-          console.log(err);
-        });
     },
     deleteData(id) {
       let self = this;

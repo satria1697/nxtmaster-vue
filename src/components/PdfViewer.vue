@@ -10,10 +10,10 @@
         type="number"
         class="form-control-row"
       /><span>/{{ numPages }} </span>
-      <button @click="rotate += 90" class="form-control-row btn btn-primary">
+      <button @click="rotate += 90" class="form-control-row btn btn-default">
         &#x27F3;
       </button>
-      <button @click="rotate -= 90" class="form-control-row btn btn-primary">
+      <button @click="rotate -= 90" class="form-control-row btn btn-default">
         &#x27F2;
       </button>
       <button @click="$refs.pdf.print()" class="form-control-row btn btn-info">

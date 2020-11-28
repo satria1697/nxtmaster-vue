@@ -1,16 +1,18 @@
+@import "../abstracts/variables.scss";
+
 .detail {
   // margin-top: 10px;
-  padding-top: 10px;
+  padding: 10px 10px 0 10px;
   // margin-right: 15px;
   // margin-bottom: 50px;
-  padding-left: 10px;
-  background-color: white;
-  min-height: 80vh;
+  background-color: $text-theme;
+  min-height: 85vh;
   // border: 1px solid rgba(0, 0, 0, 0.4);
   // border-radius: 7px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   // margin-top: -1px;
   z-index: -3;
+  overflow: auto;
 }
 .buttonDownload {
   margin: 10px;
