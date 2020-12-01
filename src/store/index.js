@@ -14,9 +14,7 @@ export default new Vuex.Store({
     active: 0,
     editId: 0,
     tabState: [],
-    token: "" || localStorage.getItem("token"),
-    isConfirmed: false,
-    isLoginConfirmed: false
+    token: "" || localStorage.getItem("token")
   },
   getters: {},
   mutations: {
@@ -26,6 +24,10 @@ export default new Vuex.Store({
       } else {
         state.isSideBar = true;
       }
+      sessionStorage.setItem(
+        "sidebar" + ":" + state.login.username + ":" + state.login.akses,
+        state.isSideBar
+      );
     },
     modalChange: state => {
       if (state.isModal === false) {
@@ -59,20 +61,6 @@ export default new Vuex.Store({
     },
     closeExpired: state => {
       state.isExpired = false;
-    },
-    confirmedChange: state => {
-      if (state.isConfirmed === false) {
-        state.isConfirmed = true;
-      } else {
-        state.isConfirmed = false;
-      }
-    },
-    loginConfirmedChange: state => {
-      if (state.isLoginConfirmed === false) {
-        state.isLoginConfirmed = true;
-      } else {
-        state.isLoginConfirmed = false;
-      }
     }
   },
   actions: {},

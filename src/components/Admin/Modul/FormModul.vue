@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-theme">
-              <span class="font-weight-bold">{{ titleProps }}</span>
+              <span class="font-weight-bold">{{ title }}</span>
               <i
                 class="fa fa-window-close pull-right pointer"
                 aria-hidden="true"
@@ -15,25 +15,25 @@
             <div class="modal-body">
               <user-modal
                 v-if="berhasil && uploaded"
-                titleProps="Data berhasil diunggah."
+                title="Data berhasil diunggah."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
               <user-modal
                 v-if="berhasil && updated"
-                titleProps="Data berhasil diperbaharui."
+                title="Data berhasil diperbaharui."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
               <user-modal
                 v-if="berhasil && deleted"
-                titleProps="Data berhasil dihapus."
+                title="Data berhasil dihapus."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
               <user-modal
                 v-if="!berhasil"
-                titleProps="Terdapat Kesalahan Data"
+                title="Terdapat Kesalahan Data"
                 :textDanger="true"
                 @modal-closed="berhasil = true"
               />
@@ -115,7 +115,7 @@
               </button>
             </div>
             <div v-if="editId !== null" class="modal-footer">
-              <button class="btn btn-danger" v-on:click="isDeleteModal = true">
+              <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button class="btn btn-default" v-on:click="update(editId)">
@@ -131,25 +131,18 @@
 </template>
 
 <script>
-import UserModal from "../../Admin/UserModal.vue";
-import DeleteModal from "../../DeleteConfirmation";
 import Api from "../../../api";
 
 export default {
-  components: {
-    "user-modal": UserModal,
-    "delete-modal": DeleteModal
-  },
   props: {
-    editIdProps: {
+    editId: {
       type: Number
     },
-    titleProps: {
+    title: {
       type: String
     }
   },
   data() {
-    let self = this;
     return {
       dataAll: {
         id: null,
@@ -158,7 +151,6 @@ export default {
         description: "",
         path: ""
       },
-      editId: self.editIdProps,
       berhasil: true,
       uploaded: false,
       updated: false,

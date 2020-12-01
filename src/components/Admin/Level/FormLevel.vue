@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-theme">
-              <span class="font-weight-bold">{{ titleProps }}</span>
+              <span class="font-weight-bold">{{ title }}</span>
               <i
                 class="fa fa-window-close pull-right pointer"
                 aria-hidden="true"
@@ -14,7 +14,7 @@
             </div>
             <div class="modal-body">
               <user-modal
-                v-if="userModal"
+                v-if="isUserModal"
                 :title="textTitle"
                 :textSuccess="berhasil"
                 :textDanger="!berhasil"
@@ -70,7 +70,7 @@
               </button>
             </div>
             <div v-if="editId !== null" class="modal-footer">
-              <button class="btn btn-danger" v-on:click="isDeleteModal = true">
+              <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
@@ -89,37 +89,29 @@
 </template>
 
 <script>
-import UserModal from "../../Admin/UserModal.vue";
-import DeleteModal from "../../DeleteConfirmation";
 import Api from "../../../api";
 
 export default {
-  components: {
-    "user-modal": UserModal,
-    "delete-modal": DeleteModal
-  },
   props: {
-    editIdProps: {
+    editId: {
       type: Number
     },
-    titleProps: {
+    title: {
       type: String
     }
   },
   data() {
-    let self = this;
     return {
       dataAll: {
         id: null,
         description: ""
       },
-      editId: self.editIdProps,
       berhasil: true,
       uploaded: false,
       updated: false,
       deleted: false,
       isDeleteModal: false,
-      userModal: false
+      isUserModal: false
     };
   },
   mounted() {
@@ -168,19 +160,19 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diunggah";
+              self.textTitle = "Data berhasil disimpan";
               self.berhasil = true;
-              self.userModal = true;
+              self.isUserModal = true;
             } else {
               self.textTitle = "Input belum masuk database";
               self.berhasil = false;
-              self.userModal = true;
+              self.isUserModal = true;
             }
           })
           .catch(err => {
             self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
-            self.userModal = true;
+            self.isUserModal = true;
             console.log(err);
           });
       } else {
@@ -190,17 +182,17 @@ export default {
             if (resp.data.status === "success") {
               self.textTitle = "Data berhasil diperbaharui";
               self.berhasil = true;
-              self.userModal = true;
+              self.isUserModal = true;
             } else {
               self.textTitle = "Input belum masuk database";
               self.berhasil = false;
-              self.userModal = true;
+              self.isUserModal = true;
             }
           })
           .catch(err => {
             self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
-            self.userModal = true;
+            self.isUserModal = true;
             console.log(err);
           });
       }

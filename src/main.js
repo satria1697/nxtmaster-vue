@@ -17,10 +17,16 @@ import "vue-navigation-bar/dist/vue-navigation-bar.css";
 
 import Vue2OrgTree from "vue2-org-tree";
 
-import VueNestable from "vue-nestable";
+// import VueNestable from "vue-nestable";
 
 import VueListPicker from "vue-list-picker";
 // import "vue-org-tree/styles/org-tree.less";
+
+// import Loading from "vue-loading-overlay";
+// import "vue-loading-overlay/dist/vue-loading.css";
+
+import UserModal from "./components/UserModal.vue";
+import DeleteModal from "./components/DeleteConfirmation";
 
 Vue.config.productionTip = false;
 
@@ -34,9 +40,14 @@ Vue.use(Vue2OrgTree);
 
 Vue.component("vue-navigation-bar", VueNavigationBar);
 
-Vue.use(VueNestable);
+// Vue.use(VueNestable);
 
 Vue.use(VueListPicker);
+
+// Vue.use("loading", Loading);
+
+Vue.component("user-modal", UserModal);
+Vue.component("delete-modal", DeleteModal);
 
 new Vue({
   router,

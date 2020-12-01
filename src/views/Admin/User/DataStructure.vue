@@ -2,8 +2,8 @@
   <div class="detail">
     <Form
       v-if="isModal"
-      :editIdProps="editId"
-      titleProps="Form Pengisian Data Pengguna"
+      :editId="editId"
+      title="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
     <div class="container">

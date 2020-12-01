@@ -63,13 +63,6 @@ export default {
     sidebar() {
       store.commit("sideBarChange");
     },
-    computedClass(routeName) {
-      let className = "isActive";
-      let self = this;
-      if (routeName === self.$route.name) {
-        return className;
-      }
-    },
     getDataRootId(id) {
       let self = this;
       api.aksesmanager
@@ -96,7 +89,6 @@ export default {
         .filterParent(params)
         .then(resp => {
           self.dataSidebar = resp.data.data;
-          // self.dataChild = resp.data.dataChild;
         })
         .catch(err => {
           console.log(err);
@@ -104,11 +96,13 @@ export default {
     },
     goTo(payload) {
       let self = this;
-      self.$router
-        .push(
-          "/" + payload.data.application.path + "/" + payload.data.modul.path
-        )
-        .catch(() => {});
+      if (payload.data.rolelevelid === 3) {
+        self.$router
+          .push(
+            "/" + payload.data.application.path + "/" + payload.data.modul.path
+          )
+          .catch(() => {});
+      }
     }
   }
 };

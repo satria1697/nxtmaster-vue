@@ -257,10 +257,7 @@ export default {
     self.init();
   },
   methods: {
-    init() {
-      let self = this;
-      self.openTab(self.$route.name, self.$route.name);
-    },
+    init() {},
     isModal() {
       let self = this;
       return self.$store.state.isModal;
@@ -359,22 +356,6 @@ export default {
         self.last = true;
       } else {
         self.last = false;
-      }
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
       }
     },
     changeOrder(column) {

@@ -1,6 +1,13 @@
 <template>
   <div class="bg-theme login-page">
     <span></span>
+    <user-modal
+      v-if="isUserModal"
+      :title="textTitle"
+      :textSuccess="berhasil"
+      :textDanger="!berhasil"
+      @modal-closed="isUserModal = false"
+    />
     <div class="login-container container">
       <div class="form-group row">
         <h1 class="text-dark display-4">Login</h1>
@@ -54,12 +61,6 @@
           </button>
         </div>
       </div>
-      <div v-if="!berhasil" class="text-danger">
-        <span>{{ errorText }}</span>
-      </div>
-      <div v-if="empty" class="text-danger">
-        <span>Masukan username dan password</span>
-      </div>
     </div>
     <div class="fixed-bottom bg-theme">
       <h1 class="display-1">NXTOffice4</h1>
@@ -70,6 +71,7 @@
 <script>
 import api from "../api";
 import Api from "../api";
+import UserModal from "../components/UserModal.vue";
 import store from "../store";
 
 function initialDataLogin() {
@@ -80,6 +82,7 @@ function initialDataLogin() {
   };
 }
 export default {
+  components: { UserModal },
   data() {
     return {
       dataLogin: initialDataLogin(),
@@ -87,7 +90,8 @@ export default {
       masuk: false,
       empty: false,
       dataAkses: [],
-      errorText: ""
+      textTitle: "",
+      isUserModal: false
     };
   },
   mounted() {},
@@ -95,11 +99,12 @@ export default {
     login() {
       let self = this;
       if (self.dataLogin.username === "" || self.dataLogin.password === "") {
-        self.empty = true;
+        // self.empty = true;
+        self.isUserModal = true;
+        self.textTitle = "Username dan Password tidak boleh kosong";
+        self.berhasil = false;
       } else {
         self.berhasil = true;
-        self.empty = false;
-        self.masuk = true;
         let rawData = {
           username: self.dataLogin.username,
           password: self.dataLogin.password,
@@ -139,28 +144,30 @@ export default {
                   id,
                   akses
                 });
-                if (akses === "0") {
+                if (
+                  sessionStorage.getItem(
+                    "sidebar" + ":" + username + ":" + akses
+                  ) === true
+                ) {
+                  store.commit("sideBarChange");
+                } else if (akses === "0") {
                   store.commit("sideBarChange");
                 }
                 store.commit("authenChange");
-                if (store.state.isAuthenticated === true) {
-                  // try {
-                  //   var storedTab = JSON.parse(
-                  //     localStorage.getItem("tabState")
-                  //   );
-                  //   self.$router.push({
-                  //     name: storedTab[0].name,
-                  //     label: storedTab[0].label
-                  //   });
-                  // } catch {
-                  //   self.$router.push("/");
-                  // }
+                let tabs = sessionStorage.getItem(
+                  "tab" + ":" + username + ":" + akses
+                );
+                if (tabs === null) {
                   self.$router.push("/");
+                } else {
+                  self.$router.push(tabs);
                 }
               }
             } else {
-              self.masuk = false;
               self.berhasil = false;
+              self.isUserModal = true;
+              self.textTitle = "Akses Ditolak";
+              self.dataLogin = initialDataLogin();
             }
           })
           .catch(() => {
@@ -173,9 +180,9 @@ export default {
             // } else {
             //   self.errorText = "Username atau Password yang dimasukan salah";
             // }
-            self.errorText = "Akses Ditolak";
             self.berhasil = false;
-            self.masuk = false;
+            self.isUserModal = true;
+            self.textTitle = "Akses Ditolak";
             self.dataLogin = initialDataLogin();
           });
       }
@@ -219,7 +226,7 @@ export default {
 }
 .login-container {
   width: 400px;
-  height: 310px;
+  height: 250px;
   margin: 100px auto;
   padding: 10px 30px;
   background-color: white;

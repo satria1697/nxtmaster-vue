@@ -5,7 +5,10 @@
         <div class="img-container">
           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
           <img v-else src="@/assets/image/table/blank_avatar.png" />
-          <div class="form-group">
+          <div
+            class="form-group"
+            v-if="this.$store.getters['getLevelId'] === 1"
+          >
             <label for="fileInputForm">
               <span class="fa-stack fa-2x pointer">
                 <i class="fa fa-circle fa-stack-2x" aria-hidden="true"></i>
@@ -25,9 +28,9 @@
           </div>
         </div>
       </div>
-      <div class="col-9">
+      <div class="col-8">
         <div class="row">
-          <div class="form form-group col-8">
+          <div class="form form-group col-6">
             <label for="formHeader1" class="top">Header 1</label>
             <input
               id="formHeader1"
@@ -39,7 +42,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-8">
+          <div class="form form-group col-6">
             <label for="formHeader2" class="top">Header 2</label>
             <input
               id="formHeader2"
@@ -51,7 +54,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-8">
+          <div class="form form-group col-6">
             <label for="formCode" class="top">Kode Perusahaan</label>
             <input
               id="formCode"
@@ -75,7 +78,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-7">
+          <div class="form form-group col-5">
             <label for="formAlamat" class="top">Alamat</label>
             <input
               id="formAlamat"
@@ -85,7 +88,7 @@
               v-on:focus="resetSpan()"
             />
           </div>
-          <div class="form form-group col-4">
+          <div class="form form-group col-3">
             <label for="formCity" class="top">Kota/Kabupaten</label>
             <input
               id="formCity"
@@ -128,6 +131,14 @@
               v-model="dataAll.companyemail"
               v-on:focus="resetSpan()"
             />
+          </div>
+        </div>
+        <div class="row" v-if="this.$store.getters['getLevelId'] === 1">
+          <div class="modal-footer">
+            <button class="btn btn-default" v-on:click="register(1)">
+              <i class="fas fa-save"></i>
+              Simpan Perubahan
+            </button>
           </div>
         </div>
       </div>
@@ -188,6 +199,50 @@ export default {
         self.dataAll.avatar = image64;
       };
       reader.readAsDataURL(image);
+    },
+    register(id) {
+      let self = this;
+      let rawData = {
+        header1: self.dataAll.header1,
+        header2: self.dataAll.header2,
+        companycode: self.dataAll.companycode,
+        companyname: self.dataAll.companyname,
+        companyaddress: self.dataAll.companyaddress,
+        companycity: self.dataAll.companycity,
+        companyphone: self.dataAll.companyphone,
+        companyfax: self.dataAll.companyfax,
+        companyemail: self.dataAll.companyemail,
+        companyfacebookid: self.dataAll.companyfacebookid,
+        companytwitterid: self.dataAll.companytwitterid,
+        avatar: self.dataAll.avatar
+      };
+      let formData = new FormData();
+      for (let key in rawData) {
+        formData.append(key, rawData[key]);
+      }
+      api.umum
+        .update(id, formData)
+        .then(resp => {
+          if (resp.data.status === "success") {
+            self.textTitle = "Data berhasil disimpan";
+            self.berhasil = true;
+            self.isUserModal = true;
+          } else {
+            self.berhasil = false;
+            self.textTitle = "Terjadi kesalahan pada server";
+            self.isUserModal = true;
+          }
+        })
+        .catch(err => {
+          if (err.status === 422) {
+            self.textTitle =
+              err.response.data.error[Object.keys(err.response.data.error)[0]];
+          } else {
+            self.textTitle = "Kesalahan isian, silahkan coba lagi";
+          }
+          self.berhasil = false;
+          self.isUserModal = true;
+        });
     }
   }
 };
@@ -205,5 +260,8 @@ export default {
     width: 200px;
     height: 200px;
   }
+}
+.detail {
+  margin-top: 10px;
 }
 </style>

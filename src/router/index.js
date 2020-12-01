@@ -171,10 +171,19 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // let self = this;
   if (to.meta.requireAuth) {
     if (store.state.isAuthenticated === false) {
       next("/login");
     } else {
+      sessionStorage.setItem(
+        "tab" +
+          ":" +
+          store.getters["getUsername"] +
+          ":" +
+          store.getters["getAkses"],
+        to.path
+      );
       next();
     }
   } else next();

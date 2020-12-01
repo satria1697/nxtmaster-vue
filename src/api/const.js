@@ -86,11 +86,11 @@ const api = {
     Get: "/api/v1/auth/rolelevel/data"
   },
   umum: {
-    Get: "/api/v1/auth/option/data",
-    GetId: "/api/v1/auth/option/{id}",
-    Register: "/api/v1/auth/option/register",
-    Update: "/api/v1/auth/option/update/{id}",
-    Delete: "/api/v1/auth/option/delete/{id}"
+    Get: "/api/admin/option/data",
+    GetId: "/api/admin/option/{id}",
+    Register: "/api/admin/option/register",
+    Update: "/api/admin/option/update/{id}",
+    Delete: "/api/admin/option/delete/{id}"
   },
   aksesuser: {
     Get: "/api/admin/aksesuser/data",

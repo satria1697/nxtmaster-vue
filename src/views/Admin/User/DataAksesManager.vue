@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <data-modul
-      titleProps="Modul"
+      title="Modul"
       :appIdProps="dataAll.application.id"
       v-if="isModulModal"
       @id-selected="getModulId"
@@ -42,7 +42,7 @@
             <div class="form form-group col-5">
               <label for="formDataAkses" class="top">Akses</label>
               <select
-                class="form-control bottom"
+                class="form-control bottom custom-select"
                 id="formDataAkses"
                 v-model="idAkses"
                 value="idAkses"
@@ -157,7 +157,7 @@
             />
             <div class="input-group-append">
               <button
-                class="btn btn-outline-secondary"
+                class="btn btn-default"
                 type="button"
                 v-on:click="findModul()"
               >
@@ -181,7 +181,7 @@
               <button class="btn btn-default" v-on:click="reset">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-danger" v-on:click="isDeleteModal = true">
+              <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
@@ -201,10 +201,7 @@
 
 <script>
 import DataModul from "../../../components/Admin/AksesManager/DataTableModul";
-// import LoginModal from "../../../components/Admin/LoginConfirmation";
-import DeleteModal from "../../../components/DeleteConfirmation";
 import api from "../../../api";
-// import store from "../../../store";
 import VJstree from "vue-jstree";
 
 function initialDataAll() {
@@ -231,8 +228,6 @@ function initialDataAll() {
 export default {
   components: {
     "data-modul": DataModul,
-    "delete-modal": DeleteModal,
-    // "login-modal": LoginModal,
     VJstree
   },
   data() {

@@ -13,36 +13,7 @@
 </template>
 
 <script>
-import store from "../store";
-
-export default {
-  mounted() {
-    let self = this;
-    self.init();
-  },
-  methods: {
-    init() {
-      let self = this;
-      self.openTab(self.$route.name, "Not Found");
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped></style>

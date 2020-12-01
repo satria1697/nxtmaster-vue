@@ -1,11 +1,11 @@
 <template>
-  <transition class="modal fade" tabindex="-1" role="dialog" v-if="!isLoading">
+  <transition class="modal" tabindex="-1" role="dialog" v-if="!isLoading">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-theme">
-              <span class="font-weight-bold">{{ titleProps }}</span>
+              <span class="font-weight-bold">{{ title }}</span>
               <i
                 class="fa fa-window-close pull-right pointer"
                 aria-hidden="true"
@@ -14,34 +14,28 @@
             </div>
             <div class="modal-body">
               <data-table-level
-                titleProps="User Level"
+                title="User Level"
                 v-if="isLevelModal"
                 @id-selected="levelSelected"
                 @modal-closed="findLevel"
               />
               <data-table-structure
-                titleProps="User Structure"
+                title="User Structure"
                 v-if="isStructureModal"
                 @id-selected="structureSelected"
                 @modal-closed="findStructure"
               />
               <data-table-rank
-                titleProps="User Rank"
+                title="User Rank"
                 v-if="isRankModal"
                 @id-selected="rankSelected"
                 @modal-closed="findRank"
               />
               <user-modal
-                v-if="userModal"
+                v-if="isUserModal"
                 :title="textTitle"
                 :textSuccess="berhasil"
                 :textDanger="!berhasil"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="unauthorized"
-                title="Tidak memiliki otoritas untuk merubah data."
-                :textDanger="true"
                 @modal-closed="closeModal"
               />
               <delete-modal
@@ -292,8 +286,8 @@
                         content-attr="description"
                         class="akses col"
                         button-class="btn btn-default btn-sm"
-                        min-height="100px"
-                        height="100px"
+                        min-height="150px"
+                        height="150px"
                         :titleCentered="false"
                       />
                     </div>
@@ -339,8 +333,6 @@ import Api from "../../api";
 import DataTableLevel from "../Admin/DataTableLevel.vue";
 import DataTableStructure from "../Admin/DataTableStructure.vue";
 import DataTableRank from "../Admin/DataTableRank.vue";
-import UserModal from "../Admin/UserModal.vue";
-import DeleteModal from "../DeleteConfirmation";
 
 function initialDataAll() {
   return {
@@ -371,7 +363,7 @@ function initialDataAll() {
     active: false,
     password: "",
     password_confirmation: "",
-    avatar: null
+    avatar: ""
   };
 }
 
@@ -379,15 +371,13 @@ export default {
   components: {
     "data-table-level": DataTableLevel,
     "data-table-structure": DataTableStructure,
-    "data-table-rank": DataTableRank,
-    "user-modal": UserModal,
-    "delete-modal": DeleteModal
+    "data-table-rank": DataTableRank
   },
   props: {
     editId: {
       type: Number
     },
-    titleProps: {
+    title: {
       type: String
     }
   },
@@ -411,9 +401,22 @@ export default {
       unauthorized: false,
       isDeleteModal: false,
       textTitle: "",
-      userModal: false,
-      dataAkses: []
+      isUserModal: false,
+      dataAkses: [],
+      avatarChange: false
     };
+  },
+  created() {
+    let self = this;
+    const escapeHandler = e => {
+      if (e.key === "Escape") {
+        self.closeModal();
+      }
+    };
+    document.addEventListener("keydown", escapeHandler);
+    self.$once("hook:destroyed", () => {
+      document.removeEventListener("keydown", escapeHandler);
+    });
   },
   mounted() {
     let self = this;
@@ -488,13 +491,14 @@ export default {
         self.$emit("get-data");
         self.$emit("modal-closed");
       } else {
-        self.userModal = false;
+        self.isUserModal = false;
       }
     },
     reset() {
       let self = this;
       self.dataAll = initialDataAll();
       self.confirmedAkses = [];
+      self.avatarChange = false;
     },
     checkEdit() {
       let self = this;
@@ -503,6 +507,7 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
+            self.dataAll.active = self.dataAll.active === 1 ? true : false; 
             self.dataAll.akses.forEach(data => {
               self.confirmedAkses.push(data);
             });
@@ -544,7 +549,8 @@ export default {
         active: active,
         structureid: self.dataAll.structureid,
         avatar: self.dataAll.avatar,
-        akses: jsonAkses
+        akses: jsonAkses,
+        avatarChange: self.avatarChange
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -555,18 +561,19 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diunggah";
+              self.textTitle = "Data berhasil disimpan";
               self.berhasil = true;
-              self.userModal = true;
+              self.isUserModal = true;
             } else {
               self.berhasil = false;
+              self.textTitle = "Terjadi kesalahan pada server";
+              self.isUserModal = true;
             }
           })
           .catch(err => {
-            console.log(err);
-            self.textTitle = "Input data salah, silahkan cek kembali";
+            self.textTitle = err.response.data.error[Object.keys(err.response.data.error)[0]];
             self.berhasil = false;
-            self.userModal = true;
+            self.isUserModal = true;
           });
       } else {
         Api.user
@@ -575,15 +582,17 @@ export default {
             if (resp.data.status === "success") {
               self.textTitle = "Data berhasil diperbaharui";
               self.berhasil = true;
-              self.userModal = true;
+              self.isUserModal = true;
             } else {
               self.berhasil = false;
+              self.textTitle = "Terjadi kesalahan pada server";
+              self.isUserModal = true;
             }
           })
           .catch(err => {
             self.textTitle = "Input data salah, silahkan cek kembali";
             self.berhasil = false;
-            self.userModal = true;
+            self.isUserModal = true;
             console.log(err);
           });
       }
@@ -595,6 +604,7 @@ export default {
       reader.onloadend = function() {
         let image64 = reader.result;
         self.dataAll.avatar = image64;
+        self.avatarChange = true;
       };
       reader.readAsDataURL(image);
     }

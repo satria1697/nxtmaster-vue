@@ -1,393 +1,260 @@
 <template>
-  <div>
-    <Form
-      v-if="isModal"
-      :editIdProps="editId"
-      titleProps="Profil Saya"
-      @modal-closed="changeModal"
-    ></Form>
-    <div class="navbar bg-theme">
-      <div class="left">
-        <div class="detail-left">
-          <div class="logo">
-            <img src="../assets/logo.png" alt="" />
-            <span>NXTOffice 4</span>
-          </div>
-          <div class="burger" v-on:click="sideBar()">
-            <div class="burger-inside"></div>
-            <div class="burger-inside"></div>
-            <div class="burger-inside"></div>
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="detail-right">
-          <!-- <div
-          class="dropdown"
-          v-on:click="toggleActive('1st')"
-          :class="{ active: isActive }"
-        >
-          <div><i class="fas fa-comments"></i></div>
-          <div
-            class="dropdown-content"
-            :class="{ active: isActive }"
-            v-if="active == '1st'"
-          >
-            <div class="content">z</div>
-            <div class="content">x</div>
-            <div class="content">c</div>
-          </div>
-        </div> -->
-          <div
-            class="dropdown"
-            v-on:click="toggleActive('2nd')"
-            :class="{ active: isActive }"
-            v-if="this.$store.getters['getLevelId'] <= 2"
-          >
-            <div class="pointer"><i class="fas fa-cogs fa-2x"></i></div>
-            <div
-              class="dropdown-content"
-              :class="{ active: isActive }"
-              v-if="active == '2nd'"
-            >
-              <div class="font-weight-bold text-dark">Pengaturan</div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('umum')"
-              >
-                <i class="fas fa-house-damage"></i> Umum
-              </div>
-
-              <div class="font-weight-bold text-dark">Manajemen Akses</div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('dataakses')"
-              >
-                <i class="fas fa-puzzle-piece"></i> Data Akses
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('dataaksesmanager')"
-              >
-                <i class="fas fa-universal-access"></i> Pengaturan Akses
-              </div>
-
-              <div class="font-weight-bold text-dark">Manajemen Aplikasi</div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('dataaplikasi')"
-              >
-                <i class="fas fa-th"></i> Data Aplikasi
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datamodul')"
-              >
-                <i class="fas fa-box-open"></i> Data Modul
-              </div>
-              <div class="content-theme text-black-50 not-allowed">
-                <i class="fas fa-box"></i> Api Klien
-              </div>
-            </div>
-          </div>
-          <div
-            class="dropdown"
-            v-on:click="toggleActive('3rd')"
-            :class="{ active: isActive }"
-            v-if="this.$store.getters['getLevelId'] <= 2"
-          >
-            <div class="pointer"><i class="fas fa-users fa-2x"></i></div>
-            <div
-              class="dropdown-content"
-              :class="{ active: isActive }"
-              v-if="active == '3rd'"
-            >
-              <div class="font-weight-bold text-dark">Manajemen Pengguna</div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datauser')"
-              >
-                <i class="fas fa-user-friends"></i> Data Pengguna
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datalevel')"
-              >
-                <i class="fas fa-users-cog"></i> Tingkatan Pengguna
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datarank')"
-              >
-                <i class="fas fa-map-marker-alt"></i> Pangkat dan Golongan
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datastructure')"
-              >
-                <i class="fas fa-network-wired"></i> Struktur Organisasi
-              </div>
-              <div
-                class="content-theme text-black-50 pointer"
-                @click="goTo('datastructurelevel')"
-              >
-                <i class="fas fa-project-diagram"></i> Tingkatan Struktural
-              </div>
-            </div>
-          </div>
-          <div
-            class="dropdown"
-            v-on:click="toggleActive('4th')"
-            :class="{ active: isActive }"
-          >
-            <div class="pointer"><i class="fas fa-info-circle fa-2x"></i></div>
-            <div
-              class="dropdown-content"
-              :class="{ active: isActive }"
-              v-if="active == '4th'"
-            >
-              <span class="text-dark">Developed by</span>
-            </div>
-          </div>
-          <!-- <div class="user"> -->
-          <div
-            class="dropdown"
-            v-on:click="toggleActive('5th')"
-            :class="{ active: isActive }"
-          >
-            <div class="user pointer">
-              <div class="img-container">
-                <img
-                  v-if="avatar === null"
-                  src="@/assets/image/table/blank_avatar.png"
-                />
-                <img v-else :src="avatar" />
-              </div>
-              <div class="user-name">
-                <span>{{ fullname }}</span>
-              </div>
-              <i class="fas fa-caret-down"></i>
-            </div>
-            <div
-              class="dropdown-content"
-              :class="{ active: isActive }"
-              v-if="active == '5th'"
-            >
-              <div class="content-theme pointer" v-on:click="changeModal()">
-                <i class="fas fa-user-cog"></i> Profil Saya
-              </div>
-              <div class="content-theme pointer" v-on:click="logout()">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <vue-navigation-bar
+    :options="navbarOptions"
+    @vnb-item-clicked="navBarMethods"
+  />
 </template>
 
 <script>
-import Api from "../api";
+import api from "../api";
 import store from "../store";
-import Form from "../components/Admin/FormDataUser";
+
+function navbarOptionRightAkses() {
+  if (store.getters["getLevelId"] <= 3) {
+    return {
+      type: "link",
+      iconLeft: '<i class="fas fa-cogs fa-2x"></i>',
+      arrowColor: "#ffffff",
+      subMenuOptions: [
+        {
+          type: "link",
+          text: "Umum",
+          path: { name: "umum" },
+          iconLeft: '<i class="fa fa-star fa-fw"></i>'
+        },
+        {
+          type: "hr"
+        },
+        {
+          type: "link",
+          text: "Hak Akses",
+          path: { name: "dataakses" },
+          iconLeft: '<i class="fas fa-puzzle-piece"></i>'
+        },
+        {
+          type: "link",
+          text: "Pengaturan Akses",
+          path: { name: "dataaksesmanager" },
+          iconLeft: '<i class="fas fa-universal-access"></i>'
+        },
+        {
+          type: "hr"
+        },
+        {
+          type: "link",
+          text: "Data Aplikasi",
+          path: { name: "dataaplikasi" },
+          iconLeft: '<i class="fas fa-th"></i>'
+        },
+        {
+          type: "link",
+          text: "Data Modul",
+          path: { name: "datamodul" },
+          iconLeft: '<i class="fas fa-box-open"></i>'
+        }
+        // {
+        //   type: "link",
+        //   text: "Api Klien",
+        //   path: { name: "dataapiklien" },
+        //   iconLeft: '<i class="fas fa-box"></i>'
+        // }
+      ]
+    };
+  } else {
+    return {};
+  }
+}
+function navbarOptionRightUser() {
+  if (store.getters["getLevelId"] <= 3) {
+    return {
+      type: "link",
+      iconLeft: '<i class="fas fa-users fa-2x"></i>',
+      arrowColor: "#ffffff",
+      subMenuOptions: [
+        {
+          type: "link",
+          text: "Data Pengguna",
+          path: { name: "datauser" },
+          iconLeft: '<i class="fas fa-user-friends"></i>'
+        },
+        {
+          type: "hr"
+        },
+        {
+          type: "link",
+          text: "Tingkatan Pengguna",
+          path: { name: "datalevel" },
+          iconLeft: '<i class="fas fa-users-cog"></i>'
+        },
+        {
+          type: "link",
+          text: "Pangkat dan Golongan",
+          path: { name: "datarank" },
+          iconLeft: '<i class="fas fa-map-marker-alt"></i>'
+        },
+        {
+          type: "hr"
+        },
+        {
+          type: "link",
+          text: "Struktur Organisasi",
+          path: { name: "datastructure" },
+          iconLeft: '<i class="fas fa-network-wired"></i>'
+        },
+        {
+          type: "link",
+          text: "Tingkatan Struktural",
+          path: { name: "datastructurelevel" },
+          iconLeft: '<i class="fas fa-project-diagram"></i>'
+        }
+      ]
+    };
+  } else {
+    return {};
+  }
+}
 
 export default {
-  components: {
-    Form
-  },
   data() {
     // let self = this;
     return {
-      avatar: null,
-      isActive: false,
-      first: false,
-      second: false,
-      active: "",
-      fullname: store.getters["getFullname"],
-      isModal: false,
-      editId: store.getters["getId"]
+      navbarOptions: {
+        elemendId: "main-navbar",
+        isUsingVueRouter: true,
+        mobileBreakpoint: 992,
+        brandImage: require("@/assets/image/logo/nxtoffice-light.png"),
+        brandImageAltText: "brand-image",
+        collapseButtonOpenColor: "#ffffff",
+        collapseButtonCloseColor: "#ffffff",
+        showBrandImageInMobilePopup: true,
+        ariaLabelMainNav: "Main Navigation",
+        tooltipAnimationType: "shift-away",
+        tooltipPlacement: "bottom",
+        menuOptionsRight: [
+          navbarOptionRightAkses(),
+          navbarOptionRightUser(),
+          {
+            type: "link",
+            iconLeft: '<i class="fas fa-info-circle fa-2x"></i>',
+            arrowColor: "#ffffff",
+            subMenuOptions: [
+              {
+                isLinkAction: true,
+                type: "link",
+                text: "Developed By",
+                path: { name: "home" },
+                subText: "Wish Enterprise"
+              }
+            ]
+          },
+          {
+            type: "link",
+            iconLeft: '<i class="fas fa-user-circle fa-2x"></i>',
+            arrowColor: "#ffffff",
+            subMenuOptions: [
+              {
+                type: "link",
+                text: store.getters["getFullname"],
+                path: { name: "profile" }
+              },
+              {
+                isLinkAction: true,
+                type: "link",
+                text: "Logout",
+                path: { name: "home" },
+                iconLeft: '<i class="fas fa-sign-out-alt"></i>'
+              }
+            ]
+          }
+        ]
+      },
+      avatar: "",
+      username: ""
     };
   },
   mounted() {
-    let self = this;
-    self.getAvatar();
-    document.addEventListener("click", self.close);
+    // let self = this;
+    // console.log(navbarOptionRightUser());
   },
   methods: {
-    changeModal() {
+    navBarMethods(payload) {
       let self = this;
-      if (self.isModal === false) {
-        self.isModal = true;
-      } else {
-        self.isModal = false;
+      if (payload === "Sidebar") {
+        store.commit("sideBarChange");
       }
-    },
-    toggleActive(where) {
-      let self = this;
-      if (where === self.active) {
-        self.isActive = !self.isActive;
-      } else {
-        self.active = where;
-        self.isActive = true;
-      }
-    },
-    sideBar() {
-      store.commit("sideBarChange");
-    },
-    logout() {
-      let self = this;
-      Api.auth
-        .logout()
-        .then(resp => {
-          if (resp.data.status === "success") {
-            store.commit("authenChange");
-            if (store.state.isAuthenticated === false) {
-              // store.commit("emptyTab");
-              // if (localStorage.tabState + ":" + store.getters["getUsername"]) {
-              //   localStorage.removeItem(
-              //     "tabState" + ":" + store.getters["getUsername"]
-              //   );
-              // }
-              // localStorage.setItem(
-              //   "tabState" + ":" + store.getters["getUsername"],
-              //   this.$tab.routerTab.ActiveTab
-              // );
-              store.commit("setToken", "");
-              localStorage.removeItem("token");
-              let username = "";
-              let fullname = "";
-              let levelid = null;
-              let id = null;
-              store.commit("setLogin", { username, fullname, levelid, id });
-              self.$router.push("/login");
+      if (payload === "Logout") {
+        api.auth
+          .logout()
+          .then(resp => {
+            if (resp.data.status === "success") {
+              store.commit("authenChange");
+              if (store.state.isAuthenticated === false) {
+                // console.log(self.$tabs.saveTabs);
+                self.$tabs.saveTabs();
+                // store.commit("emptyTab");
+                // if (localStorage.tabState + ":" + store.getters["getUsername"]+store.getters['getAkses']) {
+                //   localStorage.removeItem(
+                //     "tabState" + ":" + store.getters["getUsername"]+store.getters['getAkses']
+                //   );
+                // }
+                // localStorage.setItem(
+                //   "tabState" + ":" + store.getters["getUsername"]+store.getters['getAkses'],
+                //   this.$tab.routerTab.ActiveTab
+                // );
+                store.commit("setToken", "");
+                localStorage.removeItem("token");
+                let username = "";
+                let fullname = "";
+                let levelid = null;
+                let id = null;
+                let akses = null;
+                store.commit("setLogin", {
+                  username,
+                  fullname,
+                  levelid,
+                  id,
+                  akses
+                });
+                self.$router.push("/login");
+              }
             }
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    getAvatar() {
-      let self = this;
-      Api.user
-        .find(store.getters["getId"])
-        .then(resp => {
-          self.avatar = resp.data.data.avatar;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    goTo(place) {
-      let self = this;
-      self.$router.push({ name: place });
-      // self.$router.push(place);
-    },
-    close(e) {
-      let self = this;
-      // console.log("asds");
-      if (!this.$el.contains(e.target)) {
-        self.isActive = false;
-        self.active = "";
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      if (payload === "Developed By") {
+        console.log(payload);
       }
     }
-  },
-  beforeDestroy() {
-    let self = this;
-    document.removeEventListener("click", self.close);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.navbar {
-  // display: grid;
-  // grid-template-columns: 1fr 1fr;
-  height: 50px;
-  z-index: 120;
+@import "@/style/abstracts/_variables";
+nav {
   position: sticky;
   top: 0;
-  .left {
-    margin: auto 0;
-    justify-self: start;
-  }
-  .right {
-    margin: auto 0;
-    justify-self: end;
-  }
-  .detail-right {
-    display: grid;
-    grid-template-columns: 50px 50px 50px 190px;
-    align-items: center;
-  }
-  .detail-left {
-    display: grid;
-    grid-template-columns: 250px 50px;
-  }
 }
-
-.user {
-  display: grid;
-  grid-template-columns: 35px 135px 20px;
-  align-items: center;
-  &-image {
-    height: 34px;
-  }
-  &-name {
-    span {
-      font-size: 13px;
+.vnb {
+  z-index: 110;
+  background: $theme-bg;
+  padding: 2px 0;
+  -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0px 0px 10px #000000;
+  /deep/ .vnb__menu-options__option {
+    margin: 0;
+    &__link {
+      color: $text-theme;
     }
   }
-}
-.burger {
-  justify-self: center;
-  align-self: center;
-  cursor: pointer;
-  .burger-inside {
-    width: 35px;
-    height: 2px;
-    background-color: white;
-    margin: 5px 0;
-  }
-}
-.logo {
-  img {
-    height: 40px;
-  }
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-  .active {
-    background-color: white;
-    display: block;
-  }
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 200px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 12px 16px;
-  z-index: 1;
-  right: 0;
-  // left: -40;
-  .content {
-    color: black;
-    padding: 5px;
-  }
-  .content:hover {
-    color: white !important;
-    background-color: darkslategray;
-  }
-}
-.img-container {
-  img {
-    width: 30px;
-    height: 30px;
+  /deep/ .vnb__sub-menu-options {
+    padding: 0;
+    &__option__link {
+      padding: 0 0 0 5px;
+    }
   }
 }
 </style>

@@ -2,8 +2,8 @@
   <div class="detail">
     <Form
       v-if="isModal"
-      :editIdProps="editId"
-      titleProps="Form Pengisian Data Pengguna"
+      :editId="editId"
+      title="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
     <div class="container">
@@ -36,8 +36,6 @@ import Api from "../../../api";
 import Form from "../../../components/Admin/Level/FormLevel";
 import edit from "../../../components/Table/ActionEdit";
 import actiondelete from "../../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-import store from "../../../store";
 
 export default {
   components: {
@@ -107,7 +105,7 @@ export default {
   methods: {
     init() {
       let self = this;
-      self.openTab(self.$route.name, self.$route.name);
+      
       const params = {
         page: 1,
         find: "",
@@ -151,22 +149,6 @@ export default {
       } else {
         self.getData(self.filter);
         self.isModal = false;
-      }
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
       }
     },
     deleteData(id) {

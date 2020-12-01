@@ -3,7 +3,7 @@
     <Form
       v-if="isModal"
       :editId="editId"
-      titleProps="Form Pengisian Data Pengguna"
+      title="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
     <div class="container">
@@ -119,11 +119,9 @@ export default {
       dataAkses: []
     };
   },
-  created() {
+  mounted() {
     let self = this;
-    self.isLoading = true;
     self.init();
-    self.isLoading = false;
   },
   methods: {
     init() {

@@ -177,7 +177,7 @@ import axios from "axios";
 import Form from "../../components/Admin/FormDataUser.vue";
 import pdf from "../../components/PdfViewer";
 import store from "../../store";
-// import { mapMutations } from "vuex";
+
 export default {
   components: {
     Form,
@@ -222,7 +222,7 @@ export default {
       let self = this;
       self.isLoading = true;
       self.updateData();
-      self.openTab(self.$route.name, self.$route.name);
+      // 
       self.isLoading = false;
     },
     isModal() {
@@ -312,22 +312,22 @@ export default {
         self.last = false;
       }
     },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
-    },
+    // openTab(name, label) {
+    //   let exists = false;
+    //   let tabState = store.state.tabState;
+    //   let isZero = tabState.length === 0;
+    //   if (!isZero) {
+    //     exists = tabState.some(tab => tab.name === name);
+    //   }
+    //   if (!exists) {
+    //     if (tabState.length > 4) {
+    //       console.log("tidak bisa menambah lebih dari 5");
+    //       store.commit("closeTab", 5);
+    //     } else {
+    //       store.commit("openTab", { name, label });
+    //     }
+    //   }
+    // },
     changeOrder(column) {
       let self = this;
       if (self.orderBy === "ASC") {

@@ -35,7 +35,7 @@
             </div>
             <div v-if="!isLoading" class="modal-footer">
               <div v-if="!berhasil">
-                <span>gagal mengotorisasi</span>
+                <span class="text-danger">gagal mengotorisasi</span>
               </div>
               <button class="btn btn-seconday" @click="closeModal()">
                 Cancel
@@ -95,10 +95,8 @@ export default {
         api.auth
           .loginconfirm(formData)
           .then(resp => {
-            console.log(resp.data.status);
             if (resp.data.status === "success") {
-              store.commit("confirmedChange");
-              store.commit("loginConfirmedChange");
+              self.$emit("login", true);
             }
           })
           .catch(error => {
@@ -110,7 +108,8 @@ export default {
       }
     },
     closeModal() {
-      store.commit("loginConfirmedChange");
+      let self = this;
+      self.$emit("login", false);
     }
   }
 };

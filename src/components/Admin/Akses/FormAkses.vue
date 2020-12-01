@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-theme">
-              <span class="font-weight-bold">{{ titleProps }}</span>
+              <span class="font-weight-bold">{{ title }}</span>
               <i
                 class="fa fa-window-close pull-right pointer"
                 aria-hidden="true"
@@ -14,28 +14,11 @@
             </div>
             <div class="modal-body">
               <user-modal
-                v-if="berhasil && uploaded"
-                titleProps="Data berhasil diunggah."
-                :textSuccess="true"
+                v-if="isUserModal"
+                :title="textTitle"
+                :textSuccess="berhasil"
+                :textDanger="!berhasil"
                 @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && updated"
-                titleProps="Data berhasil diperbaharui."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && deleted"
-                titleProps="Data berhasil dihapus."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="!berhasil"
-                titleProps="Terdapat Kesalahan Data"
-                :textDanger="true"
-                @modal-closed="berhasil = true"
               />
               <delete-modal
                 :data="dataAll"
@@ -64,7 +47,7 @@
                       v-model="dataAll.description"
                     />
                   </div>
-                  <div class="form-group form-check col">
+                  <div class="form form-group form-check col">
                     <input
                       id="formActive"
                       class="form-check-input"
@@ -78,7 +61,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="dataAll.id === null" class="modal-footer">
+            <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
@@ -89,10 +72,10 @@
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="dataAll.id !== null" class="modal-footer">
+            <div v-if="editId !== null" class="modal-footer">
               <button
-                class="btn btn-danger"
-                v-on:click="deleteData(dataAll.id)"
+                class="btn btn-default float-left"
+                v-on:click="isDeleteModal = true"
               >
                 <i class="fas fa-trash"></i> Delete
               </button>
@@ -112,37 +95,31 @@
 </template>
 
 <script>
-import UserModal from "../../Admin/UserModal.vue";
-import DeleteModal from "../../DeleteConfirmation";
 import Api from "../../../api";
 
 export default {
-  components: {
-    "user-modal": UserModal,
-    "delete-modal": DeleteModal
-  },
   props: {
-    editIdProps: {
+    editId: {
       type: Number
     },
-    titleProps: {
+    title: {
       type: String
     }
   },
   data() {
-    let self = this;
     return {
       dataAll: {
         id: null,
         description: "",
         active: false
       },
-      editId: self.editIdProps,
       berhasil: true,
       uploaded: false,
       updated: false,
       deleted: false,
-      isDeleteModal: false
+      isDeleteModal: false,
+      textTitle: "",
+      isUserModal: false
     };
   },
   mounted() {
@@ -187,37 +164,41 @@ export default {
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      if (status === "register") {
+      if (status === "submit") {
         Api.akses
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.reset();
+              self.textTitle = "Data berhasil disimpan";
               self.berhasil = true;
-              self.uploaded = true;
+              self.isUserModal = true;
             } else {
               self.berhasil = false;
             }
           })
           .catch(err => {
-            console.log(err.response);
+            self.textTitle =
+              err.response.data.error[Object.keys(err.response.data.error)[0]];
             self.berhasil = false;
+            self.isUserModal = true;
           });
       } else {
         Api.akses
           .update(id, formData)
           .then(resp => {
-            if (resp.status === "error") {
-              self.berhasil = false;
-            } else {
+            if (resp.data.status === "success") {
+              self.textTitle = "Data berhasil diperbaharui";
               self.berhasil = true;
-              self.updated = true;
+              self.isUserModal = true;
+            } else {
+              self.berhasil = false;
             }
           })
           .catch(err => {
-            if (err.response.error === "") {
-              self.berhasil = false;
-            }
+            self.textTitle = "Input data salah, silahkan cek kembali";
+            self.berhasil = false;
+            self.isUserModal = true;
+            console.log(err);
           });
       }
     },
@@ -239,8 +220,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.pull-right {
-  margin: 8px 10px 0 0;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-theme">
-              <span class="font-weight-bold">{{ titleProps }}</span>
+              <span class="font-weight-bold">{{ title }}</span>
               <i
                 class="fas fa-window-close pull-right pointer"
                 @click="closeModal()"
@@ -35,7 +35,7 @@ import button from "../../../components/Table/ActionButton";
 
 export default {
   props: {
-    titleProps: {
+    title: {
       type: String
     },
     appIdProps: {

@@ -5,7 +5,11 @@
         lang="en"
         class="tab-custom-class"
         :max-alive="10"
-        :restore="this.$store.getters['getUsername']"
+        :restore="
+          this.$store.getters['getUsername'] +
+            ':' +
+            this.$store.getters['getAkses']
+        "
         restore-watch
         page-transition="page-fade"
         :tabs="tabs"
@@ -15,6 +19,7 @@
 </template>
 
 <script>
+// import store from "../store";
 export default {
   data() {
     return {
@@ -30,7 +35,6 @@ export default {
   margin: 11px 15px 0 15px;
 }
 .tab-custom-class {
-  // font-size: 13px !important;
   /deep/ .router-tab__header {
     margin: 0 5px;
     height: 25px;
@@ -47,9 +51,6 @@ export default {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-right: 1px solid rgba(0, 0, 0, 0.8);
-    // border-left: 1px solid rgba(0, 0, 0, 0.8);
-    // border-left: 1px solid rgba(0, 0, 0, 0.8);
     background-color: #dcdcdc;
     color: $text-theme-alt;
     font-size: 12px;
@@ -80,13 +81,9 @@ export default {
   }
   /deep/ .router-tab__container {
     border: 1px solid rgba(0, 0, 0, 0.2);
-    // border-bottom: 1px solid rgba(0, 0, 0, 0.8);
-    // border-left: 1px solid rgba(0, 0, 0, 0.8);
-    // border-top: 1px solid rgba(0, 0, 0, 0.8);
     border-radius: 4px;
     -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    // margin-top: -1px;
   }
   /deep/ .page-fade {
     &-enter-active {

@@ -3,6 +3,10 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-dialog modal-dialog-centered">
+          <login-confirmation
+            v-if="isLoginConfirmedModal"
+            @login="loginConfirmed"
+          />
           <div class="modal-content">
             <div class="modal-body">
               <span class="font-weight-bold">
@@ -13,7 +17,11 @@
               <button class="btn btn-default" @click="closeModal()">
                 <i class="fas fa-times"></i> Cancel
               </button>
-              <button class="btn btn-default" @click="deleteYes()">
+              <button
+                class="btn btn-default"
+                @click="deleteYes()"
+                ref="btndelete"
+              >
                 <i class="fas fa-trash"></i> Delete
               </button>
             </div>
@@ -25,28 +33,45 @@
 </template>
 
 <script>
-import store from "@/store";
+import loginConfirmation from "./Admin/LoginConfirmation.vue";
 export default {
+  components: {
+    "login-confirmation": loginConfirmation
+  },
   props: {
     data: {}
+  },
+  data() {
+    return {
+      isConfirmed: false,
+      isLoginConfirmedModal: false
+    };
+  },
+  mounted() {
+    let self = this;
+    self.$refs.btndelete.focus();
   },
   methods: {
     closeModal() {
       let self = this;
-      if (store.state.isConfirmed === true) {
-        store.commit("confirmedChange");
+      if (self.isConfirmed === true) {
+        self.isConfirmed = false;
       }
       self.$emit("modal-closed");
     },
     deleteYes() {
       let self = this;
-      if (store.state.isConfirmed === true) {
-        store.commit("confirmedChange");
-        self.$emit("delete-data");
+      if (self.isConfirmed === true) {
         self.closeModal();
+        self.$emit("delete-data", self.data);
       } else {
-        store.commit("loginConfirmedChange");
+        self.isLoginConfirmedModal = true;
       }
+    },
+    loginConfirmed(payload) {
+      let self = this;
+      self.isConfirmed = payload ? true : false;
+      self.isLoginConfirmedModal = false;
     }
   }
 };

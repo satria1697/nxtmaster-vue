@@ -1,17 +1,9 @@
 <template>
   <div id="app">
-    <NavBarC
+    <NavBar
       v-if="
         this.$router.currentRoute.name !== 'login' &&
-          this.$store.state.isAuthenticated === true &&
-          this.$store.getters['getLevelId'] <= 3
-      "
-    />
-    <NavBarL
-      v-if="
-        this.$router.currentRoute.name !== 'login' &&
-          this.$store.state.isAuthenticated === true &&
-          this.$store.getters['getLevelId'] > 3
+          this.$store.state.isAuthenticated === true
       "
     />
     <SideBar
@@ -34,8 +26,7 @@
 </template>
 
 <script>
-import NavBarC from "@/components/NavBarC.vue";
-import NavBarL from "@/components/NavBarL.vue";
+import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
 import Sesi from "../src/components/AuthorizationExpired.vue";
 import LoginConfirmed from "./components/Admin/LoginConfirmation.vue";
@@ -45,16 +36,11 @@ import store from "./store";
 export default {
   name: "Home",
   components: {
-    NavBarC,
-    NavBarL,
+    NavBar,
     SideBar,
     LoginConfirmed,
     Sesi
   },
-  // created() {
-  //   let self = this;
-  //   window.addEventListener("beforeunload", self.handler);
-  // },
   mounted() {
     let self = this;
     self.handler();
@@ -75,20 +61,43 @@ export default {
         let id = jwtDecode.sub;
         let akses = jwtDecode.akses;
         store.commit("setLogin", { username, fullname, levelid, id, akses });
-        if (akses === "0") {
+        if (
+          sessionStorage.getItem("sidebar" + ":" + username + ":" + akses) ===
+          true
+        ) {
+          store.commit("sideBarChange");
+        } else if (akses === "0") {
           store.commit("sideBarChange");
         }
-        // try {
-        //   var storedTab = JSON.parse(localStorage.getItem("tabState"));
-        //   self.$router.push({ name: storedTab[0].name });
-        // } catch {
-        //   self.$router.push("/");
-        // }
         store.commit("authenChange");
-        self.$router.push("/");
+        let tabs = sessionStorage.getItem("tab" + ":" + username + ":" + akses);
+        if (tabs === null) {
+          self.$router.push("/");
+        } else {
+          self.$router.push(tabs);
+        }
       }
     }
-  }
+  },
+  // watch: {
+  //   "$route.path": {
+  //     function() {
+  //       let self = this;
+  //       console.log(self.$route.path);
+  //       // if (self.activetabto) {
+  //       //   localStorage.setItem(
+  //       //     "tab" +
+  //       //       ":" +
+  //       //       store.getters["getUsername"] +
+  //       //       ":" +
+  //       //       store.getters["getAkses"],
+  //       //     self.$tabs.activeTab.to
+  //       //   );
+  //       // }
+  //     },
+  //     deep: true
+  //   }
+  // }
 };
 </script>
 

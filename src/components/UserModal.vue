@@ -16,7 +16,14 @@
               </span>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-info" v-on:click="closeModal()">OK</button>
+              <button
+                class="btn btn-info"
+                v-on:click="closeModal()"
+                @keyup.enter="closeModal()"
+                ref="btnok"
+              >
+                OK
+              </button>
             </div>
           </div>
         </div>
@@ -40,6 +47,10 @@ export default {
     textSuccess: {
       type: Boolean
     }
+  },
+  mounted() {
+    let self = this;
+    self.$refs.btnok.focus();
   },
   methods: {
     closeModal() {
