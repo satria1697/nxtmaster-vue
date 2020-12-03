@@ -22,8 +22,8 @@ import Vue2OrgTree from "vue2-org-tree";
 import VueListPicker from "vue-list-picker";
 // import "vue-org-tree/styles/org-tree.less";
 
-// import Loading from "vue-loading-overlay";
-// import "vue-loading-overlay/dist/vue-loading.css";
+// import loader from "vue-ui-preloader";
+
 
 import UserModal from "./components/UserModal.vue";
 import DeleteModal from "./components/DeleteConfirmation";
@@ -44,7 +44,7 @@ Vue.component("vue-navigation-bar", VueNavigationBar);
 
 Vue.use(VueListPicker);
 
-// Vue.use("loading", Loading);
+// Vue.use(loader);
 
 Vue.component("user-modal", UserModal);
 Vue.component("delete-modal", DeleteModal);

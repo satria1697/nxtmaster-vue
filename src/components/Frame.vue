@@ -3,7 +3,6 @@
     <div class="app-body">
       <router-tab
         lang="en"
-        class="tab-custom-class"
         :max-alive="10"
         :restore="
           this.$store.getters['getUsername'] +
@@ -29,13 +28,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/style/abstracts/_variables";
 .app-body {
   margin: 11px 15px 0 15px;
 }
-.tab-custom-class {
-  /deep/ .router-tab__header {
+.router-tab {
+  // min-height: 200px;
+  ::v-deep .router-tab__header {
     margin: 0 5px;
     height: 25px;
     z-index: 1;
@@ -46,7 +46,7 @@ export default {
       top: 1px;
     }
   }
-  /deep/ .router-tab__item {
+  ::v-deep .router-tab__item {
     margin: 0 1px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -69,8 +69,8 @@ export default {
       font-size: 12px;
     }
   }
-  /deep/ .router-tab__item.is-active {
-    background-color: $text-theme;
+  ::v-deep .router-tab__item.is-active {
+    background-color: $theme-bg-detail;
     z-index: 11;
     color: $theme;
     border-bottom: none;
@@ -79,13 +79,13 @@ export default {
       color: $theme-alt;
     }
   }
-  /deep/ .router-tab__container {
+  ::v-deep .router-tab__container {
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   }
-  /deep/ .page-fade {
+  ::v-deep .page-fade {
     &-enter-active {
       transition-duration: 0.3s;
       transition-property: opacity;

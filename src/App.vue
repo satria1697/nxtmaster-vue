@@ -61,14 +61,18 @@ export default {
         let id = jwtDecode.sub;
         let akses = jwtDecode.akses;
         store.commit("setLogin", { username, fullname, levelid, id, akses });
-        if (
-          sessionStorage.getItem("sidebar" + ":" + username + ":" + akses) ===
-          true
-        ) {
-          store.commit("sideBarChange");
-        } else if (akses === "0") {
+        let sidebarstate = sessionStorage.getItem(
+          "sidebar" + ":" + username + ":" + akses
+        );
+        if (!sidebarstate && akses === "0") {
           store.commit("sideBarChange");
         }
+        if (sidebarstate === "true") {
+          store.commit("sideBarChange");
+        }
+        // if (akses === "0") {
+        //   store.commit("sideBarChange");
+        // }
         store.commit("authenChange");
         let tabs = sessionStorage.getItem("tab" + ":" + username + ":" + akses);
         if (tabs === null) {
@@ -78,26 +82,7 @@ export default {
         }
       }
     }
-  },
-  // watch: {
-  //   "$route.path": {
-  //     function() {
-  //       let self = this;
-  //       console.log(self.$route.path);
-  //       // if (self.activetabto) {
-  //       //   localStorage.setItem(
-  //       //     "tab" +
-  //       //       ":" +
-  //       //       store.getters["getUsername"] +
-  //       //       ":" +
-  //       //       store.getters["getAkses"],
-  //       //     self.$tabs.activeTab.to
-  //       //   );
-  //       // }
-  //     },
-  //     deep: true
-  //   }
-  // }
+  }
 };
 </script>
 

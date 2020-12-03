@@ -289,6 +289,7 @@
                         min-height="150px"
                         height="150px"
                         :titleCentered="false"
+                        title-class="vue-picker-title-class"
                       />
                     </div>
                   </div>
@@ -309,7 +310,7 @@
             <div v-if="editId !== null" class="modal-footer">
               <button
                 class="btn btn-default float-left"
-                v-on:click="deleteData(dataAll.id)"
+                v-on:click="isDeleteModal = true"
               >
                 <i class="fas fa-trash"></i> Delete
               </button>
@@ -613,6 +614,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/style/abstracts/_variables.scss";
 .modal {
   overflow-y: auto;
 }
@@ -637,20 +639,8 @@ export default {
     height: 200px;
   }
 }
-#formRole {
-  min-height: 200px;
-  height: auto;
-  .form-check {
-    margin: 5px 10px;
-    &-label {
-      color: black;
-      // font-size: 12px;
-      padding-left: 2px;
-    }
-  }
-}
 .akses {
-  /deep/ .list-picker-item {
+  ::v-deep .list-picker-item {
     border: none;
     padding: 3px;
   }

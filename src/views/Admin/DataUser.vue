@@ -137,7 +137,7 @@ export default {
     },
     getData(params) {
       let self = this;
-      self.isLoading = true;
+      // self.$isLoading(true);
       self.filter.page = params.page;
       self.filter.find = params.find;
       self.filter.length = params.length;
@@ -147,11 +147,11 @@ export default {
         .filter(params)
         .then(res => {
           self.dataAll = res.data;
-          self.isLoading = false;
+          // self.$isLoading(false);
         })
         .catch(err => {
           console.log(err);
-          self.isLoading = false;
+          // self.$isLoading(false);
         });
     },
     reloadTable(tableProps) {

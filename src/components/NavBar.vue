@@ -179,9 +179,6 @@ export default {
   methods: {
     navBarMethods(payload) {
       let self = this;
-      if (payload === "Sidebar") {
-        store.commit("sideBarChange");
-      }
       if (payload === "Logout") {
         api.auth
           .logout()
@@ -189,20 +186,23 @@ export default {
             if (resp.data.status === "success") {
               store.commit("authenChange");
               if (store.state.isAuthenticated === false) {
-                // console.log(self.$tabs.saveTabs);
                 self.$tabs.saveTabs();
-                // store.commit("emptyTab");
-                // if (localStorage.tabState + ":" + store.getters["getUsername"]+store.getters['getAkses']) {
-                //   localStorage.removeItem(
-                //     "tabState" + ":" + store.getters["getUsername"]+store.getters['getAkses']
-                //   );
-                // }
-                // localStorage.setItem(
-                //   "tabState" + ":" + store.getters["getUsername"]+store.getters['getAkses'],
-                //   this.$tab.routerTab.ActiveTab
-                // );
                 store.commit("setToken", "");
                 localStorage.removeItem("token");
+                sessionStorage.removeItem(
+                  "sidebar" +
+                    ":" +
+                    store.getters["getUsername"] +
+                    ":" +
+                    store.getters["getAkses"]
+                );
+                sessionStorage.removeItem(
+                  "tab" +
+                    ":" +
+                    store.getters["getUsername"] +
+                    ":" +
+                    store.getters["getAkses"]
+                );
                 let username = "";
                 let fullname = "";
                 let levelid = null;
@@ -244,13 +244,13 @@ nav {
   -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   // box-shadow: 0px 0px 10px #000000;
-  /deep/ .vnb__menu-options__option {
+  ::v-deep .vnb__menu-options__option {
     margin: 0;
     &__link {
       color: $text-theme;
     }
   }
-  /deep/ .vnb__sub-menu-options {
+  ::v-deep .vnb__sub-menu-options {
     padding: 0;
     &__option__link {
       padding: 0 0 0 5px;

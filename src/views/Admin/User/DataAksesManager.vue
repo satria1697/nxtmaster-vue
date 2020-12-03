@@ -11,32 +11,37 @@
       :data="dataAll"
       v-if="isDeleteModal"
       @modal-closed="isDeleteModal = false"
-      @delete-data="(isDeletemodal = false), (isLoginModal = true)"
+      @delete-data="deleteData"
     />
-    <!-- <login-modal
-      v-if="isLoginModal"
-      @modal-closed="isLoginModal = false"
-      @confirmed-login="deleteData(dataAll.id)"
-    /> -->
     <div class="container">
       <div class="row">
         <div class="col-3">
           <div class="title">
-            <span>
+            <h4>
               <i class="fas fa-search"></i>
               Antarmuka
-            </span>
+            </h4>
           </div>
-          <div class="sidebar">
-            <v-jstree :data="dataDir" whole-row @item-click="getId"></v-jstree>
+          <div class="sidenav">
+            <div class="sidenav-list">
+              <span class="font-weight-bold"
+                ><i class="fas fa-th-large"></i> Menu
+                <span class="pointer"><i class="fas fa-times"></i></span
+              ></span>
+              <v-jstree
+                :data="dataDir"
+                whole-row
+                @item-click="getId"
+              ></v-jstree>
+            </div>
           </div>
         </div>
         <div class="col-9">
           <div class="title">
-            <span class="title">
+            <h4>
               <i class="fas fa-plus"></i>
               Tambah Menu
-            </span>
+            </h4>
           </div>
           <div class="row">
             <div class="form form-group col-5">
@@ -126,24 +131,6 @@
               </select>
             </div>
           </div>
-          <!-- <div v-if="dataAll.rolelevelid === 3" class="row">
-            <div class="form form-group col-5">
-              <label for="formModul" class="top">Modul</label>
-              <select
-                class="form-control bottom"
-                id="formModul"
-                v-model="dataAll.moduleid"
-              >
-                <option
-                  :value="data.id"
-                  v-for="data in dataModul"
-                  :key="data.id"
-                >
-                  {{ data.name }} - {{ data.description }}
-                </option>
-              </select>
-            </div>
-          </div> -->
           <div
             v-if="dataAll.rolelevelid === 3 && dataAll.application.id !== null"
             class="form form-group col-5 input-group row"
@@ -306,10 +293,10 @@ export default {
           console.log(err);
         });
     },
-    getModulId(id) {
+    getModulId(data) {
       let self = this;
       api.modul
-        .find(id)
+        .find(data.id)
         .then(resp => {
           self.dataAll.modul.id = resp.data.data.id;
           self.dataAll.modul.description = resp.data.data.name;
@@ -402,14 +389,14 @@ export default {
           console.log(err);
         });
     },
-    deleteData(id) {
+    deleteData(data) {
       let self = this;
-      console.log(id);
       api.aksesmanager
-        .delete(id)
+        .delete(data.id)
         .then(() => {
           self.isDeleteModal = false;
           self.isLoginModal = false;
+          self.reset();
           self.getDataRootId();
         })
         .catch(err => {
@@ -489,25 +476,63 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sidebar {
-  background-color: #a9a9a9;
-  color: black;
-  padding: 10px 20px 20px 10px;
-  min-height: 70vh;
-  /deep/ span {
+@import "@/style/abstracts/_variables.scss";
+.sidenav {
+  min-height: 100vh;
+  width: 230px;
+  position: fixed;
+  z-index: 100;
+  // background: #f0f0f0;
+  color: $text-theme-alt;
+  padding: 0;
+  // overflow-y: auto;
+  // overflow-x: hidden;
+  border-radius: 0px;
+  &-list {
+    margin: 5px;
+  }
+  transition: 0.2s;
+  ::v-deep span {
     margin: 0;
     font-size: 12px;
   }
-  /deep/ .tree-icon {
+  ::v-deep .tree-icon {
     width: 16px !important;
     height: 16px !important;
   }
-  /deep/ .tree-icon.tree-ocl {
-    width: 24px !important;
-    height: 24px !important;
+  ::v-deep .tree-icon.tree-ocl {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  ::v-deep .tree-wholerow-ul {
+    min-height: 20vh;
+    border-radius: 4px;
+    margin-top: 30px;
+    background-color: $theme-bg-detail;
+    color: $text-theme-alt;
+    border: 1px solid rgba($color: #000000, $alpha: 0.2);
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+    overflow-x: hidden;
   }
 }
-.title {
-  padding-bottom: 10px;
+span.font-weight-bold {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  margin: 10px 0 0 4px;
+  font-size: 13px;
+  background: $theme-bg-detail;
+  padding: 3px 14px 3px;
+  border-top: 1px solid rgba($color: #000000, $alpha: 0.2);
+  border-right: 1px solid rgba($color: #000000, $alpha: 0.2);
+  border-left: 1px solid rgba($color: #000000, $alpha: 0.2);
+  position: absolute;
+  top: 1px;
+  z-index: 10;
+  color: $text-theme-alt;
 }
+// .position-absolute {
+//   right: 10px;
+// }
 </style>

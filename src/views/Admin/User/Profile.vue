@@ -586,7 +586,7 @@ export default {
   }
 }
 .akses {
-  /deep/ .list-picker-item {
+  ::v-deep .list-picker-item {
     border: none;
     padding: 3px;
   }

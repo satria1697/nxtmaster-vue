@@ -144,13 +144,13 @@ export default {
                   id,
                   akses
                 });
-                if (
-                  sessionStorage.getItem(
-                    "sidebar" + ":" + username + ":" + akses
-                  ) === true
-                ) {
+                let sidebarstate = sessionStorage.getItem(
+                  "sidebar" + ":" + username + ":" + akses
+                );
+                if (!sidebarstate && akses === "0") {
                   store.commit("sideBarChange");
-                } else if (akses === "0") {
+                }
+                if (sidebarstate === "true") {
                   store.commit("sideBarChange");
                 }
                 store.commit("authenChange");
@@ -220,6 +220,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/style/abstracts/_variables.scss";
 .login-page {
   height: 100vh;
   // padding-bottom: 10%;
@@ -229,7 +230,7 @@ export default {
   height: 250px;
   margin: 100px auto;
   padding: 10px 30px;
-  background-color: white;
+  background-color: $theme-bg-detail;
   border-radius: 8px;
   z-index: 100;
 }

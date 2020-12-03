@@ -96,6 +96,7 @@ export default {
     },
     goTo(payload) {
       let self = this;
+      // console.log("/" + payload.data.application.path + "/" + payload.data.modul.path);
       if (payload.data.rolelevelid === 3) {
         self.$router
           .push(
@@ -116,37 +117,38 @@ export default {
   position: fixed;
   z-index: 100;
   background: #f0f0f0;
-  overflow-x: hidden;
   color: $text-theme-alt;
-  padding: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  padding: 0;
+  // overflow-y: auto;
+  // overflow-x: hidden;
   border-radius: 0px;
   &-list {
     margin: 5px;
   }
   transition: 0.2s;
-  /deep/ span {
+  ::v-deep span {
     margin: 0;
     font-size: 12px;
   }
-  /deep/ .tree-icon {
+  ::v-deep .tree-icon {
     width: 16px !important;
     height: 16px !important;
   }
-  /deep/ .tree-icon.tree-ocl {
+  ::v-deep .tree-icon.tree-ocl {
     width: 20px !important;
     height: 20px !important;
   }
-  /deep/ .tree-wholerow-ul {
+  ::v-deep .tree-wholerow-ul {
     min-height: 20vh;
     border-radius: 4px;
     margin-top: 30px;
-    background-color: $text-theme;
+    background-color: $theme-bg-detail;
     color: $text-theme-alt;
     border: 1px solid rgba($color: #000000, $alpha: 0.2);
     -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+    overflow-x: hidden;
   }
 }
 span.font-weight-bold {
@@ -154,7 +156,7 @@ span.font-weight-bold {
   border-top-right-radius: 4px;
   margin: 10px 0 0 4px;
   font-size: 13px;
-  background: $text-theme;
+  background: $theme-bg-detail;
   padding: 3px 14px 3px;
   border-top: 1px solid rgba($color: #000000, $alpha: 0.2);
   border-right: 1px solid rgba($color: #000000, $alpha: 0.2);

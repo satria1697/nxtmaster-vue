@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="col-8">
+      <div class="col-9">
         <div class="row">
           <div class="form form-group col-6">
             <label for="formHeader1" class="top">Header 1</label>
@@ -262,6 +262,6 @@ export default {
   }
 }
 .detail {
-  margin-top: 10px;
+  padding-top: 20px;
 }
 </style>

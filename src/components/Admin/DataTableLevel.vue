@@ -132,8 +132,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.modal-dialog {
-  margin-top: 100px;
-  max-width: 640px;
-}
+
 </style>

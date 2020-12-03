@@ -9,7 +9,7 @@
     border-radius: 4px;
     // border-top: 1px solid #ced4da;
     // width: 80px;
-    background-color: $text-theme;
+    background-color: $theme-bg-detail;
     z-index: 99;
     &-disabled {
       background-color: #e9ecef;
@@ -25,7 +25,7 @@
   margin: 0 15px;
 }
 select.custom-select {
-  background-color: $text-theme;
+  background-color: $theme-bg-detail;
 }
 .buttonBottom {
   display: grid;
@@ -37,17 +37,18 @@ select.custom-select {
 a {
   text-decoration: none;
 }
-.reddy {
-  color: red;
-}
-.greeny {
-  color: green;
-}
 label {
   font-size: 0.95em;
-  color: rgb(160, 160, 160);
+  color: #a0a0a0;
 }
 input.form-control {
   // width: auto;
-  background-color: $text-theme;
+  background-color: $theme-bg-detail;
+}
+select.form-control {
+  // width: auto;
+  background-color: $theme-bg-detail;
+}
+textarea.form-control {
+  background-color: $theme-bg-detail;
 }
