@@ -24,7 +24,6 @@ import VueListPicker from "vue-list-picker";
 
 // import loader from "vue-ui-preloader";
 
-
 import UserModal from "./components/UserModal.vue";
 import DeleteModal from "./components/DeleteConfirmation";
 
@@ -45,6 +44,7 @@ Vue.component("vue-navigation-bar", VueNavigationBar);
 Vue.use(VueListPicker);
 
 // Vue.use(loader);
+
 
 Vue.component("user-modal", UserModal);
 Vue.component("delete-modal", DeleteModal);

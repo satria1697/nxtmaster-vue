@@ -19,5 +19,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/style/abstracts/_variables";
-
 </style>

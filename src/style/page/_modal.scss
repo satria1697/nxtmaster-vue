@@ -32,6 +32,7 @@ div.modal {
     max-height: 90vh;
     background-color: $theme-bg-detail;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   &-footer {
     background-color: #fffbff;

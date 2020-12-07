@@ -222,7 +222,7 @@ export default {
       let self = this;
       self.isLoading = true;
       self.updateData();
-      // 
+      //
       self.isLoading = false;
     },
     isModal() {

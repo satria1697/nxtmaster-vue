@@ -26,14 +26,6 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <!-- <form-formulir-data
-                v-if="isFormulirDataModal"
-                title="Form Formulir Data"
-                :editId="editFormulirId"
-                :dataStatus="dataStatus"
-                :formulirId="dataFormulir.id"
-                @modal-closed="changeFormulirDataModal"
-              ></form-formulir-data> -->
               <div class="container">
                 <div
                   class="row"
@@ -194,7 +186,8 @@ export default {
       let self = this;
       let jsonForm = JSON.stringify(form);
       const params = {
-        formulirid: jsonForm
+        formulirid: jsonForm,
+        column: "keyid"
       };
       Api.analisisdata
         .find(self.dataFormulir.id, params)
@@ -215,6 +208,7 @@ export default {
       let jsonForm = JSON.stringify(form);
       const params = {
         formulirid: jsonForm
+        // column: "keyid"
       };
       Api.formulir
         .filterdata(params)
@@ -225,10 +219,9 @@ export default {
               value: []
             });
             for (let idx = 0; idx < data.formulirdata.length; idx++) {
-              // console.log(data.formulirdata);
               self.checkedbox[self.totalData].value.push({
                 id: data.formulirdata[idx].id,
-                value: 4,
+                value: self.dataStatus.length,
                 nilai: 0
               });
             }
@@ -247,6 +240,8 @@ export default {
       const jsonchecked = JSON.stringify(self.checkedbox);
       let rawData = {
         id: self.dataFormulir.id,
+        perawat_id: self.dataFormulir.perawat_id,
+        dokter_id: self.dataFormulir.dokter_id,
         checkeddata: jsonchecked
       };
       let formData = new FormData();
@@ -261,7 +256,8 @@ export default {
               self.textTitle = "Data berhasil disimpan";
               self.berhasil = true;
               self.isUserModal = true;
-              self.reset();
+              self.edit = true;
+              // self.reset();
             } else {
               self.berhasil = false;
               self.textTitle = "Terjadi kesalahan pada server";

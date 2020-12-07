@@ -64,6 +64,14 @@
                       >
                     </select>
                   </div>
+                  <div class="form form-group col">
+                    <label for="formtgll" class="top">Tingkatan</label>
+                    <input
+                      id="formtgll"
+                      class="bottom form-control"
+                      v-model="dataAll.keyid"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -106,7 +114,8 @@ import Api from "../../../api";
 function initialDataAll() {
   return {
     description: "",
-    formulirid: null
+    formulirid: null,
+    keyid: 0
   };
 }
 
@@ -163,7 +172,7 @@ export default {
     checkEdit() {
       let self = this;
       if (self.editId !== null) {
-        Api.formulir
+        Api.formulirdata
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
@@ -177,14 +186,16 @@ export default {
     register(status, id) {
       let self = this;
       let rawData = {
-        description: self.dataAll.description
+        description: self.dataAll.description,
+        formulirid: self.dataAll.formulirid,
+        keyid: self.dataAll.keyid
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
       if (status === "submit") {
-        Api.formulir
+        Api.formulirdata
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -211,7 +222,7 @@ export default {
             self.isUserModal = true;
           });
       } else {
-        Api.formulir
+        Api.formulirdata
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -242,7 +253,7 @@ export default {
     },
     deleteData(id) {
       let self = this;
-      Api.formulir
+      Api.formulirdata
         .delete(id)
         .then(resp => {
           console.log(resp);

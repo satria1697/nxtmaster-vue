@@ -29,6 +29,14 @@ const api = {
     Update: "/api/siska/analisisrawatinap/update/{id}",
     Delete: "/api/siska/analisisrawatinap/delete/{id}"
   },
+  laporan: {
+    Get: "/api/siska/laporan/data",
+    GetId: "/api/siska/laporan/{id}",
+    Register: "/api/siska/laporan/register",
+    Update: "/api/siska/laporan/update/{id}",
+    Delete: "/api/siska/laporan/delete/{id}",
+    laporan: "/api/siska/laporan/laporan/data"
+  },
   formulir: {
     Get: "/api/siska/formulir/data",
     GetId: "/api/siska/formulir/{id}",
@@ -66,13 +74,13 @@ const SiskaApi = {
       });
     },
     register: data => {
-      return Axios.post(api. analisisdata.Register, data);
+      return Axios.post(api.analisisdata.Register, data);
     },
     update: (id, data) => {
-      return Axios.post(api. analisisdata.Update.replace("{id}", id), data);
+      return Axios.post(api.analisisdata.Update.replace("{id}", id), data);
     },
     delete: id => {
-      return Axios.delete(api. analisisdata.Delete.replace("{id}", id));
+      return Axios.delete(api.analisisdata.Delete.replace("{id}", id));
     }
   },
   analisisformulir: {
@@ -130,6 +138,30 @@ const SiskaApi = {
     },
     delete: id => {
       return Axios.delete(api.analisisrawatinap.Delete.replace("{id}", id));
+    }
+  },
+  laporan: {
+    filter: params => {
+      return Axios.get(api.laporan.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(api.laporan.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(api.laporan.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(api.laporan.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(api.laporan.Delete.replace("{id}", id));
+    },
+    laporan: params => {
+      return Axios.get(api.laporan.laporan, {
+        params: params
+      });
     }
   },
   formulir: {

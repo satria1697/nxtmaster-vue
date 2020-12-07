@@ -45,6 +45,28 @@ const SiskaPath = [
       // icon: "fas fa-user-friends"
       // closable: false
     }
+  },
+  {
+    path: "/siska/laporan",
+    // name: "dataperawat",
+    component: importPage("Siska/LaporanKLPCM"),
+    meta: {
+      requireAuth: true,
+      title: "Laporan"
+      // icon: "fas fa-user-friends"
+      // closable: false
+    }
+  },
+  {
+    path: "/siska/laporankelengkapan",
+    // name: "dataperawat",
+    component: importPage("Siska/LaporanKelengkapan"),
+    meta: {
+      requireAuth: true,
+      title: "Laporan Kelengkapan"
+      // icon: "fas fa-user-friends"
+      // closable: false
+    }
   }
 ];
 

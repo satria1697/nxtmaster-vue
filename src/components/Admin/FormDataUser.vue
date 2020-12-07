@@ -508,7 +508,7 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
-            self.dataAll.active = self.dataAll.active === 1 ? true : false; 
+            self.dataAll.active = self.dataAll.active === 1 ? true : false;
             self.dataAll.akses.forEach(data => {
               self.confirmedAkses.push(data);
             });
@@ -572,7 +572,8 @@ export default {
             }
           })
           .catch(err => {
-            self.textTitle = err.response.data.error[Object.keys(err.response.data.error)[0]];
+            self.textTitle =
+              err.response.data.error[Object.keys(err.response.data.error)[0]];
             self.berhasil = false;
             self.isUserModal = true;
           });

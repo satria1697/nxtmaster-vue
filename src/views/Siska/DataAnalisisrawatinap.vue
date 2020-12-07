@@ -8,7 +8,6 @@
       :dataFormulir="dataFormulir"
       :dataDokter="dataDokter"
       :dataPerawat="dataPerawat"
-      :dataStatus="dataStatus"
       :dataRanap="dataRanap"
     ></Form>
     <form-formulir
@@ -78,8 +77,8 @@ export default {
           width: 5
         },
         {
-          label: "Ruang Rawat Inap",
-          name: "idranap",
+          label: "Nomer Rekam Medis",
+          name: "ranap.norm",
           orderable: true
         },
         {
@@ -89,12 +88,12 @@ export default {
         },
         {
           label: "Dokter",
-          name: "iddokter",
+          name: "dokter.namadokter",
           orderable: true
         },
         {
           label: "Perawat",
-          name: "idperawat",
+          name: "perawat.namaperawat",
           orderable: true
         },
         {
@@ -108,7 +107,7 @@ export default {
           orderable: true
         },
         {
-          label: " ",
+          label: "Checklist",
           name: "Pilih",
           orderable: false,
           event: "click",
@@ -154,7 +153,7 @@ export default {
       editFormulirId: null
     };
   },
-  created() {
+  mounted() {
     let self = this;
     self.isLoading = true;
     self.init();
@@ -172,8 +171,7 @@ export default {
       };
       self.getData(params);
       self.getDataFormulir();
-      self.getDataDokter();
-      self.getDataPerawat();
+      self.getDataTenagaMedis();
       self.getDataStatus();
       self.getDataRanap();
     },
@@ -183,8 +181,8 @@ export default {
       self.filter.page = params.page;
       self.filter.find = params.find;
       self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      self.filter.column = params.column;
+      self.filter.dir = params.dir;
       Api.analisisrawatinap
         .filter(params)
         .then(res => {
@@ -207,23 +205,39 @@ export default {
           console.log(err);
         });
     },
-    getDataDokter(params) {
+    // getDataDokter(params) {
+    //   let self = this;
+    //   Api.dokter
+    //     .filter(params)
+    //     .then(resp => {
+    //       self.dataDokter = resp.data.data;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
+    // getDataPerawat(params) {
+    //   let self = this;
+    //   Api.perawat
+    //     .filter(params)
+    //     .then(resp => {
+    //       self.dataPerawat = resp.data.data;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
+    getDataTenagaMedis(params) {
       let self = this;
-      Api.dokter
+      Api.tenagamedis
         .filter(params)
-        .then(resp => {
-          self.dataDokter = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    getDataPerawat(params) {
-      let self = this;
-      Api.perawat
-        .filter(params)
-        .then(resp => {
-          self.dataPerawat = resp.data.data;
+        .then(res => {
+          self.dataDokter = res.data.data.filter(function(data) {
+            return data.jenis_id === 1;
+          });
+          self.dataPerawat = res.data.data.filter(function(data) {
+            return data.jenis_id === 2;
+          });
         })
         .catch(err => {
           console.log(err);
@@ -288,11 +302,11 @@ export default {
         self.editFormulirId = id;
         self.isFormulirModal = true;
       } else {
-        self.init();
+        // self.init();
         // self.getData(self.filter);
         self.isFormulirModal = false;
       }
-    },
+    }
   }
 };
 </script>

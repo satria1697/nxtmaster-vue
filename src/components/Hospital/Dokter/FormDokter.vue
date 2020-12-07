@@ -118,7 +118,11 @@ function initialDataAll() {
     id: null,
     namadokter: "",
     nohp: null,
-    idspesialisasi: null
+    idspesialisasi: null,
+    spesialisasi: {
+      id: null,
+      spesialisasi: ""
+    }
   };
 }
 

@@ -44,7 +44,7 @@
                     <input
                       id="formDesc"
                       class="bottom form-control"
-                      v-model="dataAll.spesialisasi"
+                      v-model="dataAll.description"
                     />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ import Api from "../../../api";
 
 function initialDataAll() {
   return {
-    spesialisasi: ""
+    description: ""
   };
 }
 
@@ -156,7 +156,7 @@ export default {
     register(status, id) {
       let self = this;
       let rawData = {
-        spesialisasi: self.dataAll.spesialisasi
+        description: self.dataAll.description
       };
       let formData = new FormData();
       for (let key in rawData) {

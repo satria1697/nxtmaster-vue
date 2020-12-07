@@ -131,8 +131,8 @@ export default {
         page: 1,
         find: "",
         length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        column: "id",
+        dir: "ASC"
       };
       self.getData(params);
       self.getDataAgama();

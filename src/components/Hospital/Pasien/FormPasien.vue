@@ -37,17 +37,17 @@
                     />
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Jenis Kelamin</label>
+                    <label for="formjk" class="top">Jenis Kelamin</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formjk"
                       v-model="dataAll.jeniskelamin"
                     >
                       <option value="0">Laki-laki</option>
                       <option value="1">Perempuan</option>
                     </select>
                   </div>
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -68,7 +68,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-5">
+                  <div class="form form-group col-3">
                     <label for="formTmptl" class="top">Tempat Lahir</label>
                     <input
                       id="formTmptl"
@@ -76,29 +76,31 @@
                       v-model="dataAll.tempatlahir"
                     />
                   </div>
-                  <div class="form form-group col-5">
+                  <div class="form form-group col-3">
                     <label for="formtgll" class="top">Tanggal Lahir</label>
                     <input
                       type="date"
                       id="formtgll"
                       class="bottom form-control"
                       v-model="dataAll.tanggallahir"
+                      v-on:change="getUsia()"
                     />
                   </div>
-                  <div class="form form-group col-2">
-                    <label for="formTmptl" class="top">Usia</label>
+                  <div class="form form-group col-6">
+                    <label for="formusia" class="top top-disabled">Usia</label>
                     <input
-                      id="formTmptl"
+                      id="formusia"
                       class="bottom form-control"
-                      v-model="dataAll.usia"
+                      v-model="dataAll.usiafront"
+                      disabled
                     />
                   </div>
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Alamat</label>
+                    <label for="formalamat" class="top">Alamat</label>
                     <input
-                      id="formhp"
+                      id="formalamat"
                       class="bottom form-control"
                       v-model="dataAll.alamat"
                     />
@@ -106,28 +108,34 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Asuransi</label>
+                    <label for="formasuransi" class="top">Asuransi</label>
                     <input
-                      id="formhp"
+                      id="formasuransi"
                       class="bottom form-control"
                       v-model="dataAll.asuransi"
                     />
                   </div>
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Nomer Perserta</label>
+                    <label
+                      for="formnoperserta"
+                      class="top"
+                      :class="{ 'top-disabled': dataAll.asuransi === '' }"
+                      >Nomer Perserta</label
+                    >
                     <input
-                      id="formhp"
+                      id="formnoperserta"
                       class="bottom form-control"
                       v-model="dataAll.nopeserta"
+                      :disabled="dataAll.asuransi === ''"
                     />
                   </div>
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formAkses" class="top">Agama</label>
+                    <label for="formagama" class="top">Agama</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formagama"
                       v-model="dataAll.agama"
                     >
                       <option
@@ -149,12 +157,12 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formAkses" class="top"
+                    <label for="formpendidikan" class="top"
                       >Pendidikan Terakhir</label
                     >
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formpendidikan"
                       v-model="dataAll.pendidikan"
                     >
                       <option
@@ -166,10 +174,10 @@
                     </select>
                   </div>
                   <div class="form form-group col">
-                    <label for="formAkses" class="top">Pekerjaan</label>
+                    <label for="formpekerjaan" class="top">Pekerjaan</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formpekerjaan"
                       v-model="dataAll.pekerjaan"
                     >
                       <option
@@ -183,17 +191,17 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Penganggung Jawab</label>
+                    <label for="formpj" class="top">Penganggung Jawab</label>
                     <input
-                      id="formhp"
+                      id="formpj"
                       class="bottom form-control"
                       v-model="dataAll.penanggungjawab"
                     />
                   </div>
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Nomer Hp</label>
+                    <label for="fomhppj" class="top">Nomer Hp</label>
                     <input
-                      id="formhp"
+                      id="fomhppj"
                       class="bottom form-control"
                       v-model="dataAll.nohppenanggungjawab"
                     />
@@ -245,6 +253,7 @@ function initialDataAll() {
     tempatlahir: "",
     tanggallahir: "",
     usia: "",
+    usiafront: "",
     jeniskelamin: null,
     agama: 0,
     alamat: "",
@@ -421,6 +430,46 @@ export default {
           console.log(err);
           self.berhasil = false;
         });
+    },
+    getUsia() {
+      let self = this;
+      var now = new Date();
+      var yearNow = now.getYear();
+      var monthNow = now.getMonth();
+      var dateNow = now.getDate();
+
+      let date = new Date(self.dataAll.tanggallahir);
+      var yearDob = date.getYear();
+      var monthDob = date.getMonth();
+      var dateDob = date.getDate();
+
+      let yearAge = yearNow - yearDob;
+
+      if (monthNow >= monthDob) var monthAge = monthNow - monthDob;
+      else {
+        yearAge--;
+        monthAge = 12 + monthNow - monthDob;
+      }
+
+      if (dateNow >= dateDob) var dateAge = dateNow - dateDob;
+      else {
+        monthAge--;
+        dateAge = 31 + dateNow - dateDob;
+
+        if (monthAge < 0) {
+          monthAge = 11;
+          yearAge--;
+        }
+      }
+
+      const age = {
+        years: yearAge,
+        months: monthAge,
+        days: dateAge
+      };
+      self.dataAll.usia = age.years + "." + age.months + "." + age.days;
+      self.dataAll.usiafront =
+        age.years + " tahun " + age.months + " bulan " + age.days + " hari ";
     }
   }
 };

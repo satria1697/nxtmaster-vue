@@ -28,7 +28,7 @@
               />
               <div class="container">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -37,20 +37,12 @@
                       disabled
                     />
                   </div>
-                  <div v-else class="form form-group col-4">
-                    <label for="formID" class="top">ID</label>
-                    <input
-                      id="formID"
-                      class="bottom form-control"
-                      v-model="dataAll.id"
-                    />
-                  </div>
                 </div>
                 <div class="row">
                   <div class="form form-group col-10">
-                    <label for="formDesc" class="top">Kelas Rawat Inap</label>
+                    <label for="formnama" class="top">Jenis Tenaga Medis</label>
                     <input
-                      id="formDesc"
+                      id="formnama"
                       class="bottom form-control"
                       v-model="dataAll.description"
                     />
@@ -58,18 +50,18 @@
                 </div>
               </div>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
                 class="btn btn-default"
-                v-on:click="register('submit', null)"
+                v-on:click="register('submit', 0)"
               >
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button
                 class="btn btn-default float-left"
                 v-on:click="isDeleteModal = true"
@@ -96,7 +88,7 @@ import Api from "../../../api";
 
 function initialDataAll() {
   return {
-    id: null,
+    id: 0,
     description: ""
   };
 }
@@ -150,8 +142,8 @@ export default {
     },
     checkEdit() {
       let self = this;
-      if (self.editId !== null) {
-        Api.kelasrawatinap
+      if (self.editId !== 0) {
+        Api.jenistenagamedis
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
@@ -172,8 +164,8 @@ export default {
         formData.append(key, rawData[key]);
       }
       if (status === "submit") {
-        formData.append("id", self.dataAll.id);
-        Api.kelasrawatinap
+        console.log("asdjkajkhs");
+        Api.jenistenagamedis
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -200,7 +192,7 @@ export default {
             self.isUserModal = true;
           });
       } else {
-        Api.kelasrawatinap
+        Api.jenistenagamedis
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -231,7 +223,7 @@ export default {
     },
     deleteData(id) {
       let self = this;
-      Api.kelasrawatinap
+      Api.jenistenagamedis
         .delete(id)
         .then(resp => {
           console.log(resp);

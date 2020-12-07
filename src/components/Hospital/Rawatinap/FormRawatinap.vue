@@ -40,10 +40,10 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Nama Pasien</label>
+                    <label for="formnamapasien" class="top">Nama Pasien</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formnamapasien"
                       v-model="dataAll.idpasien"
                     >
                       <option
@@ -55,19 +55,21 @@
                     </select>
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formtgll" class="top">Tanggal Masuk</label>
+                    <label for="formtglmsk" class="top">Tanggal Masuk</label>
                     <input
                       type="datetime-local"
-                      id="formtgll"
+                      id="formtglmsk"
                       class="bottom form-control"
                       v-model="dataAll.tglmasuk"
                     />
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formtgll" class="top">Tanggal Keluar</label>
+                    <label for="formtglkeluar" class="top"
+                      >Tanggal Keluar</label
+                    >
                     <input
                       type="datetime-local"
-                      id="formtgll"
+                      id="formtglkeluar"
                       class="bottom form-control"
                       v-model="dataAll.tglkeluar"
                     />
@@ -75,10 +77,12 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Kelas Rawat Inap</label>
+                    <label for="formkelranap" class="top"
+                      >Kelas Rawat Inap</label
+                    >
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formkelranap"
                       v-model="dataAll.idkelas"
                     >
                       <option
@@ -90,10 +94,10 @@
                     </select>
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Bangsal</label>
+                    <label for="formbangsal" class="top">Bangsal</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formbangsal"
                       v-model="dataAll.idbangsal"
                     >
                       <option
@@ -105,10 +109,12 @@
                     </select>
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Kamar Rawat Inap</label>
+                    <label for="formkamarranap" class="top"
+                      >Kamar Rawat Inap</label
+                    >
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formkamarranap"
                       v-model="dataAll.idkamar"
                     >
                       <option
@@ -122,27 +128,27 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col-10">
-                    <label for="formAkses" class="top"
-                      >Dokter yang Menangani</label
+                    <label for="formdpjp" class="top"
+                      >Dokter Penanggung Jawab</label
                     >
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formdpjp"
                       v-model="dataAll.iddokter"
                     >
                       <option
                         :value="data.id"
                         v-for="data in dataDokter"
                         :key="data.id"
-                        >{{ data.id }} - {{ data.namadokter }}</option
+                        >{{ data.id }} - {{ data.nama }}</option
                       >
                     </select>
                   </div>
                   <div class="form form-group col-2">
-                    <label for="formAkses" class="top">Cara Masuk</label>
+                    <label for="formmasuk" class="top">Cara Masuk</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formmasuk"
                       v-model="dataAll.jeniskasus"
                     >
                       <option value="1">Baru</option>
@@ -152,9 +158,9 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formhp" class="top">Tindakan</label>
+                    <label for="formtindakan" class="top">Tindakan</label>
                     <textarea
-                      id="formhp"
+                      id="formtindakan"
                       class="bottom form-control"
                       v-model="dataAll.tindakan"
                       rows="3"
@@ -163,10 +169,10 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Cara Masuk</label>
+                    <label for="formhowto" class="top">Cara Masuk</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formhowto"
                       v-model="dataAll.caramasuk"
                     >
                       <option value="1">Poliklinik</option>
@@ -174,10 +180,12 @@
                     </select>
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Keterangan Pulang</label>
+                    <label for="formpulang" class="top"
+                      >Keterangan Pulang</label
+                    >
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formpulang"
                       v-model="dataAll.ketpulang"
                     >
                       <option value="1">APS</option>
@@ -187,10 +195,10 @@
                     </select>
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formAkses" class="top">Cara Pembayaran</label>
+                    <label for="formbayar" class="top">Cara Pembayaran</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
+                      id="formbayar"
                       v-model="dataAll.carabayar"
                     >
                       <option value="1">BPJS</option>
@@ -241,12 +249,29 @@ function initialDataAll() {
   return {
     id: null,
     idpasien: null,
+    pasien: {
+      id: null,
+      norm: ""
+    },
     tglmasuk: "",
     tglkeluar: "",
     idkelas: null,
+    kelas: {
+      id: null,
+      desription: ""
+    },
     idbangsal: null,
+    bangsal: {
+      id: null,
+      description: ""
+    },
     idkamar: null,
     iddokter: null,
+    dokter: {
+      id: null,
+      namadokter: "",
+      nohp: ""
+    },
     jeniskasus: null,
     tindakan: "",
     caramasuk: null,
@@ -336,6 +361,7 @@ export default {
       let rawData = {
         tglmasuk: self.dataAll.tglmasuk,
         idpasien: self.dataAll.idpasien,
+        norm: self.dataAll.pasien.norm,
         tglkeluar: self.dataAll.tglkeluar,
         idkelas: self.dataAll.idkelas,
         idbangsal: self.dataAll.idbangsal,

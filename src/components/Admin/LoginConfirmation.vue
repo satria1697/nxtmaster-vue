@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
               <div class="row" v-if="this.$store.getters['getLevelId'] > 3">
-                <div class="form form-group col-sm-12">
+                <div class="form form-group col-sm-10">
                   <label for="user" class="top">Username</label>
                   <input
                     id="user"
@@ -21,7 +21,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form form-group col-sm-12">
+                <div class="form form-group col-sm-10">
                   <label for="password" class="top">Password</label>
                   <input
                     id="password"
@@ -116,13 +116,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.modal {
-  &-mask {
-    z-index: 90999999;
-  }
-  &-content {
-    margin: 150px auto;
-    max-width: 300px;
-  }
-}
+// .modal {
+//   &-mask {
+//     z-index: 90999999;
+//   }
+//   &-content {
+//     // margin: 150px auto;
+//     // max-width: 300px;
+//   }
+// }
 </style>

@@ -68,6 +68,11 @@ export default {
           orderable: true
         },
         {
+          label: "Kelas Rawat Inap",
+          name: "kelasranap.description",
+          orderable: true
+        },
+        {
           label: "Edit",
           name: "Edit",
           orderable: false,
@@ -112,8 +117,8 @@ export default {
         page: 1,
         find: "",
         length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        column: "id",
+        dir: "ASC"
       };
       self.getData(params);
       self.getDataKelasRawatInap();

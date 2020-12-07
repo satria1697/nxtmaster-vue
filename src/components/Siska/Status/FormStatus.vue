@@ -109,7 +109,7 @@ function initialDataAll() {
     id: null,
     description: "",
     warna: "",
-    value: null
+    nilai: null
   };
 }
 
@@ -179,7 +179,7 @@ export default {
       let rawData = {
         description: self.dataAll.description,
         warna: self.dataAll.warna,
-        value: self.dataAll.value
+        nilai: self.dataAll.nilai
       };
       let formData = new FormData();
       for (let key in rawData) {

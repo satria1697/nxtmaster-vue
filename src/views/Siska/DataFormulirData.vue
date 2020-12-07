@@ -51,8 +51,8 @@ export default {
         page: null,
         find: "",
         length: null,
-        orderColumn: "",
-        orderBy: ""
+        column: "",
+        dir: ""
       },
       isLoading: false,
       columns: [
@@ -69,7 +69,12 @@ export default {
         },
         {
           label: "idformulir",
-          name: "formulirid",
+          name: "formulir.description",
+          orderable: true
+        },
+        {
+          label: "Tingkatan",
+          name: "keyid",
           orderable: true
         },
         {
@@ -117,8 +122,8 @@ export default {
         page: 1,
         find: "",
         length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        column: "formulirid",
+        dir: "ASC"
       };
       self.getData(params);
       self.getDataFormulir();
@@ -129,8 +134,8 @@ export default {
       self.filter.page = params.page;
       self.filter.find = params.find;
       self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      self.filter.column = params.column;
+      self.filter.dir = params.dir;
       Api.formulirdata
         .filter(params)
         .then(res => {
@@ -174,11 +179,14 @@ export default {
     },
     getDataFormulir(params) {
       let self = this;
-      Api.formulir.filter(params).then(resp => {
-        self.dataFormulir = resp.data.data
-      }).catch(err => {
-        console.log(err)
-      });
+      Api.formulir
+        .filter(params)
+        .then(resp => {
+          self.dataFormulir = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

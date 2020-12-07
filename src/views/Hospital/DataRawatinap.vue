@@ -67,23 +67,23 @@ export default {
           width: 5
         },
         {
-          label: "Pasien",
-          name: "idpasien",
+          label: "Nomer Rekam Medis",
+          name: "pasien.norm",
           orderable: true
         },
         {
           label: "Kelas",
-          name: "idkelas",
+          name: "kelas.description",
           orderable: true
         },
         {
           label: "Bangsal",
-          name: "idbangsal",
+          name: "bangsal.description",
           orderable: true
         },
         {
           label: "Dokter",
-          name: "iddokter",
+          name: "dokter.namadokter",
           orderable: true
         },
         {
@@ -135,8 +135,8 @@ export default {
         page: 1,
         find: "",
         length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        column: "id",
+        dir: "ASC"
       };
       self.getData(params);
       self.getDataPasien();
@@ -162,6 +162,37 @@ export default {
         .catch(err => {
           console.log(err);
           self.isLoading = false;
+        });
+    },
+
+    reloadTable(tableProps) {
+      let self = this;
+      self.getData(tableProps);
+    },
+    edit(data) {
+      self.changeModal(data.id);
+    },
+    changeModal(id) {
+      let self = this;
+      if (self.isModal === false) {
+        self.editId = id;
+        self.isModal = true;
+      } else {
+        self.getData(self.filter);
+        self.isModal = false;
+      }
+    },
+    deleteData(id) {
+      let self = this;
+      Api.rawatinap
+        .delete(id)
+        .then(resp => {
+          if (resp.status === 204) {
+            self.getData(self.filter);
+          }
+        })
+        .catch(() => {
+          window.alert("Tidak dapat menghapus Data");
         });
     },
     getDataPasien(params) {
@@ -210,43 +241,15 @@ export default {
     },
     getDataDokter(params) {
       let self = this;
-      Api.dokter
+      Api.tenagamedis
         .filter(params)
         .then(res => {
-          self.dataDokter = res.data.data;
+          self.dataDokter = res.data.data.filter(function(data) {
+            return data.jenis_id === 1;
+          });
         })
         .catch(err => {
           console.log(err);
-        });
-    },
-    reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
-    },
-    edit(data) {
-      self.changeModal(data.id);
-    },
-    changeModal(id) {
-      let self = this;
-      if (self.isModal === false) {
-        self.editId = id;
-        self.isModal = true;
-      } else {
-        self.getData(self.filter);
-        self.isModal = false;
-      }
-    },
-    deleteData(id) {
-      let self = this;
-      Api.rawatinap
-        .delete(id)
-        .then(resp => {
-          if (resp.status === 204) {
-            self.getData(self.filter);
-          }
-        })
-        .catch(() => {
-          window.alert("Tidak dapat menghapus Data");
         });
     }
   }

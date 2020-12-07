@@ -3,17 +3,17 @@
     <Form
       v-if="isModal"
       :editId="editId"
-      title="Form Pengisian Data Pengguna"
+      title="Form Pengisian Data Pasien"
       @modal-closed="changeModal"
     ></Form>
     <div class="container">
       <div class="row">
-        <div class="col-md">
+        <div class="col">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div class="btn btn-default btn-md" v-on:click="changeModal(0)">
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
@@ -32,12 +32,11 @@
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Rank/FormRank";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-import store from "../../../store";
+import Api from "../../api";
+import Form from "../../components/Hospital/JenisTenagaMedis/FormJenisTenagaMedis";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
+// import store from "../../store";
 
 export default {
   components: {
@@ -63,7 +62,7 @@ export default {
           width: 5
         },
         {
-          label: "Description",
+          label: "Jenis Tenaga Medis",
           name: "description",
           orderable: true
         },
@@ -95,7 +94,10 @@ export default {
         }
       },
       isModal: false,
-      editId: null
+      editId: null,
+      dataAgama: [],
+      dataPendidikan: [],
+      dataPekerjaan: []
     };
   },
   created() {
@@ -107,7 +109,6 @@ export default {
   methods: {
     init() {
       let self = this;
-
       const params = {
         page: 1,
         find: "",
@@ -116,6 +117,9 @@ export default {
         dir: "ASC"
       };
       self.getData(params);
+      self.getDataAgama();
+      self.getDataPekerjaan();
+      self.getDataPendidikan();
     },
     getData(params) {
       let self = this;
@@ -125,7 +129,7 @@ export default {
       self.filter.length = params.length;
       self.filter.orderColumn = params.orderColumn;
       self.filter.orderBy = params.orderBy;
-      Api.rank
+      Api.jenistenagamedis
         .filter(params)
         .then(res => {
           self.dataAll = res.data;
@@ -153,25 +157,9 @@ export default {
         self.isModal = false;
       }
     },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
-    },
     deleteData(id) {
       let self = this;
-      Api.rank
+      Api.jenistenagamedis
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {

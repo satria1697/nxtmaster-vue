@@ -28,7 +28,7 @@
               />
               <div class="container">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -37,39 +37,74 @@
                       disabled
                     />
                   </div>
-                  <div v-else class="form form-group col-4">
-                    <label for="formID" class="top">ID</label>
-                    <input
-                      id="formID"
-                      class="bottom form-control"
-                      v-model="dataAll.id"
-                    />
+                  <div class="form form-group col">
+                    <label for="formtjm" class="top">Jenis Tenaga Medis</label>
+                    <select
+                      class="form-control bottom custom-select"
+                      id="formtjm"
+                      v-model="dataAll.jenis_id"
+                    >
+                      <option
+                        :value="data.id"
+                        v-for="data in dataJenisTM"
+                        :key="data.id"
+                        >{{ data.id }} - {{ data.description }}</option
+                      >
+                    </select>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-10">
-                    <label for="formDesc" class="top">Kelas Rawat Inap</label>
+                  <div class="form form-group col-4">
+                    <label for="formnama" class="top">nama</label>
                     <input
-                      id="formDesc"
+                      id="formnama"
                       class="bottom form-control"
-                      v-model="dataAll.description"
+                      v-model="dataAll.nama"
                     />
+                  </div>
+                  <div class="form form-group col-4">
+                    <label for="formnohp" class="top">Nomer HP</label>
+                    <input
+                      id="formnohp"
+                      class="bottom form-control"
+                      v-model="dataAll.nohp"
+                    />
+                  </div>
+                  <div
+                    v-if="dataAll.jenis_id === 1"
+                    class="form form-group col-4"
+                  >
+                    <label for="formspesialisasi" class="top"
+                      >Spesialisasi</label
+                    >
+                    <select
+                      class="form-control bottom custom-select"
+                      id="formspesialisasi"
+                      v-model="dataAll.spesialisasi_id"
+                    >
+                      <option
+                        :value="data.id"
+                        v-for="data in dataSpesialisasi"
+                        :key="data.id"
+                        >{{ data.id }} - {{ data.description }}</option
+                      >
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
                 class="btn btn-default"
-                v-on:click="register('submit', null)"
+                v-on:click="register('submit', 0)"
               >
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button
                 class="btn btn-default float-left"
                 v-on:click="isDeleteModal = true"
@@ -96,8 +131,18 @@ import Api from "../../../api";
 
 function initialDataAll() {
   return {
-    id: null,
-    description: ""
+    id: 0,
+    nama: "",
+    jenis_id: 0,
+    jenis: {
+      id: 0,
+      description: ""
+    },
+    spesialisasi_id: 0,
+    spesialisasi: {
+      id: 0,
+      description: ""
+    }
   };
 }
 
@@ -108,6 +153,12 @@ export default {
     },
     title: {
       type: String
+    },
+    dataJenisTM: {
+      type: Array
+    },
+    dataSpesialisasi: {
+      type: Array
     }
   },
   data() {
@@ -150,8 +201,8 @@ export default {
     },
     checkEdit() {
       let self = this;
-      if (self.editId !== null) {
-        Api.kelasrawatinap
+      if (self.editId !== 0) {
+        Api.tenagamedis
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
@@ -165,15 +216,18 @@ export default {
     register(status, id) {
       let self = this;
       let rawData = {
-        description: self.dataAll.description
+        nama: self.dataAll.nama,
+        nohp: self.dataAll.nohp,
+        jenis_id: self.dataAll.jenis_id,
+        spesialisasi_id: self.dataAll.spesialisasi_id
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
       if (status === "submit") {
-        formData.append("id", self.dataAll.id);
-        Api.kelasrawatinap
+        console.log("asdjkajkhs");
+        Api.tenagamedis
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -200,7 +254,7 @@ export default {
             self.isUserModal = true;
           });
       } else {
-        Api.kelasrawatinap
+        Api.tenagamedis
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
@@ -231,7 +285,7 @@ export default {
     },
     deleteData(id) {
       let self = this;
-      Api.kelasrawatinap
+      Api.tenagamedis
         .delete(id)
         .then(resp => {
           console.log(resp);

@@ -50,7 +50,7 @@
                         :value="data.id"
                         v-for="data in dataRanap"
                         :key="data.id"
-                        >{{ data.id }} - {{ data.idpasien }}</option
+                        >{{ data.id }} - {{ data.norm }}</option
                       >
                     </select>
                   </div>
@@ -67,39 +67,39 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formAkses" class="top">Dokter</label>
+                    <label for="formdokter" class="top">Dokter</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.iddokter"
+                      id="formdokter"
+                      v-model="dataAll.dokter_id"
                     >
                       <option
                         :value="data.id"
                         v-for="data in dataDokter"
                         :key="data.id"
-                        >{{ data.id }} - {{ data.namadokter }}</option
+                        >{{ data.id }} - {{ data.nama }}</option
                       >
                     </select>
                   </div>
                   <div class="form form-group col">
-                    <label for="formAkses" class="top">Perawat</label>
+                    <label for="formperawat" class="top">Perawat</label>
                     <select
                       class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.idperawat"
+                      id="formperawat"
+                      v-model="dataAll.perawat_id"
                     >
                       <option
                         :value="data.id"
                         v-for="data in dataPerawat"
                         :key="data.id"
-                        >{{ data.id }} - {{ data.namaperawat }}</option
+                        >{{ data.id }} - {{ data.nama }}</option
                       >
                     </select>
                   </div>
                 </div>
                 <div class="row">
                   <vue-list-picker
-                    :left-items="dataFormulir"
+                    :left-items="dataFormulirAll"
                     :right-items="confirmedFormulir"
                     title-left="Formulir Tersedia"
                     title-right="Formulir Terpilih"
@@ -114,22 +114,6 @@
                   />
                 </div>
                 <div class="row">
-                  <div class="form form-group col">
-                    <label for="formAkses" class="top">Status</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.idstatus"
-                    >
-                      <option
-                        :style="{ color: data.warna }"
-                        :value="data.id"
-                        v-for="data in dataStatus"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
-                  </div>
                   <div class="form form-group col-4">
                     <label for="formDesc" class="top">Jatuh Tempo</label>
                     <input
@@ -140,42 +124,56 @@
                     />
                   </div>
                   <div class="form form-group col-4">
-                    <label for="formDesc" class="top">Tanggal Lengkap</label>
+                    <label for="formtgllengkap" class="top"
+                      >Tanggal Lengkap</label
+                    >
                     <input
                       type="datetime-local"
-                      id="formDesc"
+                      id="formtgllengkap"
                       class="bottom form-control"
                       v-model="dataAll.tgllengkap"
+                      @change="setStatus()"
+                    />
+                  </div>
+                  <div class="form form-group col-4">
+                    <label for="formstatus" class="top top-disabled"
+                      >Status</label
+                    >
+                    <input
+                      id="formstatus"
+                      class="bottom form-control disabled"
+                      v-model="dataAll.status"
+                      disabled
                     />
                   </div>
                 </div>
               </div>
-            </div>
-            <div v-if="editId === null" class="modal-footer">
-              <button class="btn btn-default" v-on:click="reset()">
-                <i class="fas fa-eraser"></i> Reset
-              </button>
-              <button
-                class="btn btn-default"
-                v-on:click="register('submit', null)"
-              >
-                <i class="fas fa-save"></i> Simpan
-              </button>
-            </div>
-            <div v-if="editId !== null" class="modal-footer">
-              <button
-                class="btn btn-default float-left"
-                v-on:click="isDeleteModal = true"
-              >
-                <i class="fas fa-trash"></i> Delete
-              </button>
-              <button
-                class="btn btn-default"
-                v-on:click="register('update', dataAll.id)"
-              >
-                <i class="fas fa-save"></i>
-                Simpan Perubahan
-              </button>
+              <div v-if="editId === null" class="modal-footer">
+                <button class="btn btn-default" v-on:click="reset()">
+                  <i class="fas fa-eraser"></i> Reset
+                </button>
+                <button
+                  class="btn btn-default"
+                  v-on:click="register('submit', null)"
+                >
+                  <i class="fas fa-save"></i> Simpan
+                </button>
+              </div>
+              <div v-if="editId !== null" class="modal-footer">
+                <button
+                  class="btn btn-default float-left"
+                  v-on:click="isDeleteModal = true"
+                >
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+                <button
+                  class="btn btn-default"
+                  v-on:click="register('update', dataAll.id)"
+                >
+                  <i class="fas fa-save"></i>
+                  Simpan Perubahan
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -186,15 +184,16 @@
 
 <script>
 import Api from "../../../api";
+import moment from "moment";
 
 function initialDataAll() {
   return {
     id: null,
     idranap: null,
     tglinput: "",
-    iddokter: null,
-    idperawat: null,
-    idstatus: 4,
+    perawat_id: null,
+    dokter_id: null,
+    status: 0,
     jatuhtempo: "",
     tgllengkap: ""
   };
@@ -234,7 +233,8 @@ export default {
       isDeleteModal: false,
       textTitle: "",
       isUserModal: false,
-      confirmedFormulir: []
+      confirmedFormulir: [],
+      dataFormulirAll: []
     };
   },
   created() {
@@ -270,14 +270,11 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
-            // self.getDataFormulir();
-            // console.log(self.dataAll.tglinput);
             if (self.dataAll.tglinput !== null) {
               self.dataAll.tglinput = self.dataAll.tglinput.replace(" ", "T");
             } else {
               self.dataAll.tglinput = "";
             }
-            console.log(self.dataAll.jatuhtempo);
             if (self.dataAll.jatuhtempo !== null) {
               self.dataAll.jatuhtempo = self.dataAll.jatuhtempo.replace(
                 " ",
@@ -297,7 +294,7 @@ export default {
             self.dataAll.formulir.forEach(data => {
               self.confirmedFormulir.push(data);
             });
-            self.dataFormulir = self.dataFormulir.filter(
+            self.dataFormulirAll = self.dataFormulir.filter(
               data => !self.confirmedFormulir.find(({ id }) => data.id === id)
             );
           })
@@ -305,6 +302,8 @@ export default {
             console.log(error);
             self.reset();
           });
+      } else {
+        self.dataFormulirAll = self.dataFormulir;
       }
     },
     register(status, id) {
@@ -313,8 +312,8 @@ export default {
       let rawData = {
         idranap: self.dataAll.idranap,
         tglinput: self.dataAll.tglinput,
-        iddokter: self.dataAll.iddokter,
-        idperawat: self.dataAll.idperawat,
+        dokter_id: self.dataAll.dokter_id,
+        perawat_id: self.dataAll.perawat_id,
         idstatus: self.dataAll.idstatus,
         jatuhtempo: self.dataAll.jatuhtempo,
         tgllengkap: self.dataAll.tgllengkap,
@@ -423,7 +422,7 @@ export default {
       let self = this;
       let params = {
         analisisid: self.editId
-      }
+      };
       Api.analisisformulir
         .filter(params)
         .then(resp => {
@@ -432,6 +431,24 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    setStatus() {
+      let self = this;
+      let a = moment(self.dataAll.tglinput);
+      let b = moment(self.dataAll.tgllengkap);
+      let duration = moment.duration(b.diff(a));
+      let hours = duration.asHours();
+      let status = 0;
+      if (hours <= 24 && hours >= 0) {
+        status = 1;
+      } else if (hours <= 48 && hours > 24) {
+        status = 2;
+      } else if (hours > 48) {
+        status = 3;
+      } else {
+        status = 4;
+      }
+      self.dataAll.status = status;
     }
   }
 };

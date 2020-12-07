@@ -106,7 +106,11 @@ import Api from "../../../api";
 function initialDataAll() {
   return {
     description: "",
-    idkelas: null
+    idkelas: null,
+    kelas: {
+      id: null,
+      description: ""
+    }
   };
 }
 

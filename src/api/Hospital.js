@@ -36,6 +36,13 @@ const api = {
     Update: "/api/hospital/icd10/update/{id}",
     Delete: "/api/hospital/icd10/delete/{id}"
   },
+  jenistenagamedis: {
+    Get: "/api/hospital/jenistenagamedis/data",
+    GetId: "/api/hospital/jenistenagamedis/{id}",
+    Register: "/api/hospital/jenistenagamedis/register",
+    Update: "/api/hospital/jenistenagamedis/update/{id}",
+    Delete: "/api/hospital/jenistenagamedis/delete/{id}"
+  },
   kamarrawatinap: {
     Get: "/api/hospital/kamarrawatinap/data",
     GetId: "/api/hospital/kamarrawatinap/{id}",
@@ -91,6 +98,13 @@ const api = {
     Register: "/api/hospital/spesialisasi/register",
     Update: "/api/hospital/spesialisasi/update/{id}",
     Delete: "/api/hospital/spesialisasi/delete/{id}"
+  },
+  tenagamedis: {
+    Get: "/api/hospital/tenagamedis/data",
+    GetId: "/api/hospital/tenagamedis/{id}",
+    Register: "/api/hospital/tenagamedis/register",
+    Update: "/api/hospital/tenagamedis/update/{id}",
+    Delete: "/api/hospital/tenagamedis/delete/{id}"
   },
   wilayah: {
     Get: "/api/hospital/wilayah/data",
@@ -198,6 +212,25 @@ const HospitalApi = {
     },
     delete: id => {
       return Axios.delete(api.icd10.Delete.replace("{id}", id));
+    }
+  },
+  jenistenagamedis: {
+    filter: params => {
+      return Axios.get(api.jenistenagamedis.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(api.jenistenagamedis.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(api.jenistenagamedis.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(api.jenistenagamedis.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(api.jenistenagamedis.Delete.replace("{id}", id));
     }
   },
   kamarrawatinap: {
@@ -350,6 +383,25 @@ const HospitalApi = {
     },
     delete: id => {
       return Axios.delete(api.spesialisasi.Delete.replace("{id}", id));
+    }
+  },
+  tenagamedis: {
+    filter: params => {
+      return Axios.get(api.tenagamedis.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(api.tenagamedis.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(api.tenagamedis.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(api.tenagamedis.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(api.tenagamedis.Delete.replace("{id}", id));
     }
   },
   wilayah: {

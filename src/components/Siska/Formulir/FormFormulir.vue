@@ -47,6 +47,14 @@
                       v-model="dataAll.description"
                     />
                   </div>
+                  <div class="form form-group col">
+                    <label for="formtgll" class="top">Dibutuhkan</label>
+                    <input
+                      id="formtgll"
+                      class="bottom form-control"
+                      v-model="dataAll.required"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -88,7 +96,8 @@ import Api from "../../../api";
 
 function initialDataAll() {
   return {
-    description: ""
+    description: "",
+    required: null
   };
 }
 
@@ -156,7 +165,8 @@ export default {
     register(status, id) {
       let self = this;
       let rawData = {
-        description: self.dataAll.description
+        description: self.dataAll.description,
+        required: self.dataAll.required
       };
       let formData = new FormData();
       for (let key in rawData) {

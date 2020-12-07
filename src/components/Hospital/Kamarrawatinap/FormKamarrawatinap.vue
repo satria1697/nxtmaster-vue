@@ -106,7 +106,11 @@ import Api from "../../../api";
 function initialDataAll() {
   return {
     description: "",
-    idbangsal: null
+    idbangsal: null,
+    bangsal: {
+      id: null,
+      description: ""
+    }
   };
 }
 
@@ -163,7 +167,7 @@ export default {
     checkEdit() {
       let self = this;
       if (self.editId !== null) {
-        Api.bangsal
+        Api.kamarrawatinap
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
