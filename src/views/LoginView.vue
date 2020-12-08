@@ -61,9 +61,9 @@
           </button>
         </div>
       </div>
-    </div>
-    <div class="fixed-bottom bg-theme">
-      <h1 class="display-1">NXTOffice4</h1>
+      <div class="fixed-bottom bg-theme">
+        <h1 class="display-1">NXTOffice4</h1>
+      </div>
     </div>
   </div>
 </template>
@@ -220,7 +220,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables.scss";
+@import "src/style/abstracts/variables";
 .login-page {
   height: 100vh;
   // padding-bottom: 10%;
@@ -231,7 +231,19 @@ export default {
   margin: 100px auto;
   padding: 10px 30px;
   background-color: $theme-bg-detail;
+  /*opacity: 0.9;*/
   border-radius: 8px;
-  z-index: 100;
+  z-index: 9999;
 }
+.particles-js {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*z-index: 10;*/
+}
+/*.fixed-bottom {*/
+  /*z-index: 10;*/
+/*}*/
 </style>

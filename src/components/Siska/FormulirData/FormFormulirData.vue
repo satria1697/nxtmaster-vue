@@ -203,6 +203,7 @@ export default {
               self.berhasil = true;
               self.isUserModal = true;
               self.reset();
+              self.dataAll.keyid = parseInt(rawData.keyid) + 1;
             } else {
               self.berhasil = false;
               self.textTitle = "Terjadi kesalahan pada server";

@@ -134,12 +134,10 @@
           </div>
         </div>
         <div class="row" v-if="this.$store.getters['getLevelId'] === 1">
-          <div class="modal-footer">
-            <button class="btn btn-default" v-on:click="register(1)">
-              <i class="fas fa-save"></i>
-              Simpan Perubahan
-            </button>
-          </div>
+          <button class="btn btn-default" v-on:click="register(1)">
+            <i class="fas fa-save"></i>
+            Simpan Perubahan
+          </button>
         </div>
       </div>
     </div>

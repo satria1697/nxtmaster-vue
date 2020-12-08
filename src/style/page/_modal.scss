@@ -23,13 +23,13 @@ div.modal {
   &-dialog {
     margin: 0 auto;
     max-width: 640px;
-    // max-height: 85vh;
+     //max-height: 85vh;
   }
   &-header {
     background-color: $theme;
   }
   &-body {
-    max-height: 90vh;
+    max-height: 85vh;
     background-color: $theme-bg-detail;
     overflow-y: auto;
     overflow-x: hidden;

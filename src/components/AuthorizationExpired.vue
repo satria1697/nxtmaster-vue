@@ -35,9 +35,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.modal-content {
-  max-width: 400px;
-  margin-top: 150px;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -17,12 +17,10 @@ import "vue-navigation-bar/dist/vue-navigation-bar.css";
 
 import Vue2OrgTree from "vue2-org-tree";
 
-// import VueNestable from "vue-nestable";
-
 import VueListPicker from "vue-list-picker";
-// import "vue-org-tree/styles/org-tree.less";
 
-// import loader from "vue-ui-preloader";
+import VueStripeMenu from "vue-stripe-menu";
+import "vue-stripe-menu/dist/vue-stripe-menu.css";
 
 import UserModal from "./components/UserModal.vue";
 import DeleteModal from "./components/DeleteConfirmation";
@@ -39,12 +37,9 @@ Vue.use(Vue2OrgTree);
 
 Vue.component("vue-navigation-bar", VueNavigationBar);
 
-// Vue.use(VueNestable);
+Vue.use(VueStripeMenu);
 
 Vue.use(VueListPicker);
-
-// Vue.use(loader);
-
 
 Vue.component("user-modal", UserModal);
 Vue.component("delete-modal", DeleteModal);

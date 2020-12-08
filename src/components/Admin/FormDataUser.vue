@@ -263,6 +263,7 @@
                           type="password"
                           v-model="dataAll.password"
                         />
+                        <password-meter :password="dataAll.password" />
                       </div>
                       <div class="form form-group col">
                         <label for="formPwdconf" class="top"
@@ -334,6 +335,7 @@ import Api from "../../api";
 import DataTableLevel from "../Admin/DataTableLevel.vue";
 import DataTableStructure from "../Admin/DataTableStructure.vue";
 import DataTableRank from "../Admin/DataTableRank.vue";
+import passwordMeter from "vue-simple-password-meter";
 
 function initialDataAll() {
   return {
@@ -372,7 +374,8 @@ export default {
   components: {
     "data-table-level": DataTableLevel,
     "data-table-structure": DataTableStructure,
-    "data-table-rank": DataTableRank
+    "data-table-rank": DataTableRank,
+    "password-meter": passwordMeter
   },
   props: {
     editId: {

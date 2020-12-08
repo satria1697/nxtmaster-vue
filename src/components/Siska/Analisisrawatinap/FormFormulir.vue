@@ -34,41 +34,79 @@
                 >
                   <div class="col">
                     <h5>{{ data.description }}</h5>
-                    <div
-                      class="row"
-                      v-for="(datas, indexs) in data.formulirdata"
-                      :key="datas.id"
-                    >
-                      <div class="col-2">
-                        {{ datas.description }}
-                      </div>
-                      <div class="col-10">
-                        <div
-                          class="form-check form-check-inline"
-                          v-for="dataz in dataStatus"
-                          :key="dataz.id"
-                        >
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            :name="'inlineCheckboxOptions' + index + indexs"
-                            :id="'inlineCheckbox' + index + indexs"
-                            :value="dataz.id"
-                            v-model="checkedbox[index].value[indexs].value"
-                            v-on:change="
-                              checkedbox[index].value[indexs].nilai =
-                                dataz.nilai
-                            "
-                          />
-                          <label
-                            class="form-check-label"
+                    <!--                    <div-->
+                    <!--                      class="row"-->
+                    <!--                      v-for="(datas, indexs) in data.formulirdata"-->
+                    <!--                      :key="datas.id"-->
+                    <!--                    >-->
+                    <!--                      <div class="col-2">-->
+                    <!--                        {{ datas.description }}-->
+                    <!--                      </div>-->
+                    <!--                      <div class="col-10">-->
+                    <!--                        <div-->
+                    <!--                          class="form-check form-check-inline"-->
+                    <!--                          v-for="dataz in dataStatus"-->
+                    <!--                          :key="dataz.id"-->
+                    <!--                        >-->
+                    <!--                          <input-->
+                    <!--                            class="form-check-input"-->
+                    <!--                            type="radio"-->
+                    <!--                            :name="'inlineCheckboxOptions' + index + indexs"-->
+                    <!--                            :id="'inlineCheckbox' + index + indexs"-->
+                    <!--                            :value="dataz.id"-->
+                    <!--                            v-model="checkedbox[index].value[indexs].value"-->
+                    <!--                            v-on:change="-->
+                    <!--                              checkedbox[index].value[indexs].nilai =-->
+                    <!--                                dataz.nilai-->
+                    <!--                            "-->
+                    <!--                          />-->
+                    <!--                          <label-->
+                    <!--                            class="form-check-label"-->
+                    <!--                            :style="{ color: dataz.warna }"-->
+                    <!--                            :for="'inlineCheckbox' + index + indexs"-->
+                    <!--                            >{{ dataz.description }}</label-->
+                    <!--                          >-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
+
+                    <table class="table table-responsive-md table-striped mb-4">
+                      <thead>
+                        <tr>
+                          <th style="width: 38%">Deskripsi</th>
+                          <th
+                            v-for="dataz in dataStatus"
+                            :key="dataz.id"
                             :style="{ color: dataz.warna }"
-                            :for="'inlineCheckbox' + index + indexs"
-                            >{{ dataz.description }}</label
+                            style="width: 20%"
                           >
-                        </div>
-                      </div>
-                    </div>
+                            {{ dataz.description }}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(datas, indexs) in data.formulirdata"
+                          :key="datas.id"
+                        >
+                          <td>{{ datas.description }}</td>
+                          <td v-for="dataz in dataStatus" :key="dataz.id">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              :name="'inlineCheckboxOptions' + index + indexs"
+                              :value="dataz.id"
+                              v-model="checkedbox[index].value[indexs].value"
+                              v-on:change="
+                                checkedbox[index].value[indexs].nilai =
+                                  dataz.nilai
+                              "
+                              style="margin: 0 auto"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -341,4 +379,12 @@ export default {
     max-width: 75vw;
   }
 }
+  .table {
+    td {
+    padding: 0.5rem;
+    }
+    th {
+      padding: 0.5rem;
+    }
+  }
 </style>

@@ -44,24 +44,33 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formAkses"
-                      v-model="dataAll.idranap"
+                      v-model="dataAll.ranap"
+                      v-on:change="setTempoDate(dataAll.ranap)"
                     >
                       <option
-                        :value="data.id"
+                        :value="data"
                         v-for="data in dataRanap"
                         :key="data.id"
                         >{{ data.id }} - {{ data.norm }}</option
                       >
                     </select>
                   </div>
-                  <div class="form form-group col-6">
+                  <div class="form form-group col-4">
+                    <label for="tglkeluar" class="top">Tanggal Keluar</label>
+                    <input
+                      type="datetime-local"
+                      id="tglkeluar"
+                      class="bottom form-control"
+                      v-model="dataAll.ranap.tglkeluar"
+                    />
+                  </div>
+                  <div class="form form-group col-4">
                     <label for="formDesc" class="top">Tanggal Input</label>
                     <input
                       type="datetime-local"
                       id="formDesc"
                       class="bottom form-control"
                       v-model="dataAll.tglinput"
-                      @change="setTempoDate()"
                     />
                   </div>
                 </div>
@@ -192,6 +201,9 @@ function initialDataAll() {
   return {
     id: null,
     idranap: null,
+    ranap: {
+      tglkeluar: ""
+    },
     tglinput: "",
     perawat_id: null,
     dokter_id: null,
@@ -279,6 +291,14 @@ export default {
             } else {
               self.dataAll.tglinput = "";
             }
+            if (self.dataAll.ranap.tglkeluar !== null) {
+              self.dataAll.ranap.tglkeluar = self.dataAll.ranap.tglkeluar.replace(
+                " ",
+                "T"
+              );
+            } else {
+              self.dataAll.ranap.tglkeluar = "";
+            }
             if (self.dataAll.jatuhtempo !== null) {
               self.dataAll.jatuhtempo = self.dataAll.jatuhtempo.replace(
                 " ",
@@ -301,6 +321,7 @@ export default {
             self.dataFormulirAll = self.dataFormulir.filter(
               data => !self.confirmedFormulir.find(({ id }) => data.id === id)
             );
+            self.setTempoDate();
           })
           .catch(error => {
             console.log(error);
@@ -398,29 +419,14 @@ export default {
           self.berhasil = false;
         });
     },
-    setTempoDate() {
+    setTempoDate(data) {
       let self = this;
-      // let date = new Date(self.dataAll.tglinput);
-      // let unixNewDate = (date.getTime() / 1000 + 24 * 60 * 60) * 1000;
-      // let newDate = new Date(unixNewDate);
-      // let year = newDate.getFullYear();
-      // let month = newDate.getMonth() + 1;
-      // let day = newDate.getDay();
-      // let hour = newDate.getHours();
-      // let minute = newDate.getMinutes();
-      // if (day < 10) {
-      //   day = "0" + day;
-      // }
-      // if (minute < 10) {
-      //   minute = "0" + minute;
-      // }
-      // if (hour < 10) {
-      //   hour = "0" + hour;
-      // }
-      // let literallyNewDate =
-      //   year + "-" + month + "-" + day + "T" + hour + ":" + minute;
-      // console.log(year + "/" + month + "/" + day + " " + hour + ":" + minute);
-      let newdate = moment(self.dataAll.tglinput).add(2, 'days').format("YYYY-MM-DDThh:mm");
+      console.log(data);
+      self.dataAll.ranap.tglkeluar = moment(self.dataAll.ranap.tglkeluar)
+        .format("YYYY-MM-DDThh:mm");
+      let newdate = moment(self.dataAll.ranap.tglkeluar)
+        .add(2, "days")
+        .format("YYYY-MM-DDThh:mm");
       self.dataAll.jatuhtempo = newdate;
     },
     getDataFormulir() {
@@ -439,7 +445,7 @@ export default {
     },
     setStatus() {
       let self = this;
-      let a = moment(self.dataAll.tglinput);
+      let a = moment(self.dataAll.ranap.tglkeluar);
       let b = moment(self.dataAll.tgllengkap);
       let duration = moment.duration(b.diff(a));
       let hours = duration.asHours();

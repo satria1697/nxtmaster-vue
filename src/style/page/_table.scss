@@ -28,9 +28,9 @@ table.table {
   margin: 10px;
 }
 thead {
-  border-top: 1px solid rgba($color: #219186, $alpha: 0.8);
-  border-bottom: 1px solid rgba($color: #219186, $alpha: 0.8);
-  color: rgba($color: #219186, $alpha: 1);
+  border-top: $theme;
+  border-bottom: $theme;
+  color: $theme;
 }
 tbody {
   border-bottom: 1px solid rgba($color: #000000, $alpha: 0.2);
