@@ -49,11 +49,11 @@
           </button>
         </div>
       </div>
-      <!--      <div class="row">-->
-      <!--        <div class="col">-->
-      <!--          {{ dataz }}-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <!--            <div class="row">-->
+      <!--              <div class="col">-->
+      <!--                {{ dataz }}-->
+      <!--              </div>-->
+      <!--            </div>-->
       <div class="row">
         <pdf-viewer
           class="col"
@@ -190,12 +190,10 @@ export default {
         column: "id",
         dir: "ASC"
       };
-
-      // console.log(Api.laporan.filter(params, "blob"));
       Api.laporan
         .laporan(params)
         .then(res => {
-          self.dataz = res.data;
+          // self.dataz = res;
           self.pdf64 = res.data.data;
           self.title = res.data.filename;
           self.dataSend = initialDataSend();
@@ -236,11 +234,15 @@ export default {
     },
     addMonths() {
       let self = this;
-      self.dataSend.tglakhir = moment(self.dataSend.tglawal).add(2, 'months').format("YYYY-MM");
+      self.dataSend.tglakhir = moment(self.dataSend.tglawal)
+        .add(2, "months")
+        .format("YYYY-MM");
     },
     setTglawal() {
       let self = this;
-      self.dataSend.tglawal = moment().subtract(3, 'months').format("YYYY-MM");
+      self.dataSend.tglawal = moment()
+        .subtract(3, "months")
+        .format("YYYY-MM");
       self.addMonths();
     },
     getDataTenagaMedis(params) {

@@ -87,7 +87,6 @@ export default {
     },
     printPdf() {
       let self = this;
-      console.log(self.$refs.pdf);
       document.title = self.title;
       self.$refs.pdf.print();
     }

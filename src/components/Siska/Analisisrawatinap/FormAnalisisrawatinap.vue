@@ -115,10 +115,10 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col-4">
-                    <label for="formDesc" class="top">Jatuh Tempo</label>
+                    <label for="formjatuhtempo" class="top">Jatuh Tempo</label>
                     <input
                       type="datetime-local"
-                      id="formDesc"
+                      id="formjatuhtempo"
                       class="bottom form-control"
                       v-model="dataAll.jatuhtempo"
                     />
@@ -135,15 +135,17 @@
                       @change="setStatus()"
                     />
                   </div>
-                  <div class="form form-group col-4">
-                    <label for="formstatus" class="top top-disabled"
-                      >Status</label
-                    >
+                  <div
+                    class="form form-group col-4"
+                    v-if="
+                      dataAll.tgllengkap !== '' || dataAll.tgllengkap !== null
+                    "
+                  >
+                    <label for="formtgll" class="top">Status</label>
                     <input
-                      id="formstatus"
-                      class="bottom form-control disabled"
-                      v-model="dataAll.status"
-                      disabled
+                      id="formtgll"
+                      class="bottom form-control"
+                      v-model="dataAll.idstatus"
                     />
                   </div>
                 </div>
@@ -193,7 +195,7 @@ function initialDataAll() {
     tglinput: "",
     perawat_id: null,
     dokter_id: null,
-    status: 0,
+    idstatus: 0,
     jatuhtempo: "",
     tgllengkap: ""
   };
@@ -216,9 +218,9 @@ export default {
     dataPerawat: {
       type: Array
     },
-    dataStatus: {
-      type: Array
-    },
+    // dataStatus: {
+    //   type: Array
+    // },
     dataRanap: {
       type: Array
     }
@@ -262,6 +264,8 @@ export default {
     reset() {
       let self = this;
       self.dataAll = initialDataAll();
+      self.dataFormulirAll = self.dataFormulir;
+      self.confirmedFormulir = [];
     },
     checkEdit() {
       let self = this;
@@ -396,27 +400,28 @@ export default {
     },
     setTempoDate() {
       let self = this;
-      let date = new Date(self.dataAll.tglinput);
-      let unixNewDate = (date.getTime() / 1000 + 24 * 60 * 60) * 1000;
-      let newDate = new Date(unixNewDate);
-      let year = newDate.getFullYear();
-      let month = newDate.getMonth() + 1;
-      let day = newDate.getDay();
-      let hour = newDate.getHours();
-      let minute = newDate.getMinutes();
-      if (day < 10) {
-        day = "0" + day;
-      }
-      if (minute < 10) {
-        minute = "0" + minute;
-      }
-      if (hour < 10) {
-        hour = "0" + hour;
-      }
-      let literallyNewDate =
-        year + "-" + month + "-" + day + "T" + hour + ":" + minute;
+      // let date = new Date(self.dataAll.tglinput);
+      // let unixNewDate = (date.getTime() / 1000 + 24 * 60 * 60) * 1000;
+      // let newDate = new Date(unixNewDate);
+      // let year = newDate.getFullYear();
+      // let month = newDate.getMonth() + 1;
+      // let day = newDate.getDay();
+      // let hour = newDate.getHours();
+      // let minute = newDate.getMinutes();
+      // if (day < 10) {
+      //   day = "0" + day;
+      // }
+      // if (minute < 10) {
+      //   minute = "0" + minute;
+      // }
+      // if (hour < 10) {
+      //   hour = "0" + hour;
+      // }
+      // let literallyNewDate =
+      //   year + "-" + month + "-" + day + "T" + hour + ":" + minute;
       // console.log(year + "/" + month + "/" + day + " " + hour + ":" + minute);
-      self.dataAll.jatuhtempo = literallyNewDate;
+      let newdate = moment(self.dataAll.tglinput).add(2, 'days').format("YYYY-MM-DDThh:mm");
+      self.dataAll.jatuhtempo = newdate;
     },
     getDataFormulir() {
       let self = this;
@@ -448,7 +453,9 @@ export default {
       } else {
         status = 4;
       }
-      self.dataAll.status = status;
+      // console.log(status);
+      self.dataAll.idstatus = status;
+      console.log(self.dataAll.idstatus);
     }
   }
 };

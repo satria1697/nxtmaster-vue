@@ -106,11 +106,13 @@
                         />
                       </div>
                       <div v-else class="form form-group col">
-                        <label for="formUsername" class="top top-disabled"
+                        <label
+                          for="formusernamedisabled"
+                          class="top top-disabled"
                           >Username</label
                         >
                         <input
-                          id="formUsername"
+                          id="formusernamedisabled"
                           class="bottom form-control disabled"
                           type="text"
                           v-model="dataAll.username"
@@ -172,9 +174,7 @@
                     </div>
                     <div class="row">
                       <div class="form form-group col input-group">
-                        <label for="formStrcId" class="top top-disabled"
-                          >Structure</label
-                        >
+                        <label for="formStrcId" class="top top-disabled">Structure</label>
                         <input
                           type="text"
                           class="form-control bottom"

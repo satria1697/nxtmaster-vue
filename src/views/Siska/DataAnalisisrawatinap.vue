@@ -87,16 +87,6 @@ export default {
           orderable: true
         },
         {
-          label: "Dokter",
-          name: "dokter.namadokter",
-          orderable: true
-        },
-        {
-          label: "Perawat",
-          name: "perawat.namaperawat",
-          orderable: true
-        },
-        {
           label: "Jatuh Tempo",
           name: "jatuhtempo",
           orderable: true
