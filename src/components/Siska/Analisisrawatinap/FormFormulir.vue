@@ -379,12 +379,12 @@ export default {
     max-width: 75vw;
   }
 }
-  .table {
-    td {
+.table {
+  td {
     padding: 0.5rem;
-    }
-    th {
-      padding: 0.5rem;
-    }
   }
+  th {
+    padding: 0.5rem;
+  }
+}
 </style>

@@ -174,7 +174,9 @@
                     </div>
                     <div class="row">
                       <div class="form form-group col input-group">
-                        <label for="formStrcId" class="top top-disabled">Structure</label>
+                        <label for="formStrcId" class="top top-disabled"
+                          >Structure</label
+                        >
                         <input
                           type="text"
                           class="form-control bottom"

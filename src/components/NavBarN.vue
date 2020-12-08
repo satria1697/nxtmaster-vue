@@ -30,9 +30,9 @@
     <template #after-nav>
       <!--Mobile Burger, buttons, etc-->
       <!--For the same styles - add the vsm-section-->
-<!--      <li class="vsm-section vsm-mob-hide">-->
-<!--        <button>My Button</button>-->
-<!--      </li>-->
+      <!--      <li class="vsm-section vsm-mob-hide">-->
+      <!--        <button>My Button</button>-->
+      <!--      </li>-->
       <!--Display when user media screen below from $vsm-media (scss)-->
       <vsm-mob>Mobile Content</vsm-mob>
     </template>

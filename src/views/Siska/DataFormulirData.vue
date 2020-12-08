@@ -135,7 +135,7 @@ export default {
       self.filter.find = params.find;
       self.filter.length = params.length;
       if (params.column === "formulir.description") {
-        params.column = "formulirid"
+        params.column = "formulirid";
       }
       self.filter.column = params.column;
       self.filter.dir = params.dir;

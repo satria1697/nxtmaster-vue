@@ -422,8 +422,9 @@ export default {
     setTempoDate(data) {
       let self = this;
       console.log(data);
-      self.dataAll.ranap.tglkeluar = moment(self.dataAll.ranap.tglkeluar)
-        .format("YYYY-MM-DDThh:mm");
+      self.dataAll.ranap.tglkeluar = moment(
+        self.dataAll.ranap.tglkeluar
+      ).format("YYYY-MM-DDThh:mm");
       let newdate = moment(self.dataAll.ranap.tglkeluar)
         .add(2, "days")
         .format("YYYY-MM-DDThh:mm");

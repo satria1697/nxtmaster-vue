@@ -244,6 +244,6 @@ export default {
   /*z-index: 10;*/
 }
 /*.fixed-bottom {*/
-  /*z-index: 10;*/
+/*z-index: 10;*/
 /*}*/
 </style>

@@ -321,11 +321,15 @@ export default {
     },
     addMonths() {
       let self = this;
-      self.dataSend.tglakhir = moment(self.dataSend.tglawal).add(2, 'months').format("YYYY-MM");
+      self.dataSend.tglakhir = moment(self.dataSend.tglawal)
+        .add(2, "months")
+        .format("YYYY-MM");
     },
     setTglawal() {
       let self = this;
-      self.dataSend.tglawal = moment().subtract(3, 'months').format("YYYY-MM");
+      self.dataSend.tglawal = moment()
+        .subtract(3, "months")
+        .format("YYYY-MM");
       self.addMonths();
     },
     getDataTenagaMedis(params) {
