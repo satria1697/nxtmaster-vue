@@ -23,63 +23,21 @@
         </div>
       </div>
       <div class="row">
-        <div class="form form-group col-4">
-          <label for="formAkses" class="top">Filter Data</label>
-          <select
-            class="form-control bottom custom-select"
-            id="formAkses"
-            v-model="dataSend.pengambilanData"
-          >
-            <option
-              :value="data.id"
-              v-for="data in pengambilanData"
-              :key="data.id"
-              >{{ data.id }} - {{ data.description }}</option
-            >
-          </select>
-        </div>
         <div
           v-if="dataSend.pengambilanData !== null"
           class="form form-group col-4"
         >
-          <label for="formAkses" class="top">Terhadap</label>
+          <label for="formAkses" class="top">Pengambilan Data</label>
           <select
             class="form-control bottom custom-select"
             id="formAkses"
-            v-model="dataSend.terhadap"
+            v-model="dataSend.kelengkapan"
           >
-            <option :value="data.id" v-for="data in terhadapData" :key="data.id"
+            <option
+              :value="data.id"
+              v-for="data in dataKelengkapan"
+              :key="data.id"
               >{{ data.id }} - {{ data.description }}</option
-            >
-          </select>
-        </div>
-        <div
-          v-if="dataSend.pengambilanData === 3 && dataSend.terhadap !== null"
-          class="form form-group col-4"
-        >
-          <label for="formAkses" class="top">Nama Dokter</label>
-          <select
-            class="form-control bottom custom-select"
-            id="formAkses"
-            v-model="dataSend.dokter_id"
-          >
-            <option :value="data.id" v-for="data in dataDokter" :key="data.id"
-              >{{ data.id }} - {{ data.nama }}</option
-            >
-          </select>
-        </div>
-        <div
-          v-if="dataSend.pengambilanData === 4 && dataSend.terhadap !== null"
-          class="form form-group col-4"
-        >
-          <label for="formnamaperawat" class="top">Nama Perawat</label>
-          <select
-            class="form-control bottom custom-select"
-            id="formnamaperawat"
-            v-model="dataSend.perawat_id"
-          >
-            <option :value="data.id" v-for="data in dataPerawat" :key="data.id"
-              >{{ data.id }} - {{ data.nama }}</option
             >
           </select>
         </div>
@@ -100,19 +58,15 @@
           </button>
         </div>
       </div>
-      <chart-laporan-klpcm
+      <chart-laporan-mutu
         v-if="dataChart !== null"
         :bulan="bulanChart"
         :data="dataChart"
-        :whodata="whodata"
         ref="chart"
-      ></chart-laporan-klpcm>
+      ></chart-laporan-mutu>
       <div class="row" id="printableArea">
         <div class="col" v-if="printed" v-show="printed">
-          <h3>
-            Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.who }} terhadap
-            {{ dataPDF.terhadap }}
-          </h3>
+          <h3>Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.text }}</h3>
           <p>
             Persentase kelengkapan berkas dari {{ dataPDF.tglawal }} sampai
             dengan {{ dataPDF.tglakhir }}, digambarkan pada tabel berikut:
@@ -120,23 +74,18 @@
           <table class="table table-sm table-striped">
             <thead>
               <tr>
-                <th rowspan="2" style="vertical-align: middle">
-                  {{ dataPDF.who }}
-                </th>
-                <th colspan="3" style="text-align: center">Bulan</th>
-              </tr>
-              <tr>
-                <th v-for="(bulan, index) in dataPDF.bulan" :key="index">
-                  {{ bulan }}
-                </th>
+                <th>Bulan</th>
+                <th>Persentase Dokter 2x24jam</th>
+                <th>Persentase Perawat 2x24jam</th>
+                <th>Jumlah Data Dokter</th>
+                <th>Jumlah Data Perawat</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(data, index) in dataPDF.whodata" :key="index">
-                <td>{{ data.nama }}</td>
-                <td v-for="indexs in dataPDF.bulan.length" :key="indexs">
-                  {{ dataPDF.data[index][indexs]
-                  }}%
+              <tr v-for="(bulan, index) in dataPDF.bulan" :key="index">
+                <td>{{ bulan }}</td>
+                <td v-for="indexs in 4" :key="indexs">
+                  {{ dataPDF.datatabel[index][indexs - 1] }}<span v-if="indexs<=2">%</span>
                 </td>
               </tr>
             </tbody>
@@ -152,29 +101,28 @@ import Api from "../../api";
 // import Form from "../../components/Siska/Status/FormStatus";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
-import ChartLaporanKLPCM from "../../components/Siska/LaporanKLPCM/ChartLaporanKLPCM";
-// import store from "../../store";
+// import PdfViewer from "../../components/PdfViewer.vue";
 import moment from "moment";
+import ChartLaporanMutu from "../../components/Siska/LaporanMutu/ChartLaporanMutu";
+// import store from "../../store";
+// import VueHtml2pdf from "vue-html2pdf";
 
 function initialDataSend() {
   return {
     tglawal: "",
     tglakhir: "",
-    pengambilanData: null,
-    dokter_id: null,
-    // namadokter: "",
-    perawat_id: null,
-    // namaperawat: ""
-    terhadap: null
+    kelengkapan: null
   };
 }
 
 export default {
   components: {
-    "chart-laporan-klpcm": ChartLaporanKLPCM
+    "chart-laporan-mutu": ChartLaporanMutu
+    // PdfViewer
+    // VueHtml2pdf
     // Form
   },
-  data() {
+  data: function() {
     let self = this;
     return {
       dataAll: {},
@@ -238,82 +186,50 @@ export default {
       isModal: false,
       editId: null,
       dataSend: initialDataSend(),
-      pengambilanData: [
-        {
-          id: 0,
-          description: "Semua Dokter"
-        },
+      dataKelengkapan: [
         {
           id: 1,
-          description: "Semua perawat"
-        },
-        {
-          id: 3,
-          description: "Dokter"
-        },
-        {
-          id: 4,
-          description: "Perawat"
-        }
-      ],
-      terhadapData: [
-        {
-          id: 1,
-          description: "Seluruh Data Rawat Inap"
+          description: "Lengkap"
         },
         {
           id: 2,
-          description: "dokter"
-        },
-        {
-          id: 3,
-          description: "perawat"
+          description: "Tidak Lengkap"
         }
       ],
-      dataPerawat: [],
-      dataDokter: [],
       persentase: 0,
       pdf64: "",
       title: "",
       dataz: null,
       dataChart: null,
       bulanChart: null,
-      whodata: null,
       dataPDF: null,
       printed: false
     };
   },
-  created() {
+  mounted() {
     let self = this;
     self.init();
-    self.setTglawal();
   },
   methods: {
     init() {
       let self = this;
-      self.getDataTenagaMedis();
+      // self.getDataTenagaMedis();
+      self.setTglawal();
     },
     getData() {
       let self = this;
       const params = {
         tglawal: self.dataSend.tglawal,
         tglakhir: self.dataSend.tglakhir,
-        pengambilanData: self.dataSend.pengambilanData,
-        dokter_id: self.dataSend.dokter_id,
-        perawat_id: self.dataSend.perawat_id,
-        namadokter: self.dataDokter[self.dataSend.dokter_id],
-        namaperawat: self.dataPerawat[self.dataSend.perawat_id],
-        terhadap: self.dataSend.terhadap,
+        kelengkapan: self.dataSend.kelengkapan,
         page: 1,
         find: "",
         length: 10000,
         column: "id",
         dir: "ASC"
       };
-
-      // console.log(Api.laporan.filter(params, "blob"));
       Api.laporan
-        .filter(params)
+        .mutu(params)
         .then(res => {
           // self.dataChart = res.data.data.data;
           let arr = res.data.data.data
@@ -330,9 +246,7 @@ export default {
           }
           self.dataChart = f;
           self.bulanChart = res.data.data.bulan;
-          self.whodata = res.data.data.whodata;
           self.dataPDF = res.data.data;
-          console.log(self.dataPDF.data[1][0])
           self.dataSend = initialDataSend();
         })
         .catch(err => {
@@ -446,4 +360,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media print {
+  @page {
+    size: landscape;
+  }
+}
+</style>

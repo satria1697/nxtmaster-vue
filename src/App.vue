@@ -75,6 +75,8 @@ export default {
         // }
         store.commit("authenChange");
         let tabs = sessionStorage.getItem("tab" + ":" + username + ":" + akses);
+        // let re = new RegExp("(siska/pdf/)\\w+");
+        // console.log(re);
         if (tabs === null) {
           self.$router.push("/");
         } else {

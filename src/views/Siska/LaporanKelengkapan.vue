@@ -43,24 +43,56 @@
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col-2">
           <button class="btn btn-default" v-on:click="getData()">
             <i class="fas fa-eye"></i> Preview
           </button>
         </div>
+        <div class="col-2 offset-8">
+          <button
+            class="btn btn-default right"
+            v-on:click="printPDF('printableArea')"
+            v-if="dataChart !== null"
+          >
+            <i class="fas fa-file-pdf"></i> Print / Save As PDF
+          </button>
+        </div>
       </div>
-      <!--            <div class="row">-->
-      <!--              <div class="col">-->
-      <!--                {{ dataz }}-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <div class="row">
-        <pdf-viewer
-          class="col"
-          v-if="pdf64"
-          :src="pdf64"
-          :title="title"
-        ></pdf-viewer>
+      <chart-laporan-kelengkapan
+        v-if="dataChart !== null"
+        :bulan="bulanChart"
+        :data="dataChart"
+        ref="chart"
+      ></chart-laporan-kelengkapan>
+      <div class="row" id="printableArea">
+        <div class="col" v-if="printed" v-show="printed">
+          <h3>Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.text }}</h3>
+          <p>
+            Persentase kelengkapan berkas dari {{ dataPDF.tglawal }} sampai
+            dengan {{ dataPDF.tglakhir }}, digambarkan pada tabel berikut:
+          </p>
+          <table class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th>Bulan</th>
+                <th>Persentase Dokter</th>
+                <th>Persentase Perawat</th>
+                <th>Jumlah RM Dokter</th>
+                <th>Jumlah RM Perawat</th>
+                <th>Jumlah Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(bulan, index) in dataPDF.bulan" :key="index">
+                <td>{{ bulan }}</td>
+                <td v-for="indexs in 5" :key="indexs">
+                  {{ dataPDF.datatabel[index][indexs - 1]
+                  }}<span v-if="indexs <= 2">%</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -71,7 +103,7 @@ import Api from "../../api";
 // import Form from "../../components/Siska/Status/FormStatus";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
-import PdfViewer from "../../components/PdfViewer.vue";
+import ChartLaporanKelengkapan from "../../components/Siska/Laporan Kelengkapan/ChartLaporanKelengkapan";
 import moment from "moment";
 // import store from "../../store";
 
@@ -85,7 +117,7 @@ function initialDataSend() {
 
 export default {
   components: {
-    PdfViewer
+    "chart-laporan-kelengkapan": ChartLaporanKelengkapan
     // Form
   },
   data: function() {
@@ -165,7 +197,11 @@ export default {
       persentase: 0,
       pdf64: "",
       title: "",
-      dataz: null
+      dataz: null,
+      dataChart: null,
+      bulanChart: null,
+      dataPDF: null,
+      printed: false
     };
   },
   created() {
@@ -193,14 +229,71 @@ export default {
       Api.laporan
         .laporan(params)
         .then(res => {
-          // self.dataz = res;
-          self.pdf64 = res.data.data;
-          self.title = res.data.filename;
+          // self.dataChart = res.data.data.data;
+          let arr = res.data.data.data
+          let m = arr.length;
+          let n = arr[0].length;
+          let f = [];
+          let t = [];
+          for (let j=0;j<n; j++){
+            t = [];
+            for (let i=0;i<m; i++){
+              t.push(arr[i][j]);
+            }
+            f.push(t);
+          }
+          self.dataChart = f;
+          self.bulanChart = res.data.data.bulan;
+          self.dataPDF = res.data.data;
           self.dataSend = initialDataSend();
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    printPDF(whereprint) {
+      let self = this;
+      self.printed = true;
+      setTimeout(function() {
+        //giving it 200 milliseconds time to load
+
+        const prtHtml = document.getElementById(whereprint).innerHTML;
+        let canvasEle = document.getElementById("bar-chart");
+
+        let stylesHtml = "";
+        for (const node of [
+          ...document.querySelectorAll('link[rel="stylesheet"], style')
+        ]) {
+          stylesHtml += node.outerHTML;
+        }
+
+        // Open the print window
+        const WinPrint = window.open(
+          "",
+          "",
+          "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+        );
+
+        WinPrint.document.write(`<!DOCTYPE html>
+      <html>
+        <head>
+          ${stylesHtml}
+        </head>
+        <body>
+          ${prtHtml}
+          <br><img src=${canvasEle.toDataURL()}>
+        </body>
+      </html>`);
+
+        setTimeout(function() {
+          WinPrint.document.title = self.dataPDF.filename;
+          WinPrint.document.close();
+          WinPrint.focus();
+          WinPrint.print();
+          WinPrint.close();
+        }, 100);
+        self.printed = false;
+      }, 100);
     },
     reloadTable(tableProps) {
       let self = this;
@@ -265,4 +358,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media print {
+  @page {
+    size: landscape;
+  }
+}
+</style>

@@ -342,7 +342,8 @@ export default {
         idstatus: self.dataAll.idstatus,
         jatuhtempo: self.dataAll.jatuhtempo,
         tgllengkap: self.dataAll.tgllengkap,
-        formulir: jsonFormulir
+        formulir: jsonFormulir,
+        tglkeluar: self.dataAll.ranap.tglkeluar
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -451,14 +452,14 @@ export default {
       let duration = moment.duration(b.diff(a));
       let hours = duration.asHours();
       let status = 0;
-      if (hours <= 24 && hours >= 0) {
+      if (self.dataAll.tgllengkap === "" || self.dataAll.tgllengkap === null) {
+        status = 4;
+      } else if (hours <= 24 && hours >= 0) {
         status = 1;
       } else if (hours <= 48 && hours > 24) {
         status = 2;
       } else if (hours > 48) {
         status = 3;
-      } else {
-        status = 4;
       }
       // console.log(status);
       self.dataAll.idstatus = status;

@@ -67,6 +67,28 @@ const SiskaPath = [
       // icon: "fas fa-user-friends"
       // closable: false
     }
+  },
+  {
+    path: "/siska/laporanmutu",
+    // name: "dataperawat",
+    component: importPage("Siska/LaporanMutu"),
+    meta: {
+      requireAuth: true,
+      title: "Laporan Mutu"
+      // icon: "fas fa-user-friends"
+      // closable: false
+    }
+  },
+  {
+    path: "/siska/pdf/laporanmutu",
+    name: "pdf/laporanmutu",
+    component: importPage("Siska/PDF/PDFLaporanMutu"),
+    meta: {
+      requireAuth: true,
+      title: "PDF Mutu"
+      // icon: "fas fa-user-friends"
+      // closable: false
+    }
   }
 ];
 
