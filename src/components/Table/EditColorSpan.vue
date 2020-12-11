@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span v-bind:style="{ color: data.warna }">{{ data.description }}</span>
+    <span v-bind:style="{ color: data.warna || data.statuskelengkapan.warna }">{{ data.description || data.statuskelengkapan.description}}</span>
   </div>
 </template>
 
@@ -18,5 +18,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables";
+@import "src/style/abstracts/_variables";
 </style>

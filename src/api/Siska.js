@@ -59,6 +59,13 @@ const api = {
     Register: "/api/siska/status/register",
     Update: "/api/siska/status/update/{id}",
     Delete: "/api/siska/status/delete/{id}"
+  },
+  statuskelengkapan: {
+    Get: "/api/siska/statuskelengkapan/data",
+    GetId: "/api/siska/statuskelengkapan/{id}",
+    Register: "/api/siska/statuskelengkapan/register",
+    Update: "/api/siska/statuskelengkapan/update/{id}",
+    Delete: "/api/siska/statuskelengkapan/delete/{id}"
   }
 };
 
@@ -230,6 +237,25 @@ const SiskaApi = {
     },
     delete: id => {
       return Axios.delete(api.status.Delete.replace("{id}", id));
+    }
+  },
+  statuskelengkapan: {
+    filter: params => {
+      return Axios.get(api.statuskelengkapan.Get, {
+        params: params
+      });
+    },
+    find: id => {
+      return Axios.get(api.statuskelengkapan.GetId.replace("{id}", id));
+    },
+    register: data => {
+      return Axios.post(api.statuskelengkapan.Register, data);
+    },
+    update: (id, data) => {
+      return Axios.post(api.statuskelengkapan.Update.replace("{id}", id), data);
+    },
+    delete: id => {
+      return Axios.delete(api.statuskelengkapan.Delete.replace("{id}", id));
     }
   }
 };

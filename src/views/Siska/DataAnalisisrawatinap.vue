@@ -50,6 +50,7 @@ import FormFormulir from "../../components/Siska/Analisisrawatinap/FormFormulir"
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import actionbutton from "../../components/Table/ActionButton";
+import EditColorSpan from "../../components/Table/EditColorSpan";
 // import store from "../../store";
 
 export default {
@@ -94,6 +95,12 @@ export default {
         {
           label: "Tanggal Lengkap",
           name: "tgllengkap",
+          orderable: true
+        },
+        {
+          label: "Status",
+          name: "statuskelengkapan.description",
+          component: EditColorSpan,
           orderable: true
         },
         {

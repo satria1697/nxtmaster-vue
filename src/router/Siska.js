@@ -80,12 +80,12 @@ const SiskaPath = [
     }
   },
   {
-    path: "/siska/pdf/laporanmutu",
-    name: "pdf/laporanmutu",
-    component: importPage("Siska/PDF/PDFLaporanMutu"),
+    path: "/siska/statuskelengkapan",
+    // name: "pdf/laporanmutu",
+    component: importPage("Siska/DataStatusKelengkapan"),
     meta: {
       requireAuth: true,
-      title: "PDF Mutu"
+      title: "Status Kelengkapan"
       // icon: "fas fa-user-friends"
       // closable: false
     }

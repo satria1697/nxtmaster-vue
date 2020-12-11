@@ -150,11 +150,13 @@
                       dataAll.tgllengkap !== '' || dataAll.tgllengkap !== null
                     "
                   >
-                    <label for="formtgll" class="top">Status</label>
+                    <label for="formtgll" class="top top-disabled">Status</label>
                     <input
                       id="formtgll"
                       class="bottom form-control"
-                      v-model="dataAll.idstatus"
+                      v-model="dataAll.statuskelengkapan.description"
+                      :style="{color: dataAll.statuskelengkapan.warna}"
+                      disabled
                     />
                   </div>
                 </div>
@@ -208,6 +210,10 @@ function initialDataAll() {
     perawat_id: null,
     dokter_id: null,
     idstatus: 0,
+    statuskelengkapan: {
+      description: "",
+      warna: "black"
+    },
     jatuhtempo: "",
     tgllengkap: ""
   };
