@@ -21,7 +21,7 @@ export default {
       let self = this;
       console.log(self.data);
       let datasets = [];
-      let who = ["Dokter", "Perawat"]
+      let who = ["Dokter", "Perawat"];
       let j = 0;
       if (self.data.length) {
         self.data.forEach(function(data) {

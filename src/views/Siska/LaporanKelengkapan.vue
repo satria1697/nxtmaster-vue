@@ -230,14 +230,14 @@ export default {
         .laporan(params)
         .then(res => {
           // self.dataChart = res.data.data.data;
-          let arr = res.data.data.data
+          let arr = res.data.data.data;
           let m = arr.length;
           let n = arr[0].length;
           let f = [];
           let t = [];
-          for (let j=0;j<n; j++){
+          for (let j = 0; j < n; j++) {
             t = [];
-            for (let i=0;i<m; i++){
+            for (let i = 0; i < m; i++) {
               t.push(arr[i][j]);
             }
             f.push(t);

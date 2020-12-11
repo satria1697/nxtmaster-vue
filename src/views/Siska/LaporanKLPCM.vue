@@ -135,8 +135,7 @@
               <tr v-for="(data, index) in dataPDF.whodata" :key="index">
                 <td>{{ data.nama }}</td>
                 <td v-for="indexs in dataPDF.bulan.length" :key="indexs">
-                  {{ dataPDF.data[index][indexs]
-                  }}%
+                  {{ dataPDF.data[index][indexs] }}%
                 </td>
               </tr>
             </tbody>
@@ -316,14 +315,14 @@ export default {
         .filter(params)
         .then(res => {
           // self.dataChart = res.data.data.data;
-          let arr = res.data.data.data
+          let arr = res.data.data.data;
           let m = arr.length;
           let n = arr[0].length;
           let f = [];
           let t = [];
-          for (let j=0;j<n; j++){
+          for (let j = 0; j < n; j++) {
             t = [];
-            for (let i=0;i<m; i++){
+            for (let i = 0; i < m; i++) {
               t.push(arr[i][j]);
             }
             f.push(t);
@@ -332,7 +331,7 @@ export default {
           self.bulanChart = res.data.data.bulan;
           self.whodata = res.data.data.whodata;
           self.dataPDF = res.data.data;
-          console.log(self.dataPDF.data[1][0])
+          console.log(self.dataPDF.data[1][0]);
           self.dataSend = initialDataSend();
         })
         .catch(err => {

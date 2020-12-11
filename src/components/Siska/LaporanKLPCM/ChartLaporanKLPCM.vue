@@ -40,10 +40,10 @@ export default {
           j = j + 1;
         });
       }
-      let who = []
+      let who = [];
       self.whodata.forEach(function(data) {
-        who.push(data.nama)
-      })
+        who.push(data.nama);
+      });
       let chartData = {
         labels: who,
         datasets: datasets
