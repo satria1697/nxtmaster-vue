@@ -97,7 +97,7 @@ function initialDataSend() {
 
 export default {
   components: {
-    "chart": Chart
+    chart: Chart
     // PdfViewer
     // VueHtml2pdf
     // Form
