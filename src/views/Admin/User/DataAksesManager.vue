@@ -476,11 +476,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables.scss";
+@import "src/style/abstracts/_variables.scss";
 .sidenav {
-  min-height: 100vh;
+  /*min-height: 40vh;*/
   width: 230px;
-  position: fixed;
+  /*position: fixed;*/
   z-index: 100;
   // background: #f0f0f0;
   color: $text-theme-alt;
@@ -520,7 +520,7 @@ export default {
 span.font-weight-bold {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  margin: 10px 0 0 4px;
+  margin: 10px 0 5px 4px;
   font-size: 13px;
   background: $theme-bg-detail;
   padding: 3px 14px 3px;
@@ -528,7 +528,7 @@ span.font-weight-bold {
   border-right: 1px solid rgba($color: #000000, $alpha: 0.2);
   border-left: 1px solid rgba($color: #000000, $alpha: 0.2);
   position: absolute;
-  top: 1px;
+  top: 23px;
   z-index: 10;
   color: $text-theme-alt;
 }

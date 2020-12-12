@@ -44,7 +44,8 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formnamapasien"
-                      v-model="dataAll.idpasien"
+                      v-model="dataAll.pasien_id"
+                      v-on:change="getDataPasien()"
                     >
                       <option
                         :value="data.id"
@@ -83,7 +84,7 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formkelranap"
-                      v-model="dataAll.idkelas"
+                      v-model="dataAll.kelas_id"
                     >
                       <option
                         :value="data.id"
@@ -98,7 +99,7 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formbangsal"
-                      v-model="dataAll.idbangsal"
+                      v-model="dataAll.bangsal_id"
                     >
                       <option
                         :value="data.id"
@@ -115,7 +116,7 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formkamarranap"
-                      v-model="dataAll.idkamar"
+                      v-model="dataAll.kamar_id"
                     >
                       <option
                         :value="data.id"
@@ -134,7 +135,7 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formdpjp"
-                      v-model="dataAll.iddokter"
+                      v-model="dataAll.dokter_id"
                     >
                       <option
                         :value="data.id"
@@ -207,8 +208,119 @@
                     </select>
                   </div>
                 </div>
+                <div v-if="formOperasi">
+                  <div class="row">
+                    <div class="col">
+                      <h5>Form Operasi</h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form form-group col-4">
+                      <label for="formtglmsk" class="top"
+                        >Tanggal Operasi</label
+                      >
+                      <input
+                        type="datetime-local"
+                        id="formtglmsk"
+                        class="bottom form-control"
+                        v-model="dataAll.operasi.tgloperasi"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form form-group col-6">
+                      <label for="formdpjp" class="top"
+                        >Dokter Penanggung Jawab</label
+                      >
+                      <select
+                        class="form-control bottom custom-select"
+                        id="formdpjp"
+                        v-model="dataAll.operasi.dokter_id"
+                      >
+                        <option
+                          :value="data.id"
+                          v-for="data in dataDokter"
+                          :key="data.id"
+                          >{{ data.id }} - {{ data.nama }}</option
+                        >
+                      </select>
+                    </div>
+                    <div class="form form-group col-6">
+                      <label for="formdpjp" class="top">Dokter Anestesi</label>
+                      <select
+                        class="form-control bottom custom-select"
+                        id="formdpjp"
+                        v-model="dataAll.operasi.dokteranestesi_id"
+                      >
+                        <option
+                          :value="data.id"
+                          v-for="data in dataDokterAnestesi"
+                          :key="data.id"
+                          >{{ data.id }} - {{ data.nama }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form form-group col-6">
+                      <label for="formdpjp" class="top">Perawat</label>
+                      <select
+                        class="form-control bottom custom-select"
+                        id="formdpjp"
+                        v-model="dataAll.operasi.perawat_id"
+                      >
+                        <option
+                          :value="data.id"
+                          v-for="data in dataPerawat"
+                          :key="data.id"
+                          >{{ data.id }} - {{ data.nama }}</option
+                        >
+                      </select>
+                    </div>
+                    <div class="form form-group col">
+                      <label for="formtindakan" class="top"
+                        >Jenis Anestesi</label
+                      >
+                      <input
+                        id="formtindakan"
+                        class="bottom form-control"
+                        v-model="dataAll.operasi.jenisanestesi"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form form-group col">
+                      <label for="formtindakan" class="top">Tindakan</label>
+                      <textarea
+                        id="formtindakan"
+                        class="bottom form-control"
+                        v-model="dataAll.operasi.tindakan"
+                        rows="3"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <button
+                      class="btn btn-default"
+                      @click="formOperasi = false"
+                      v-if="formOperasi"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      class="btn btn-default"
+                      @click="formOperasi = true"
+                      v-else
+                    >
+                      Operasi
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+
             <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
@@ -248,25 +360,25 @@ import Api from "../../../api";
 function initialDataAll() {
   return {
     id: null,
-    idpasien: null,
+    pasien_id: null,
     pasien: {
       id: null,
       norm: ""
     },
     tglmasuk: "",
     tglkeluar: "",
-    idkelas: null,
+    kelas_id: null,
     kelas: {
       id: null,
       desription: ""
     },
-    idbangsal: null,
+    bangsal_id: null,
     bangsal: {
       id: null,
       description: ""
     },
-    idkamar: null,
-    iddokter: null,
+    kamar_id: null,
+    dokter_id: null,
     dokter: {
       id: null,
       namadokter: "",
@@ -276,7 +388,16 @@ function initialDataAll() {
     tindakan: "",
     caramasuk: null,
     ketpulang: null,
-    carabayar: null
+    carabayar: null,
+    idoperasi: null,
+    operasi: {
+      dokter_id: null,
+      perawat_id: null,
+      tgloperasi: "",
+      dokteranestesi_id: null,
+      jenisanestesi: "",
+      tindakan: ""
+    }
   };
 }
 
@@ -302,6 +423,12 @@ export default {
     },
     dataDokter: {
       type: Array
+    },
+    dataPerawat: {
+      type: Array
+    },
+    dataDokterAnestesi: {
+      type: Array
     }
   },
   data() {
@@ -313,7 +440,8 @@ export default {
       deleted: false,
       isDeleteModal: false,
       textTitle: "",
-      isUserModal: false
+      isUserModal: false,
+      formOperasi: false
     };
   },
   created() {
@@ -349,6 +477,31 @@ export default {
           .find(self.editId)
           .then(resp => {
             self.dataAll = resp.data.data;
+            if (self.dataAll.tglmasuk !== null) {
+              self.dataAll.tglmasuk = self.dataAll.tglmasuk.replace(" ", "T");
+            } else {
+              self.dataAll.tglmasuk = "";
+            }
+            if (self.dataAll.tglkeluar !== null) {
+              self.dataAll.tglkeluar = self.dataAll.tglkeluar.replace(" ", "T");
+            } else {
+              self.dataAll.tglkeluar = "";
+            }
+            if (resp.data.data.operasi === null) {
+              self.dataAll.operasi = {
+                iddokter: null,
+                idperawat: null,
+                tgloperasi: "",
+                iddokteranastesi: null,
+                jenisanestesi: "",
+                tindakan: ""
+              };
+            }
+            if (self.dataAll.operasi.tgloperasi !== null) {
+              self.dataAll.operasi.tgloperasi = self.dataAll.operasi.tgloperasi.replace(" ", "T");
+            } else {
+              self.dataAll.operasi.tgloperasi = "";
+            }
           })
           .catch(error => {
             console.log(error);
@@ -358,20 +511,32 @@ export default {
     },
     register(status, id) {
       let self = this;
+      let operasi = {
+        dokter_id: self.dataAll.operasi.dokter_id,
+        perawat_id: self.dataAll.operasi.perawat_id,
+        tgloperasi: self.dataAll.operasi.tgloperasi,
+        dokteranestesi_id: self.dataAll.operasi.dokteranestesi_id,
+        jenisanestesi: self.dataAll.operasi.jenisanestesi,
+        tindakan: self.dataAll.operasi.tindakan
+      }
+      let operasiJson = JSON.stringify(operasi);
       let rawData = {
         tglmasuk: self.dataAll.tglmasuk,
-        idpasien: self.dataAll.idpasien,
+        pasien_id: self.dataAll.pasien_id,
         norm: self.dataAll.pasien.norm,
         tglkeluar: self.dataAll.tglkeluar,
-        idkelas: self.dataAll.idkelas,
-        idbangsal: self.dataAll.idbangsal,
-        idkamar: self.dataAll.idkamar,
-        iddokter: self.dataAll.iddokter,
+        kelas_id: self.dataAll.kelas_id,
+        bangsal_id: self.dataAll.bangsal_id,
+        kamar_id: self.dataAll.kamar_id,
+        dokter_id: self.dataAll.dokter_id,
         jeniskasus: self.dataAll.jeniskasus,
         tindakan: self.dataAll.tindakan,
         caramasuk: self.dataAll.caramasuk,
         ketpulang: self.dataAll.ketpulang,
-        carabayar: self.dataAll.carabayar
+        carabayar: self.dataAll.carabayar,
+        operasi_id: self.dataAll.operasi_id,
+        isoperasi: self.formOperasi === true ? 1 : 0,
+        operasi: operasiJson
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -446,6 +611,19 @@ export default {
         .catch(err => {
           console.log(err);
           self.berhasil = false;
+        });
+    },
+    getDataPasien() {
+      let self = this;
+      Api.pasien
+        .find(self.dataAll.pasien_id)
+        .then(resp => {
+          if (resp.status === 200) {
+            self.dataAll.pasien = resp.data.data;
+          }
+        })
+        .catch(err => {
+          console.log(err);
         });
     }
   }

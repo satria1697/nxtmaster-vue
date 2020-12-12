@@ -89,6 +89,17 @@ const SiskaPath = [
       // icon: "fas fa-user-friends"
       // closable: false
     }
+  },
+  {
+    path: "/siska/laporanoperasi",
+    // name: "pdf/laporanmutu",
+    component: importPage("Siska/LaporanOperasi"),
+    meta: {
+      requireAuth: true,
+      title: "Laporan Operasi"
+      // icon: "fas fa-user-friends"
+      // closable: false
+    }
   }
 ];
 

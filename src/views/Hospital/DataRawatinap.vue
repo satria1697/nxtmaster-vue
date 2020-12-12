@@ -10,6 +10,8 @@
       :dataBangsal="dataBangsal"
       :dataKamarrawatinap="dataKamarrawatinap"
       :dataDokter="dataDokter"
+      :dataPerawat="dataPerawat"
+      :dataDokterAnestesi="dataDokterAnestesi"
     ></Form>
     <div class="container">
       <div class="row">
@@ -119,7 +121,9 @@ export default {
       dataKelasrawatinap: [],
       dataBangsal: [],
       dataKamarrawatinap: [],
-      dataDokter: []
+      dataDokter: [],
+      dataPerawat: [],
+      dataDokterAnestesi: []
     };
   },
   created() {
@@ -143,7 +147,7 @@ export default {
       self.getDataKelasrawatinap();
       self.getDataBangsal();
       self.getDataKamarrawatinap();
-      self.getDataDokter();
+      self.getDataTenagaMedis();
     },
     getData(params) {
       let self = this;
@@ -239,13 +243,19 @@ export default {
           console.log(err);
         });
     },
-    getDataDokter(params) {
+    getDataTenagaMedis(params) {
       let self = this;
       Api.tenagamedis
         .filter(params)
         .then(res => {
           self.dataDokter = res.data.data.filter(function(data) {
             return data.jenis_id === 1;
+          });
+          self.dataPerawat = res.data.data.filter(function(data) {
+            return data.jenis_id === 2;
+          });
+          self.dataDokterAnestesi = self.dataDokter.filter(function(data) {
+            return data.spesialisasi_id === 4;
           });
         })
         .catch(err => {

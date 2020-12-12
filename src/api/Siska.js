@@ -36,7 +36,8 @@ const api = {
     Update: "/api/siska/laporan/update/{id}",
     Delete: "/api/siska/laporan/delete/{id}",
     laporan: "/api/siska/laporan/laporan/data",
-    laporanMutu: "api/siska/laporan/laporan/mutu"
+    laporanMutu: "api/siska/laporan/laporan/mutu",
+    laporanoperasi: "api/siska/laporan/laporan/operasi"
   },
   formulir: {
     Get: "/api/siska/formulir/data",
@@ -173,6 +174,11 @@ const SiskaApi = {
     },
     mutu: params => {
       return Axios.get(api.laporan.laporanMutu, {
+        params: params
+      });
+    },
+    operasi: params => {
+      return Axios.get(api.laporan.laporanoperasi, {
         params: params
       });
     }
