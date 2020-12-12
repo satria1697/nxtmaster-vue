@@ -47,7 +47,7 @@
                       <option value="1">Perempuan</option>
                     </select>
                   </div>
-                  <div v-if="editId !== 0" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"

@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="fixed-bottom bg-theme">
-        <h1 class="display-1">NXTOffice4</h1>
+        <h1 class="display-1">NXTHospital2</h1>
       </div>
     </div>
   </div>

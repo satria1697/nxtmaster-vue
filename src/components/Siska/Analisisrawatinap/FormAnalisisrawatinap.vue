@@ -44,7 +44,7 @@
                     <select
                       class="form-control bottom custom-select"
                       id="formAkses"
-                      v-model="dataAll.ranap"
+                      v-model="dataAll.idranap"
                       v-on:change="setTempoDate(dataAll.ranap)"
                     >
                       <option
