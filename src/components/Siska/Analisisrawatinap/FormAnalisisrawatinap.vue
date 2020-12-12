@@ -150,12 +150,14 @@
                       dataAll.tgllengkap !== '' || dataAll.tgllengkap !== null
                     "
                   >
-                    <label for="formtgll" class="top top-disabled">Status</label>
+                    <label for="formtgll" class="top top-disabled"
+                      >Status</label
+                    >
                     <input
                       id="formtgll"
                       class="bottom form-control"
                       v-model="dataAll.statuskelengkapan.description"
-                      :style="{color: dataAll.statuskelengkapan.warna}"
+                      :style="{ color: dataAll.statuskelengkapan.warna }"
                       disabled
                     />
                   </div>

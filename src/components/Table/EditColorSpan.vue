@@ -1,6 +1,9 @@
 <template>
   <div>
-    <span v-bind:style="{ color: data.warna || data.statuskelengkapan.warna }">{{ data.description || data.statuskelengkapan.description}}</span>
+    <span
+      v-bind:style="{ color: data.warna || data.statuskelengkapan.warna }"
+      >{{ data.description || data.statuskelengkapan.description }}</span
+    >
   </div>
 </template>
 

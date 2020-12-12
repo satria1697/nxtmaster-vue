@@ -498,7 +498,10 @@ export default {
               };
             }
             if (self.dataAll.operasi.tgloperasi !== null) {
-              self.dataAll.operasi.tgloperasi = self.dataAll.operasi.tgloperasi.replace(" ", "T");
+              self.dataAll.operasi.tgloperasi = self.dataAll.operasi.tgloperasi.replace(
+                " ",
+                "T"
+              );
             } else {
               self.dataAll.operasi.tgloperasi = "";
             }
@@ -518,7 +521,7 @@ export default {
         dokteranestesi_id: self.dataAll.operasi.dokteranestesi_id,
         jenisanestesi: self.dataAll.operasi.jenisanestesi,
         tindakan: self.dataAll.operasi.tindakan
-      }
+      };
       let operasiJson = JSON.stringify(operasi);
       let rawData = {
         tglmasuk: self.dataAll.tglmasuk,
