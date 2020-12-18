@@ -176,7 +176,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // let self = this;
+  //
   if (to.meta.requireAuth) {
     if (store.state.isAuthenticated === false) {
       next("/login");

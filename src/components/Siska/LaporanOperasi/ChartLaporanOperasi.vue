@@ -13,18 +13,17 @@ export default {
   },
   mounted() {
     // Overwriting base render method with actual data.
-    let self = this;
-    self.makeChart();
+
+    this.makeChart();
   },
   methods: {
     makeChart() {
-      let self = this;
-      console.log(self.data);
+      console.log(this.data);
       let datasets = [];
       let who = ["Dokter", "Perawat"];
       let j = 0;
-      if (self.data.length) {
-        self.data.forEach(function(data) {
+      if (this.data.length) {
+        this.data.forEach(function(data) {
           const letters = "0123456789ABCDEF";
           let color = "#";
           for (var i = 0; i < 6; i++) {
@@ -41,7 +40,7 @@ export default {
       }
       console.log(datasets);
       let chartData = {
-        labels: self.bulan,
+        labels: this.bulan,
         datasets: datasets
       };
 
@@ -61,13 +60,12 @@ export default {
         }
       };
 
-      self.renderChart(chartData, options);
+      this.renderChart(chartData, options);
     }
   },
   watch: {
     data: function() {
-      let self = this;
-      self.makeChart();
+      this.makeChart();
     }
   }
 };

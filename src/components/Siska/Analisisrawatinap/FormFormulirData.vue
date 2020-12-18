@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,7 +26,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="col">
                   <table class="table table-sm">
                     <thead>
@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                       <tr v-for="(data, index) in formulirData" :key="data.id">
-                        <td class="pointer" v-on:click="rowBoom(data)">
+                        <td class="pointer-event" v-on:click="rowBoom(data)">
                           {{ data.description }}
                         </td>
                         <td class="row">
@@ -142,56 +142,50 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
+      this.dataAll = initialDataAll();
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.formulir
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
             // console.log(resp.data.data[0].formulirdata);
             for (let idx = 0; idx < resp.data.data.formulirdata.length; idx++) {
-              self.checkedbox.push({
+              this.checkedbox.push({
                 value: 4
               });
             }
-            self.dataAll = resp.data.data;
-            self.formulirData = self.dataAll.formulirdata;
+            this.dataAll = resp.data.data;
+            this.formulirData = this.dataAll.formulirdata;
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(status, id) {
-      let self = this;
       let rawData = {
-        description: self.dataAll.description
+        description: this.dataAll.description
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -202,81 +196,79 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.formulir
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.formulir
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
     changeFormulirDataModal(id) {
-      let self = this;
-      if (self.isFormulirModal === false) {
-        self.editFormulirId = id;
-        self.isFormulirModal = true;
+      if (this.isFormulirModal === false) {
+        this.editFormulirId = id;
+        this.isFormulirModal = true;
       } else {
-        // self.init();
-        // self.getData(self.filter);
-        self.isFormulirModal = false;
+        // this.init();
+        // this.getData(this.filter);
+        this.isFormulirModal = false;
       }
     }
   }

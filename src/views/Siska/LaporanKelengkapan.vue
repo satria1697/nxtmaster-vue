@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="form form-group col-3">
           <label for="formtgll" class="top">Bulan Awal</label>
@@ -121,7 +121,6 @@ export default {
     // Form
   },
   data: function() {
-    let self = this;
     return {
       dataAll: {},
       filter: {
@@ -159,7 +158,7 @@ export default {
           name: "Edit",
           orderable: false,
           event: "click",
-          handler: self.changeModal,
+          handler: this.changeModal,
           component: edit,
           width: 5
         },
@@ -168,7 +167,7 @@ export default {
           name: "Delete",
           oderable: false,
           event: "click",
-          handler: self.deleteData,
+          handler: this.deleteData,
           component: actiondelete,
           width: 5
         }
@@ -205,21 +204,19 @@ export default {
     };
   },
   created() {
-    let self = this;
-    self.init();
-    self.setTglawal();
+    this.init();
+    this.setTglawal();
   },
   methods: {
     init() {
-      // let self = this;
-      // self.getDataTenagaMedis();
+      //
+      // this.getDataTenagaMedis();
     },
     getData() {
-      let self = this;
       const params = {
-        tglawal: self.dataSend.tglawal,
-        tglakhir: self.dataSend.tglakhir,
-        kelengkapan: self.dataSend.kelengkapan,
+        tglawal: this.dataSend.tglawal,
+        tglakhir: this.dataSend.tglakhir,
+        kelengkapan: this.dataSend.kelengkapan,
         page: 1,
         find: "",
         length: 10000,
@@ -229,7 +226,7 @@ export default {
       Api.laporan
         .laporan(params)
         .then(res => {
-          // self.dataChart = res.data.data.data;
+          // this.dataChart = res.data.data.data;
           let arr = res.data.data.data;
           let m = arr.length;
           let n = arr[0].length;
@@ -242,18 +239,17 @@ export default {
             }
             f.push(t);
           }
-          self.dataChart = f;
-          self.bulanChart = res.data.data.bulan;
-          self.dataPDF = res.data.data;
-          self.dataSend = initialDataSend();
+          this.dataChart = f;
+          this.bulanChart = res.data.data.bulan;
+          this.dataPDF = res.data.data;
+          this.dataSend = initialDataSend();
         })
         .catch(err => {
           console.log(err);
         });
     },
     printPDF(whereprint) {
-      let self = this;
-      self.printed = true;
+      this.printed = true;
       setTimeout(function() {
         //giving it 200 milliseconds time to load
 
@@ -286,39 +282,36 @@ export default {
       </html>`);
 
         setTimeout(function() {
-          WinPrint.document.title = self.dataPDF.filename;
+          WinPrint.document.title = this.dataPDF.filename;
           WinPrint.document.close();
           WinPrint.focus();
           WinPrint.print();
           WinPrint.close();
         }, 100);
-        self.printed = false;
+        this.printed = false;
       }, 100);
     },
     reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
+      this.getData(tableProps);
     },
     edit(data) {
-      self.changeModal(data.id);
+      this.changeModal(data.id);
     },
     changeModal(id) {
-      let self = this;
-      if (self.isModal === false) {
-        self.editId = id;
-        self.isModal = true;
+      if (this.isModal === false) {
+        this.editId = id;
+        this.isModal = true;
       } else {
-        self.getData(self.filter);
-        self.isModal = false;
+        this.getData(this.filter);
+        this.isModal = false;
       }
     },
     deleteData(id) {
-      let self = this;
       Api.status
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
-            self.getData(self.filter);
+            this.getData(this.filter);
           }
         })
         .catch(() => {
@@ -326,27 +319,24 @@ export default {
         });
     },
     addMonths() {
-      let self = this;
-      self.dataSend.tglakhir = moment(self.dataSend.tglawal)
+      this.dataSend.tglakhir = moment(this.dataSend.tglawal)
         .add(2, "months")
         .format("YYYY-MM");
     },
     setTglawal() {
-      let self = this;
-      self.dataSend.tglawal = moment()
+      this.dataSend.tglawal = moment()
         .subtract(3, "months")
         .format("YYYY-MM");
-      self.addMonths();
+      this.addMonths();
     },
     getDataTenagaMedis(params) {
-      let self = this;
       Api.tenagamedis
         .filter(params)
         .then(res => {
-          self.dataDokter = res.data.data.filter(function(data) {
+          this.dataDokter = res.data.data.filter(function(data) {
             return data.jenis_id === 1;
           });
-          self.dataPerawat = res.data.data.filter(function(data) {
+          this.dataPerawat = res.data.data.filter(function(data) {
             return data.jenis_id === 2;
           });
         })

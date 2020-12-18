@@ -29,15 +29,14 @@ export default {
     };
   },
   created() {
-    let self = this;
     store.watch(
       state => {
         return state.tabState;
       },
       () => {
-        self.isLoading = true;
-        self.getTabStore();
-        self.isLoading = false;
+        this.isLoading = true;
+        this.getTabStore();
+        this.isLoading = false;
       },
       {
         deep: true
@@ -45,9 +44,8 @@ export default {
     );
   },
   mounted() {
-    let self = this;
-    self.getLocalTab();
-    self.getTabStore();
+    this.getLocalTab();
+    this.getTabStore();
     // console.log(store.getters.tabRouteName(0));
   },
   methods: {
@@ -63,39 +61,36 @@ export default {
       }
     },
     getTabStore() {
-      let self = this;
-      self.tabState = self.stateTab();
+      this.tabState = this.stateTab();
     },
     stateTab() {
       return store.state.tabState;
     },
     goTo(place) {
-      let self = this;
-      self.$router.push({ name: place }).catch(err => {
+      this.$router.push({ name: place }).catch(err => {
         err;
       });
     },
     close(index) {
-      let self = this;
       let state = store.state.tabState;
       console.log(state);
       if (state.length === 1) {
-        self.closeTabAct(index);
-        self.$router.push("/").catch(err => {
+        this.closeTabAct(index);
+        this.$router.push("/").catch(err => {
           err;
         });
       } else {
-        if (state[index].name === self.$route.name) {
+        if (state[index].name === this.$route.name) {
           console.log(index);
           if (index === 0) {
-            self.closeTabAct(index);
-            self.$router.push(state[index + 1].name);
+            this.closeTabAct(index);
+            this.$router.push(state[index + 1].name);
           } else {
-            self.closeTabAct(index);
-            self.$router.push(state[index - 1].name);
+            this.closeTabAct(index);
+            this.$router.push(state[index - 1].name);
           }
         } else {
-          self.closeTabAct(index);
+          this.closeTabAct(index);
         }
       }
     },
@@ -104,8 +99,8 @@ export default {
     },
     computedClass(routeName) {
       let className = "down";
-      let self = this;
-      if (routeName === self.$route.name) {
+
+      if (routeName === this.$route.name) {
         return className;
       }
     }
@@ -114,10 +109,9 @@ export default {
     tabState: {
       deep: true,
       handler() {
-        let self = this;
-        self.isLoading = true;
-        self.getTabStore();
-        self.isLoading = false;
+        this.isLoading = true;
+        this.getTabStore();
+        this.isLoading = false;
       }
     }
   }
@@ -162,13 +156,13 @@ export default {
     border-style: solid;
     // border: solid black;
     // border-radius: 10px 10px 0 0;
-    align-self: center;
+    align-this: center;
     padding-right: 7px;
     // padding: 15px;
     // background-color: white;
   }
   .center {
-    place-self: center;
+    place-this: center;
   }
 }
 .down {

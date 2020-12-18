@@ -1,30 +1,30 @@
-@import "../abstracts/variables.scss";
-
-.detail {
-  // margin-top: 10px;
-  padding: 10px 10px 5px 10px;
-  // margin-right: 15px;
-  // margin-bottom: 50px;
-  background-color: $theme-bg-detail;
-  min-height: 85vh;
-  // border: 1px solid rgba(0, 0, 0, 0.4);
-  // border-radius: 7px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  // margin-top: -1px;
-  z-index: -3;
-  overflow: auto;
-}
-.buttonDownload {
-  margin: 10px;
-}
-.form-control-row {
-  margin-right: 5px;
-}
-.pdf-main {
-  margin-top: 15px;
-  margin-right: 10px;
-  border: 1px solid rgba($color: black, $alpha: 0.6);
-  -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
-}
+//@import "../abstracts/variables.scss";
+//
+//.detail {
+//  // margin-top: 10px;
+//  padding: 10px 10px 5px 10px;
+//  // margin-right: 15px;
+//  // margin-bottom: 50px;
+//  background-color: $theme-bg-detail;
+//  min-height: 85vh;
+//  // border: 1px solid rgba(0, 0, 0, 0.4);
+//  // border-radius: 7px;
+//  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+//  // margin-top: -1px;
+//  z-index: -3;
+//  overflow: auto;
+//}
+//.buttonDownload {
+//  margin: 10px;
+//}
+//.form-control-row {
+//  margin-right: 5px;
+//}
+//.pdf-main {
+//  margin-top: 15px;
+//  margin-right: 10px;
+//  border: 1px solid rgba($color: black, $alpha: 0.6);
+//  -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
+//  -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
+//  box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.75);
+//}

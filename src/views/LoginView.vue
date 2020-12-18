@@ -1,19 +1,19 @@
 <template>
-  <div class="bg-theme login-page">
+  <div class="bg-default login-page container-lg-fluid">
     <span></span>
-    <user-modal
-      v-if="isUserModal"
-      :title="textTitle"
-      :textSuccess="berhasil"
-      :textDanger="!berhasil"
-      @modal-closed="isUserModal = false"
-    />
-    <div class="login-container container">
+    <div class="login-container col-md-4">
+      <user-modal
+        v-if="isUserModal"
+        :title="textTitle"
+        :textSuccess="berhasil"
+        :textDanger="!berhasil"
+        @modal-closed="isUserModal = false"
+      />
       <div class="form-group row">
-        <h1 class="text-dark display-4">Login</h1>
+        <h1 class="text-dark display-4 col">Login</h1>
       </div>
       <div class="row">
-        <div class="form form-group col-sm-12">
+        <div class="form form-group col-md">
           <label for="user" class="top">Username</label>
           <input
             id="user"
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="form form-group col-sm-12">
+        <div class="form form-group col-md">
           <label for="password" class="top">Password</label>
           <input
             id="password"
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="row align-content-center justify-content-center">
-        <div v-if="masuk" class="spinner-border center span-theme">
+        <div v-if="isLoading" class="spinner-border center span-theme">
           <span class="sr-only"></span>
         </div>
         <div v-else class="form-group col-4">
@@ -61,9 +61,9 @@
           </button>
         </div>
       </div>
-      <div class="fixed-bottom bg-theme">
-        <h1 class="display-1">NXTHospital2</h1>
-      </div>
+    </div>
+    <div class="bg-default mt-auto">
+      <h1 class="display-1">NXTHospital2</h1>
     </div>
   </div>
 </template>
@@ -91,24 +91,26 @@ export default {
       empty: false,
       dataAkses: [],
       textTitle: "",
-      isUserModal: false
+      isUserModal: false,
+      isLoading: false
     };
   },
   mounted() {},
   methods: {
     login() {
-      let self = this;
-      if (self.dataLogin.username === "" || self.dataLogin.password === "") {
-        // self.empty = true;
-        self.isUserModal = true;
-        self.textTitle = "Username dan Password tidak boleh kosong";
-        self.berhasil = false;
+      this.isLoading = true;
+      if (this.dataLogin.username === "" || this.dataLogin.password === "") {
+        // this.empty = true;
+        this.isUserModal = true;
+        this.textTitle = "Username dan Password tidak boleh kosong";
+        this.berhasil = false;
+        this.isLoading = false;
       } else {
-        self.berhasil = true;
+        this.berhasil = true;
         let rawData = {
-          username: self.dataLogin.username,
-          password: self.dataLogin.password,
-          akses: self.dataLogin.akses
+          username: this.dataLogin.username,
+          password: this.dataLogin.password,
+          akses: this.dataLogin.akses
         };
         const formData = new FormData();
         for (let key in rawData) {
@@ -118,7 +120,7 @@ export default {
           .login(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.berhasil = true;
+              this.berhasil = true;
               // store.commit("setToken", resp.headers.authorization);
               if (localStorage.token) {
                 localStorage.removeItem("token");
@@ -127,7 +129,7 @@ export default {
               if (localStorage.token) {
                 const secretKey =
                   "TtGYMF5mRwzAPEJKQ7eYDB0mAQnbdW4ijXBmZMHvpAy5a78dQ4z2lzDDF65uEhQ1";
-                const jwtDecode = self.$jwt.decode(
+                const jwtDecode = this.$jwt.decode(
                   // store.state.token,
                   localStorage.getItem("token"),
                   secretKey
@@ -144,61 +146,53 @@ export default {
                   id,
                   akses
                 });
-                let sidebarstate = sessionStorage.getItem(
-                  "sidebar" + ":" + username + ":" + akses
-                );
-                if (!sidebarstate && akses === "0") {
-                  store.commit("sideBarChange");
-                }
-                if (sidebarstate === "true") {
-                  store.commit("sideBarChange");
-                }
                 store.commit("authenChange");
                 let tabs = sessionStorage.getItem(
                   "tab" + ":" + username + ":" + akses
                 );
                 if (tabs === null) {
-                  self.$router.push("/");
+                  this.$router.push("/");
                 } else {
-                  self.$router.push(tabs);
+                  this.$router.push(tabs);
                 }
               }
             } else {
-              self.berhasil = false;
-              self.isUserModal = true;
-              self.textTitle = "Akses Ditolak";
-              self.dataLogin = initialDataLogin();
+              this.berhasil = false;
+              this.isUserModal = true;
+              this.textTitle = "Akses Ditolak";
+              this.isLoading = false;
+              this.dataLogin = initialDataLogin();
             }
           })
           .catch(() => {
             // console.log(err.response.data);
             // if (err.response.data.error === "akses_required") {
-            //   self.errorText = "Tidak Memiliki Akses";
+            //   this.errorText = "Tidak Memiliki Akses";
             // } else if (err.response.data.error === "not_active") {
-            //   self.errorText =
+            //   this.errorText =
             //     "Username belum aktif, silahkan hubungi administrator";
             // } else {
-            //   self.errorText = "Username atau Password yang dimasukan salah";
+            //   this.errorText = "Username atau Password yang dimasukan salah";
             // }
-            self.berhasil = false;
-            self.isUserModal = true;
-            self.textTitle = "Akses Ditolak";
-            self.dataLogin = initialDataLogin();
+            this.berhasil = false;
+            this.isUserModal = true;
+            this.textTitle = "Akses Ditolak";
+            this.dataLogin = initialDataLogin();
+            this.isLoading = false;
           });
       }
     },
     getDataAkses() {
-      let self = this;
       let params = {
-        username: self.dataLogin.username,
+        username: this.dataLogin.username,
         login: true
       };
       api.auth
         .akses(params)
         .then(resp => {
-          self.dataAkses = resp.data.data[0].akses;
-          if (self.dataAkses.length === 0) {
-            self.dataAkses = [
+          this.dataAkses = resp.data.data[0].akses;
+          if (this.dataAkses.length === 0) {
+            this.dataAkses = [
               {
                 id: 0,
                 description: "#Tidak ada akses",
@@ -206,10 +200,10 @@ export default {
               }
             ];
           }
-          self.dataAkses = self.dataAkses.filter(function(data) {
+          this.dataAkses = this.dataAkses.filter(function(data) {
             return data.active === 1;
           });
-          self.dataLogin.akses = self.dataAkses[0].id;
+          this.dataLogin.akses = this.dataAkses[0].id;
         })
         .catch(err => {
           console.log(err);
@@ -223,27 +217,18 @@ export default {
 @import "src/style/abstracts/variables";
 .login-page {
   height: 100vh;
+  width: 100vw;
+  color: $text;
   // padding-bottom: 10%;
 }
 .login-container {
-  width: 400px;
-  height: 250px;
-  margin: 100px auto;
+  max-width: 400px;
+  max-height: 250px;
+  margin: 10rem auto;
   padding: 10px 30px;
   background-color: $theme-bg-detail;
   /*opacity: 0.9;*/
   border-radius: 8px;
   z-index: 9999;
 }
-.particles-js {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /*z-index: 10;*/
-}
-/*.fixed-bottom {*/
-/*z-index: 10;*/
-/*}*/
 </style>

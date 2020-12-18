@@ -2,12 +2,15 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-dialog modal-dialog-centered container-md"
+          role="document"
+        >
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,7 +29,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <form class="container-fluid">
                 <div class="row">
                   <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
@@ -47,7 +50,7 @@
                       v-model="dataAll.description"
                     />
                   </div>
-                  <div class="form form-group form-check col">
+                  <div class="form form-group form-check col-2">
                     <input
                       id="formActive"
                       class="form-check-input"
@@ -59,7 +62,7 @@
                     >
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
             <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
@@ -123,41 +126,36 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.reset();
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.reset();
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll.description = "";
-      self.editId = null;
-      self.dataAll.active = false;
+      this.dataAll.description = "";
+      this.editId = null;
+      this.dataAll.active = false;
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.akses
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
+            this.dataAll = resp.data.data;
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(status, id) {
-      let self = this;
-      let active = self.dataAll.active === true ? 1 : 0;
+      let active = this.dataAll.active === true ? 1 : 0;
       let rawData = {
-        description: self.dataAll.description,
+        description: this.dataAll.description,
         active: active
       };
       let formData = new FormData();
@@ -169,51 +167,50 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
+              this.berhasil = false;
             }
           })
           .catch(err => {
-            self.textTitle =
+            this.textTitle =
               err.response.data.error[Object.keys(err.response.data.error)[0]];
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.akses
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
+              this.berhasil = false;
             }
           })
           .catch(err => {
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.akses
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     }
   }

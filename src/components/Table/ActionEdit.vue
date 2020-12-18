@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="pointer col-1" @click="click(data.id)">
+    <div class="pointer-event col-1" @click="click(data.id)">
       <i class="fas fa-edit"></i>
     </div>
   </div>
@@ -20,8 +20,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables";
+@import "src/style/abstracts/_variables";
 .fa-edit {
+  font-size: 1rem;
   color: $theme;
 }
 </style>

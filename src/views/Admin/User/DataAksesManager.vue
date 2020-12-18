@@ -13,20 +13,21 @@
       @modal-closed="isDeleteModal = false"
       @delete-data="deleteData"
     />
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
-        <div class="col-3">
+        <div class="col-md-3">
           <div class="title">
             <h4>
               <i class="fas fa-search"></i>
               Antarmuka
+              <div v-if="isLoading" class="spinner-border"></div>
             </h4>
           </div>
           <div class="sidenav">
             <div class="sidenav-list">
               <span class="font-weight-bold"
                 ><i class="fas fa-th-large"></i> Menu
-                <span class="pointer"><i class="fas fa-times"></i></span
+                <span class="pointer-event"><i class="fas fa-times"></i></span
               ></span>
               <v-jstree
                 :data="dataDir"
@@ -36,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="col-9">
+        <div class="col-md-9">
           <div class="title">
             <h4>
               <i class="fas fa-plus"></i>
@@ -44,26 +45,17 @@
             </h4>
           </div>
           <div class="row">
-            <div class="form form-group col-5">
+            <div class="form form-group col-md-6">
               <label for="formDataAkses" class="top">Akses</label>
-              <select
-                class="form-control bottom custom-select"
-                id="formDataAkses"
-                v-model="idAkses"
-                value="idAkses"
-              >
-                <option
-                  :value="data.id"
-                  v-for="data in dataAkses"
-                  :key="data.id"
-                >
-                  {{ data.description }}
-                </option>
-              </select>
+              <v-select
+                label="description"
+                :options="dataAkses"
+                v-model="akses"
+              ></v-select>
             </div>
           </div>
           <div class="row">
-            <div class="form form-group col-4">
+            <div class="form form-group col-md-4">
               <label for="formLabel" class="top">Label</label>
               <input
                 id="formLabel"
@@ -73,7 +65,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="form form-group col-6">
+            <div class="form form-group col-md-6">
               <label for="formIkon" class="top">Ikon</label>
               <input
                 id="formIkon"
@@ -83,57 +75,75 @@
             </div>
           </div>
           <div class="row">
-            <div class="form form-group col-4">
+            <div class="form form-group col-md-4">
               <label for="formTingkat" class="top">Tingkat</label>
-              <select
-                class="form-control bottom custom-select"
-                id="formTingkat"
-                v-model="dataAll.rolelevelid"
-                value="idRoleLevel"
-              >
-                <option
-                  :value="data.id"
-                  v-for="data in dataRoleLevel"
-                  :key="data.id"
-                >
-                  {{ data.id }} - {{ data.description }}
-                </option>
-              </select>
+              <v-select
+                :options="dataRoleLevel"
+                label="description"
+                v-model="dataAll.rolelevel"
+              ></v-select>
+              <!--              <select-->
+              <!--                class="form-control bottom custom-select"-->
+              <!--                id="formTingkat"-->
+              <!--                v-model="dataAll.rolelevelid"-->
+              <!--                value="idRoleLevel"-->
+              <!--              >-->
+              <!--                <option-->
+              <!--                  :value="data.id"-->
+              <!--                  v-for="data in dataRoleLevel"-->
+              <!--                  :key="data.id"-->
+              <!--                >-->
+              <!--                  {{ data.id }} - {{ data.description }}-->
+              <!--                </option>-->
+              <!--              </select>-->
             </div>
-            <div v-if="dataAll.rolelevelid > 1" class="form form-group col-4">
-              <label for="formMenuInduk" class="top">Menu Induk</label>
-              <select
-                class="form-control bottom custom-select"
-                id="formMenuInduk"
+            <div
+              v-if="dataAll.rolelevel.id > 1"
+              class="form form-group col-md-4"
+            >
+              <label class="top">Menu Induk</label>
+              <v-select
+                :options="dataParent"
+                label="text"
                 v-model="dataAll.parentid"
-              >
-                <option
-                  :value="data.id"
-                  v-for="data in dataParent"
-                  :key="data.id"
-                >
-                  {{ data.id }} - {{ data.text }}
-                </option>
-              </select>
+              ></v-select>
+              <!--              <select-->
+              <!--                class="form-control bottom custom-select"-->
+              <!--                id="formMenuInduk"-->
+              <!--                v-model="dataAll.parentid"-->
+              <!--              >-->
+              <!--                <option-->
+              <!--                  :value="data.id"-->
+              <!--                  v-for="data in dataParent"-->
+              <!--                  :key="data.id"-->
+              <!--                >-->
+              <!--                  {{ data.id }} - {{ data.text }}-->
+              <!--                </option>-->
+              <!--              </select>-->
             </div>
           </div>
-          <div v-if="dataAll.rolelevelid === 3" class="row">
-            <div class="form form-group col-5">
+          <div v-if="dataAll.rolelevel.id === 3" class="row">
+            <div class="form form-group col-md-5">
               <label for="formApp" class="top">Application</label>
-              <select
-                class="form-control bottom custom-select"
-                id="formApp"
+              <v-select
+                :options="dataApp"
+                label="description"
                 v-model="dataAll.application.id"
-              >
-                <option :value="data.id" v-for="data in dataApp" :key="data.id">
-                  {{ data.description }}
-                </option>
-              </select>
+              ></v-select>
+              <!--              <select-->
+              <!--                class="form-control bottom custom-select"-->
+              <!--                id="formApp"-->
+              <!--                v-model="dataAll.application.id"-->
+              <!--              >-->
+              <!--                <option :value="data.id" v-for="data in dataApp" :key="data.id">-->
+              <!--                  {{ data.description }}-->
+              <!--                </option>-->
+              <!--              </select>-->
             </div>
           </div>
           <div
-            v-if="dataAll.rolelevelid === 3 && dataAll.application.id !== null"
-            class="form form-group col-5 input-group row"
+            v-if="dataAll.rolelevel.id === 3 && dataAll.application.id !== null"
+            class="form form-group col-md-5 input-group row"
           >
             <label for="FormModul" class="top">Modul</label>
             <input
@@ -207,7 +217,10 @@ function initialDataAll() {
     },
     parentid: null,
     roleid: null,
-    rolelevelid: 1,
+    rolelevel: {
+      id: null,
+      description: null
+    },
     id: null
   };
 }
@@ -227,94 +240,84 @@ export default {
       dataRoleLevel: [],
       dataApp: [],
       dataAkses: [],
-      idAkses: 1,
+      akses: null,
       dataModul: [],
       isModulModal: false,
       isDeleteModal: false,
-      isLoginModal: false
+      isLoginModal: false,
+      isLoading: false
     };
   },
   mounted() {
-    let self = this;
-    self.init();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
-      self.getDataAkses();
-      self.getDataRoleLevel();
-      self.getDataApp();
+      this.getDataAkses();
+      this.getDataRoleLevel();
+      this.getDataApp();
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
+      this.dataAll = initialDataAll();
     },
     getDataAkses(params) {
-      let self = this;
       api.akses
         .filter(params)
         .then(resp => {
-          self.dataAkses = resp.data.data;
+          this.dataAkses = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getDataApp(params) {
-      let self = this;
       api.application
         .filter(params)
         .then(resp => {
-          self.dataApp = resp.data.data;
+          this.dataApp = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     findModul() {
-      let self = this;
-      if (self.isModulModal === false) {
-        self.isModulModal = true;
+      if (this.isModulModal === false) {
+        this.isModulModal = true;
       } else {
-        self.isModulModal = false;
+        this.isModulModal = false;
       }
     },
     getDataModul() {
-      let self = this;
       let params = {
-        applicationid: self.dataAll.applicationid
+        applicationid: this.dataAll.applicationid
       };
       api.modul
         .filterApp(params)
         .then(resp => {
-          self.dataModul = resp.data.data;
+          this.dataModul = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getModulId(data) {
-      let self = this;
       api.modul
         .find(data.id)
         .then(resp => {
-          self.dataAll.modul.id = resp.data.data.id;
-          self.dataAll.modul.description = resp.data.data.name;
+          this.dataAll.modul.id = resp.data.data.id;
+          this.dataAll.modul.description = resp.data.data.name;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getDataRootId() {
-      let self = this;
       api.aksesmanager
-        .findRoot(self.idAkses)
+        .findRoot(this.akses.id)
         .then(resp => {
-          self.dataParent = [];
-          self.dataDir = resp.data.data;
-          self.dataDir.forEach(data => {
+          this.dataDir = resp.data.data;
+          this.dataDir.forEach(data => {
             data.children.forEach(data => {
-              // self.dataParent.push(data);
               data.children.forEach(leaf => {
                 if (
                   leaf.icon === "" ||
@@ -332,54 +335,50 @@ export default {
         });
     },
     getDataRoot(id) {
-      let self = this;
       let rawData = {
         idakses: id
       };
       api.aksesmanager
         .filterRoot(rawData)
         .then(resp => {
-          self.dataParent = resp.data.data;
+          this.dataParent = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getDataParent(id) {
-      let self = this;
       let rawData = {
         idakses: id
       };
       api.aksesmanager
         .filterParent(rawData)
         .then(resp => {
-          self.dataParent = resp.data.data;
+          this.dataParent = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getDataRoleLevel(params) {
-      let self = this;
       api.rolelevel
         .filter(params)
         .then(resp => {
-          self.dataRoleLevel = resp.data.data;
+          this.dataRoleLevel = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getId(payload) {
-      let self = this;
       console.log(payload.data.id);
       api.aksesmanager
         .find(payload.data.id)
         .then(resp => {
           console.log(resp.data.data[0]);
-          self.dataAll = resp.data.data[0];
+          this.dataAll = resp.data.data[0];
           if (resp.data.data[0].modul === null) {
-            self.dataAll.modul = {
+            this.dataAll.modul = {
               id: null,
               description: ""
             };
@@ -390,39 +389,37 @@ export default {
         });
     },
     deleteData(data) {
-      let self = this;
       api.aksesmanager
         .delete(data.id)
         .then(() => {
-          self.isDeleteModal = false;
-          self.isLoginModal = false;
-          self.reset();
-          self.getDataRootId();
+          this.isDeleteModal = false;
+          this.isLoginModal = false;
+          this.reset();
+          this.getDataRootId();
         })
         .catch(err => {
           console.log(err);
         });
     },
     register(setup, id) {
-      let self = this;
       let rawData = {
-        text: self.dataAll.text,
-        icon: self.dataAll.icon,
-        rolelevelid: self.dataAll.rolelevelid,
-        roleid: self.idAkses
+        text: this.dataAll.text,
+        icon: this.dataAll.icon,
+        rolelevelid: this.dataAll.rolelevelid,
+        roleid: this.idAkses
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      if (self.dataAll.rolelevelid === 2) {
-        formData.append("parentid", self.dataAll.parentid);
+      if (this.dataAll.rolelevelid === 2) {
+        formData.append("parentid", this.dataAll.parentid);
       }
-      if (self.dataAll.rolelevelid === 3) {
+      if (this.dataAll.rolelevelid === 3) {
         let childData = {
-          parentid: self.dataAll.parentid,
-          applicationid: self.dataAll.application.id,
-          moduleid: self.dataAll.modul.id
+          parentid: this.dataAll.parentid,
+          applicationid: this.dataAll.application.id,
+          moduleid: this.dataAll.modul.id
         };
         for (let key in childData) {
           formData.append(key, childData[key]);
@@ -433,8 +430,8 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.status === 200) {
-              self.reset();
-              self.getDataRootId();
+              this.reset();
+              this.getDataRootId();
             }
           })
           .catch(err => {
@@ -447,8 +444,8 @@ export default {
           .update(id, formData)
           .then(resp => {
             if (resp.status === 200) {
-              self.reset();
-              self.getDataRootId();
+              this.reset();
+              this.getDataRootId();
             }
           })
           .catch(err => {
@@ -458,17 +455,15 @@ export default {
     }
   },
   watch: {
-    idAkses: function() {
-      let self = this;
-      self.reset();
-      self.getDataRootId();
+    "akses.id": function() {
+      this.reset();
+      this.getDataRootId();
     },
-    "dataAll.rolelevelid": function() {
-      let self = this;
-      if (self.dataAll.rolelevelid === 2) {
-        self.getDataRoot(self.idAkses);
+    "dataAll.rolelevel.id": function() {
+      if (this.dataAll.rolelevel.id === 2) {
+        this.getDataRoot(this.akses.id);
       } else {
-        self.getDataParent(self.idAkses);
+        this.getDataParent(this.akses.id);
       }
     }
   }
@@ -483,7 +478,7 @@ export default {
   /*position: fixed;*/
   z-index: 100;
   // background: #f0f0f0;
-  color: $text-theme-alt;
+  color: $text-alt;
   padding: 0;
   // overflow-y: auto;
   // overflow-x: hidden;
@@ -509,7 +504,7 @@ export default {
     border-radius: 4px;
     margin-top: 30px;
     background-color: $theme-bg-detail;
-    color: $text-theme-alt;
+    color: $text-alt;
     border: 1px solid rgba($color: #000000, $alpha: 0.2);
     -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -530,7 +525,7 @@ span.font-weight-bold {
   position: absolute;
   top: 23px;
   z-index: 10;
-  color: $text-theme-alt;
+  color: $text-alt;
 }
 // .position-absolute {
 //   right: 10px;

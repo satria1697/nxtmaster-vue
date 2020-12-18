@@ -116,7 +116,7 @@ function navbarOptionRightUser() {
 
 export default {
   data() {
-    // let self = this;
+    //
     return {
       navbarOptions: {
         elemendId: "main-navbar",
@@ -173,12 +173,11 @@ export default {
     };
   },
   mounted() {
-    // let self = this;
+    //
     // console.log(navbarOptionRightUser());
   },
   methods: {
     navBarMethods(payload) {
-      let self = this;
       if (payload === "Logout") {
         api.auth
           .logout()
@@ -186,7 +185,7 @@ export default {
             if (resp.data.status === "success") {
               store.commit("authenChange");
               if (store.state.isAuthenticated === false) {
-                self.$tabs.saveTabs();
+                this.$tabs.saveTabs();
                 store.commit("setToken", "");
                 localStorage.removeItem("token");
                 sessionStorage.removeItem(
@@ -215,7 +214,7 @@ export default {
                   id,
                   akses
                 });
-                self.$router.push("/login");
+                this.$router.push("/login");
               }
             }
           })
@@ -247,7 +246,7 @@ nav {
   ::v-deep .vnb__menu-options__option {
     margin: 0;
     &__link {
-      color: $text-theme;
+      color: $text;
     }
   }
   ::v-deep .vnb__sub-menu-options {

@@ -2,7 +2,7 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
             <div class="modal-body">
               <span
@@ -49,13 +49,11 @@ export default {
     }
   },
   mounted() {
-    let self = this;
-    self.$refs.btnok.focus();
+    this.$refs.btnok.focus();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("modal-closed");
+      this.$emit("modal-closed");
     }
   }
 };

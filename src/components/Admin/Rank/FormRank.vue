@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,7 +26,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
                   <div v-if="editId === null" class="form form-group col-4">
                     <label for="formID" class="top">ID</label>
@@ -116,54 +116,48 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       // console.log(e);
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.reset();
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.reset();
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll.id = null;
-      self.dataAll.description = "";
-      // self.editId = null;
+      this.dataAll.id = null;
+      this.dataAll.description = "";
+      // this.editId = null;
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.rank
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
+            this.dataAll = resp.data.data;
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(setup, id) {
-      let self = this;
       let rawData = {
-        id: self.dataAll.id,
-        description: self.dataAll.description
+        id: this.dataAll.id,
+        description: this.dataAll.description
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -174,65 +168,65 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.textTitle =
+              this.textTitle =
                 "Input belum masuk kedatabase, silahkan coba lagi";
-              self.berhasil = false;
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             console.log(err);
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.rank
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.textTitle =
+              this.textTitle =
                 "Input belum masuk kedatabase, silahkan coba lagi";
-              self.berhasil = false;
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.isUserModal = true;
             }
           })
           .catch(err => {
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(data) {
       console.log(data);
-      let self = this;
+
       Api.rank
         .delete(data.id)
         .then(resp => {
           if (resp.status === 204) {
-            self.textTitle = "Data berhasil dihapus";
-            self.berhasil = true;
-            self.isUserModal = true;
+            this.textTitle = "Data berhasil dihapus";
+            this.berhasil = true;
+            this.isUserModal = true;
           } else {
-            self.textTitle = "Data gagal dihapus";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Data gagal dihapus";
+            this.berhasil = false;
+            this.isUserModal = true;
           }
         })
         .catch(err => {
-          self.textTitle = "Data gagal dihapus";
-          self.berhasil = false;
-          self.isUserModal = true;
+          this.textTitle = "Data gagal dihapus";
+          this.berhasil = false;
+          this.isUserModal = true;
           console.log(err);
         });
     }

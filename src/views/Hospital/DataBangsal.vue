@@ -7,9 +7,9 @@
       @modal-closed="changeModal"
       :dataKelasRawatInap="dataKelasRawatInap"
     ></Form>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
-        <div class="col">
+        <div class="col-md-6">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
@@ -19,16 +19,24 @@
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    >
-    </data-table>
   </div>
 </template>
 
@@ -44,7 +52,6 @@ export default {
     Form
   },
   data() {
-    let self = this;
     return {
       dataAll: {},
       filter: {
@@ -77,7 +84,7 @@ export default {
           name: "Edit",
           orderable: false,
           event: "click",
-          handler: self.changeModal,
+          handler: this.changeModal,
           component: edit,
           width: 5
         },
@@ -86,7 +93,7 @@ export default {
           name: "Delete",
           oderable: false,
           event: "click",
-          handler: self.deleteData,
+          handler: this.deleteData,
           component: actiondelete,
           width: 5
         }
@@ -105,14 +112,12 @@ export default {
     };
   },
   created() {
-    let self = this;
-    self.isLoading = true;
-    self.init();
-    self.isLoading = false;
+    this.isLoading = true;
+    this.init();
+    this.isLoading = false;
   },
   methods: {
     init() {
-      let self = this;
       const params = {
         page: 1,
         find: "",
@@ -120,63 +125,58 @@ export default {
         column: "id",
         dir: "ASC"
       };
-      self.getData(params);
-      self.getDataKelasRawatInap();
+      this.getData(params);
+      this.getDataKelasRawatInap();
     },
     getData(params) {
-      let self = this;
-      self.isLoading = true;
-      self.filter.page = params.page;
-      self.filter.find = params.find;
-      self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      this.isLoading = true;
+      this.filter.page = params.page;
+      this.filter.find = params.find;
+      this.filter.length = params.length;
+      this.filter.orderColumn = params.orderColumn;
+      this.filter.orderBy = params.orderBy;
       Api.bangsal
         .filter(params)
         .then(res => {
-          self.dataAll = res.data;
-          self.isLoading = false;
+          this.dataAll = res.data;
+          this.isLoading = false;
         })
         .catch(err => {
           console.log(err);
-          self.isLoading = false;
+          this.isLoading = false;
         });
     },
     getDataKelasRawatInap(params) {
-      let self = this;
       Api.kelasrawatinap
         .filter(params)
         .then(resp => {
-          self.dataKelasRawatInap = resp.data.data;
+          this.dataKelasRawatInap = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
+      this.getData(tableProps);
     },
     edit(data) {
-      self.changeModal(data.id);
+      this.changeModal(data.id);
     },
     changeModal(id) {
-      let self = this;
-      if (self.isModal === false) {
-        self.editId = id;
-        self.isModal = true;
+      if (this.isModal === false) {
+        this.editId = id;
+        this.isModal = true;
       } else {
-        self.getData(self.filter);
-        self.isModal = false;
+        this.getData(this.filter);
+        this.isModal = false;
       }
     },
     deleteData(id) {
-      let self = this;
       Api.bangsal
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
-            self.getData(self.filter);
+            this.getData(this.filter);
           }
         })
         .catch(() => {

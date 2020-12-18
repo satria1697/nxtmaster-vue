@@ -32,7 +32,7 @@
         @modal-closed="isDeleteModal = false"
         @delete-data="deleteData"
       />
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col-3">
             <div class="row">
@@ -42,7 +42,7 @@
                   <img v-else src="@/assets/image/table/blank_avatar.png" />
                   <div class="form-group">
                     <label for="fileInputForm">
-                      <span class="fa-stack fa-2x pointer">
+                      <span class="fa-stack fa-2x pointer-event">
                         <i
                           class="fa fa-circle fa-stack-2x"
                           aria-hidden="true"
@@ -346,7 +346,7 @@ export default {
     "data-table-rank": DataTableRank
   },
   data() {
-    // let self = this;
+    //
     return {
       isLoading: false,
       newForm: true,
@@ -371,137 +371,123 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.isLoading = true;
-    self.init();
-    self.isLoading = false;
+    this.isLoading = true;
+    this.init();
+    this.isLoading = false;
   },
   methods: {
     init() {
-      let self = this;
-      self.getAksesData();
-      self.checkEdit();
+      this.getAksesData();
+      this.checkEdit();
     },
     getAksesData(params) {
-      let self = this;
       Api.akses
         .filter(params)
         .then(resp => {
-          self.dataAkses = resp.data.data;
+          this.dataAkses = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     findLevel() {
-      let self = this;
-      if (self.isLevelModal === false) {
-        self.isLevelModal = true;
+      if (this.isLevelModal === false) {
+        this.isLevelModal = true;
       } else {
-        self.isLevelModal = false;
+        this.isLevelModal = false;
       }
     },
     levelSelected(data) {
-      let self = this;
-      self.dataAll.levelid = data.id;
-      self.dataAll.level.id = data.id;
-      self.dataAll.level.description = data.description;
+      this.dataAll.levelid = data.id;
+      this.dataAll.level.id = data.id;
+      this.dataAll.level.description = data.description;
     },
     findStructure() {
-      let self = this;
-      if (self.isStructureModal === false) {
-        self.isStructureModal = true;
+      if (this.isStructureModal === false) {
+        this.isStructureModal = true;
       } else {
-        self.isStructureModal = false;
+        this.isStructureModal = false;
       }
     },
     structureSelected(data) {
-      let self = this;
       console.log(data);
-      self.dataAll.structureid = data.id;
-      self.dataAll.structure.id = data.id;
-      self.dataAll.structure.label = data.label;
+      this.dataAll.structureid = data.id;
+      this.dataAll.structure.id = data.id;
+      this.dataAll.structure.label = data.label;
     },
     findRank() {
-      let self = this;
-      if (self.isRankModal === false) {
-        self.isRankModal = true;
+      if (this.isRankModal === false) {
+        this.isRankModal = true;
       } else {
-        self.isRankModal = false;
+        this.isRankModal = false;
       }
     },
     rankSelected(data) {
-      let self = this;
-      self.dataAll.rankid = data.id;
-      self.dataAll.rank.id = data.id;
-      self.dataAll.rank.description = data.description;
+      this.dataAll.rankid = data.id;
+      this.dataAll.rank.id = data.id;
+      this.dataAll.rank.description = data.description;
     },
     closeModal() {
-      let self = this;
-      if (self.berhasil) {
-        self.reset();
-        self.$emit("get-data");
-        self.$emit("modal-closed");
+      if (this.berhasil) {
+        this.reset();
+        this.$emit("get-data");
+        this.$emit("modal-closed");
       } else {
-        self.isUserModal = false;
+        this.isUserModal = false;
       }
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
-      self.confirmedAkses = [];
+      this.dataAll = initialDataAll();
+      this.confirmedAkses = [];
     },
     checkEdit() {
-      let self = this;
-      if (self.dataAll.id !== null) {
+      if (this.dataAll.id !== null) {
         Api.user
-          .find(self.dataAll.id)
+          .find(this.dataAll.id)
           .then(resp => {
-            self.dataAll = resp.data.data;
-            self.dataAll.akses.forEach(data => {
-              self.confirmedAkses.push(data);
+            this.dataAll = resp.data.data;
+            this.dataAll.akses.forEach(data => {
+              this.confirmedAkses.push(data);
             });
-            self.dataAkses = self.dataAkses.filter(
-              elem => !self.confirmedAkses.find(({ id }) => elem.id === id)
+            this.dataAkses = this.dataAkses.filter(
+              elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
             );
           })
           .catch(error => {
             console.log(error);
-            // self.reset();
-            // self.unauthorized = true;
+            // this.reset();
+            // this.unauthorized = true;
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.user.delete(id).then(resp => {
         console.log(resp);
-        self.closeModal();
+        this.closeModal();
       });
     },
     register(setup, id) {
-      let self = this;
-      let jsonAkses = JSON.stringify(self.confirmedAkses);
-      let active = self.dataAll.active === true ? 1 : 0;
-      console.log(self.avatarChange);
+      let jsonAkses = JSON.stringify(this.confirmedAkses);
+      let active = this.dataAll.active === true ? 1 : 0;
+      console.log(this.avatarChange);
       let rawData = {
-        username: self.dataAll.username,
-        password: self.dataAll.password,
-        password_confirmation: self.dataAll.password_confirmation,
-        empid: self.dataAll.empid,
-        fullname: self.dataAll.fullname,
-        rankid: self.dataAll.rankid,
-        city: self.dataAll.city,
-        address: self.dataAll.address,
-        email: self.dataAll.email,
-        phone: self.dataAll.phone,
-        levelid: self.dataAll.levelid,
+        username: this.dataAll.username,
+        password: this.dataAll.password,
+        password_confirmation: this.dataAll.password_confirmation,
+        empid: this.dataAll.empid,
+        fullname: this.dataAll.fullname,
+        rankid: this.dataAll.rankid,
+        city: this.dataAll.city,
+        address: this.dataAll.address,
+        email: this.dataAll.email,
+        phone: this.dataAll.phone,
+        levelid: this.dataAll.levelid,
         neverexpired: 1,
         active: active,
-        structureid: self.dataAll.structureid,
-        avatar: self.dataAll.avatar,
+        structureid: this.dataAll.structureid,
+        avatar: this.dataAll.avatar,
         akses: jsonAkses,
-        avatarChange: self.avatarChange
+        avatarChange: this.avatarChange
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -512,47 +498,46 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
+              this.berhasil = false;
             }
           })
           .catch(err => {
             console.log(err);
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.user
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
+              this.berhasil = false;
             }
           })
           .catch(err => {
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     selectImage(e) {
-      let self = this;
       const image = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = function() {
         let image64 = reader.result;
-        self.avatarChange = true;
-        self.dataAll.avatar = image64;
+        this.avatarChange = true;
+        this.dataAll.avatar = image64;
       };
       reader.readAsDataURL(image);
     }

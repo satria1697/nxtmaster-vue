@@ -25,6 +25,9 @@ import "vue-stripe-menu/dist/vue-stripe-menu.css";
 import UserModal from "./components/UserModal.vue";
 import DeleteModal from "./components/DeleteConfirmation";
 
+import vSelect from "vue-select";
+Vue.component("v-select", vSelect);
+
 Vue.config.productionTip = false;
 
 Vue.use(VueJWT, { ignoreNotBefore: true, keyName: "token" });

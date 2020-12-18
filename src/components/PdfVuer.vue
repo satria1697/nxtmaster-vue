@@ -94,10 +94,9 @@ export default {
   },
   methods: {
     getPdf() {
-      var self = this;
-      self.pdfdata = pdfvuer.createLoadingTask("./static/relativity.pdf");
-      self.pdfdata.then(pdf => {
-        self.numPages = pdf.numPages;
+      this.pdfdata = pdfvuer.createLoadingTask("./static/relativity.pdf");
+      this.pdfdata.then(pdf => {
+        this.numPages = pdf.numPages;
         window.onscroll = function() {
           changePage();
           // stickyNav();
@@ -106,7 +105,7 @@ export default {
         // // Get the offset position of the navbar
         // var sticky = $("#buttons")[0].offsetTop;
 
-        // // Add the sticky class to the self.$refs.nav when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        // // Add the sticky class to the this.$refs.nav when you reach its scroll position. Remove "sticky" when you leave the scroll position
         // function stickyNav() {
         //   if (window.pageYOffset >= sticky) {
         //     $("#buttons")[0].classList.remove("hidden");
@@ -120,15 +119,15 @@ export default {
             count = Number(pdf.numPages);
           do {
             if (
-              window.pageYOffset >= self.findPos(document.getElementById(i)) &&
-              window.pageYOffset <= self.findPos(document.getElementById(i + 1))
+              window.pageYOffset >= this.findPos(document.getElementById(i)) &&
+              window.pageYOffset <= this.findPos(document.getElementById(i + 1))
             ) {
-              self.page = i;
+              this.page = i;
             }
             i++;
           } while (i < count);
-          if (window.pageYOffset >= self.findPos(document.getElementById(i))) {
-            self.page = i;
+          if (window.pageYOffset >= this.findPos(document.getElementById(i))) {
+            this.page = i;
           }
         }
       });

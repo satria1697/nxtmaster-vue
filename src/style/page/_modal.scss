@@ -27,6 +27,7 @@ div.modal {
   }
   &-header {
     background-color: $theme;
+    color: $text;
   }
   &-body {
     max-height: 85vh;

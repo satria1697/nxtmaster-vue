@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -43,7 +43,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <form class="container-fluid">
                 <div class="row">
                   <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
@@ -60,18 +60,23 @@
                     <label for="formStructureLevel" class="top"
                       >Nama Aplikasi</label
                     >
-                    <select
-                      class="form-control bottom"
-                      id="formStructureLevel"
+                    <v-select
+                      :options="dataApp"
+                      label="description"
                       v-model="appSelect"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataApp"
-                        :key="data.id"
-                        >{{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
+                    <!--                    <select-->
+                    <!--                      class="form-control bottom"-->
+                    <!--                      id="formStructureLevel"-->
+                    <!--                      v-model="appSelect"-->
+                    <!--                    >-->
+                    <!--                      <option-->
+                    <!--                        :value="data.id"-->
+                    <!--                        v-for="data in dataApp"-->
+                    <!--                        :key="data.id"-->
+                    <!--                        >{{ data.description }}</option-->
+                    <!--                      >-->
+                    <!--                    </select>-->
                   </div>
                 </div>
                 <div class="row">
@@ -104,7 +109,7 @@
                     />
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
             <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
@@ -161,50 +166,44 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.init();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
-      self.getDataApp();
-      self.checkEdit();
+      this.getDataApp();
+      this.checkEdit();
     },
     closeModal() {
-      let self = this;
-      self.reset();
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.reset();
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll.id = null;
-      self.dataAll.description = "";
-      self.editId = null;
+      this.dataAll.id = null;
+      this.dataAll.description = "";
+      this.editId = null;
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.modul
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
-            self.appSelect = resp.data.data.applicationid;
+            this.dataAll = resp.data.data;
+            this.appSelect = resp.data.data.applicationid;
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     submit() {
-      let self = this;
       let rawData = {
-        id: self.dataAll.id,
-        applicationid: self.appSelect,
-        name: self.dataAll.name,
-        description: self.dataAll.description,
-        path: self.dataAll.path
+        id: this.dataAll.id,
+        applicationid: this.appSelect,
+        name: this.dataAll.name,
+        description: this.dataAll.description,
+        path: this.dataAll.path
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -214,26 +213,25 @@ export default {
         .register(formData)
         .then(resp => {
           if (resp.data.status === "success") {
-            self.reset();
-            self.berhasil = true;
-            self.uploaded = true;
+            this.reset();
+            this.berhasil = true;
+            this.uploaded = true;
           } else {
-            self.berhasil = false;
+            this.berhasil = false;
           }
         })
         .catch(err => {
           console.log(err.response);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
     update(id) {
-      let self = this;
       let rawData = {
-        id: self.dataAll.id,
-        applicationid: self.appSelect,
-        name: self.dataAll.name,
-        description: self.dataAll.description,
-        path: self.dataAll.path
+        id: this.dataAll.id,
+        applicationid: this.appSelect,
+        name: this.dataAll.name,
+        description: this.dataAll.description,
+        path: this.dataAll.path
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -243,39 +241,37 @@ export default {
         .update(id, formData)
         .then(resp => {
           if (resp.status === "error") {
-            self.berhasil = false;
+            this.berhasil = false;
           } else {
-            self.berhasil = true;
-            self.updated = true;
+            this.berhasil = true;
+            this.updated = true;
           }
         })
         .catch(err => {
-          self.berhasil = false;
+          this.berhasil = false;
           console.log(err);
         });
     },
     deleteData() {
-      let self = this;
       Api.modul
-        .delete(self.dataAll.id)
+        .delete(this.dataAll.id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
-          self.isDeleteModal = false;
-          self.$emit("modal-closed");
+          this.berhasil = true;
+          this.deleted = true;
+          this.isDeleteModal = false;
+          this.$emit("modal-closed");
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
     getDataApp(params) {
-      let self = this;
       Api.application
         .filter(params)
         .then(resp => {
-          self.dataApp = resp.data.data;
+          this.dataApp = resp.data.data;
         })
         .catch(err => {
           console.log(err);

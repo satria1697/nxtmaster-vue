@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,7 +26,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
                   <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
@@ -40,15 +40,15 @@
                 </div>
                 <div class="row">
                   <div class="form form-group col">
-                    <label for="formAkses" class="top">ID Rawat Inap</label>
+                    <label for="formAkses" class="top">No RM</label>
                     <select
                       class="form-control bottom custom-select"
                       id="formAkses"
                       v-model="dataAll.idranap"
-                      v-on:change="setTempoDate(dataAll.ranap)"
+                      v-on:change="setTempoDate()"
                     >
                       <option
-                        :value="data"
+                        :value="data.id"
                         v-for="data in dataRanap"
                         :key="data.id"
                         >{{ data.id }} - {{ data.norm }}</option
@@ -260,98 +260,92 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
-      self.dataFormulirAll = self.dataFormulir;
-      self.confirmedFormulir = [];
+      this.dataAll = initialDataAll();
+      this.dataFormulirAll = this.dataFormulir;
+      this.confirmedFormulir = [];
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.analisisrawatinap
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
-            if (self.dataAll.tglinput !== null) {
-              self.dataAll.tglinput = self.dataAll.tglinput.replace(" ", "T");
+            this.dataAll = resp.data.data;
+            if (this.dataAll.tglinput !== null) {
+              this.dataAll.tglinput = this.dataAll.tglinput.replace(" ", "T");
             } else {
-              self.dataAll.tglinput = "";
+              this.dataAll.tglinput = "";
             }
-            if (self.dataAll.ranap.tglkeluar !== null) {
-              self.dataAll.ranap.tglkeluar = self.dataAll.ranap.tglkeluar.replace(
+            if (this.dataAll.ranap.tglkeluar !== null) {
+              this.dataAll.ranap.tglkeluar = this.dataAll.ranap.tglkeluar.replace(
                 " ",
                 "T"
               );
             } else {
-              self.dataAll.ranap.tglkeluar = "";
+              this.dataAll.ranap.tglkeluar = "";
             }
-            if (self.dataAll.jatuhtempo !== null) {
-              self.dataAll.jatuhtempo = self.dataAll.jatuhtempo.replace(
+            if (this.dataAll.jatuhtempo !== null) {
+              this.dataAll.jatuhtempo = this.dataAll.jatuhtempo.replace(
                 " ",
                 "T"
               );
             } else {
-              self.dataAll.jatuhtempo = "";
+              this.dataAll.jatuhtempo = "";
             }
-            if (self.dataAll.tgllengkap !== null) {
-              self.dataAll.tgllengkap = self.dataAll.tgllengkap.replace(
+            if (this.dataAll.tgllengkap !== null) {
+              this.dataAll.tgllengkap = this.dataAll.tgllengkap.replace(
                 " ",
                 "T"
               );
             } else {
-              self.dataAll.tgllengkap = "";
+              this.dataAll.tgllengkap = "";
             }
-            self.dataAll.formulir.forEach(data => {
-              self.confirmedFormulir.push(data);
+            this.dataAll.formulir.forEach(data => {
+              this.confirmedFormulir.push(data);
             });
-            self.dataFormulirAll = self.dataFormulir.filter(
-              data => !self.confirmedFormulir.find(({ id }) => data.id === id)
+            this.dataFormulirAll = this.dataFormulir.filter(
+              data => !this.confirmedFormulir.find(({ id }) => data.id === id)
             );
-            self.setTempoDate();
+            this.setTempoDate();
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       } else {
-        self.dataFormulirAll = self.dataFormulir;
+        this.dataFormulirAll = this.dataFormulir;
       }
     },
     register(status, id) {
-      let self = this;
-      let jsonFormulir = JSON.stringify(self.confirmedFormulir);
+      let jsonFormulir = JSON.stringify(this.confirmedFormulir);
       let rawData = {
-        idranap: self.dataAll.idranap,
-        tglinput: self.dataAll.tglinput,
-        dokter_id: self.dataAll.dokter_id,
-        perawat_id: self.dataAll.perawat_id,
-        idstatus: self.dataAll.idstatus,
-        jatuhtempo: self.dataAll.jatuhtempo,
-        tgllengkap: self.dataAll.tgllengkap,
+        idranap: this.dataAll.idranap,
+        tglinput: this.dataAll.tglinput,
+        dokter_id: this.dataAll.dokter_id,
+        perawat_id: this.dataAll.perawat_id,
+        idstatus: this.dataAll.idstatus,
+        jatuhtempo: this.dataAll.jatuhtempo,
+        tgllengkap: this.dataAll.tgllengkap,
         formulir: jsonFormulir,
-        tglkeluar: self.dataAll.ranap.tglkeluar
+        tglkeluar: this.dataAll.ranap.tglkeluar
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -362,105 +356,109 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.analisisrawatinap
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.analisisrawatinap
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
-    setTempoDate(data) {
-      let self = this;
-      console.log(data);
-      self.dataAll.ranap.tglkeluar = moment(
-        self.dataAll.ranap.tglkeluar
-      ).format("YYYY-MM-DDThh:mm");
-      let newdate = moment(self.dataAll.ranap.tglkeluar)
-        .add(2, "days")
-        .format("YYYY-MM-DDThh:mm");
-      self.dataAll.jatuhtempo = newdate;
+    setTempoDate() {
+      // console.log(data);
+      Api.rawatinap
+        .find(this.dataAll.idranap)
+        .then(resp => {
+          this.dataAll.ranap.tglkeluar = moment(
+            resp.data.data.tglkeluar
+          ).format("YYYY-MM-DDThh:mm");
+          let newdate = moment(this.dataAll.ranap.tglkeluar)
+            .add(2, "days")
+            .format("YYYY-MM-DDThh:mm");
+          this.dataAll.jatuhtempo = newdate;
+          this.setStatus();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     getDataFormulir() {
-      let self = this;
       let params = {
-        analisisid: self.editId
+        analisisid: this.editId
       };
       Api.analisisformulir
         .filter(params)
         .then(resp => {
-          self.confirmedFormulir = resp.data.data;
+          this.confirmedFormulir = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     setStatus() {
-      let self = this;
-      let a = moment(self.dataAll.ranap.tglkeluar);
-      let b = moment(self.dataAll.tgllengkap);
+      let a = moment(this.dataAll.ranap.tglkeluar);
+      let b = moment(this.dataAll.tgllengkap);
       let duration = moment.duration(b.diff(a));
       let hours = duration.asHours();
       let status = 0;
-      if (self.dataAll.tgllengkap === "" || self.dataAll.tgllengkap === null) {
+      if (this.dataAll.tgllengkap === "" || this.dataAll.tgllengkap === null) {
         status = 4;
       } else if (hours <= 24 && hours >= 0) {
         status = 1;
@@ -470,8 +468,17 @@ export default {
         status = 3;
       }
       // console.log(status);
-      self.dataAll.idstatus = status;
-      console.log(self.dataAll.idstatus);
+      Api.statuskelengkapan
+        .find(status)
+        .then(resp => {
+          this.dataAll.idstatus = status;
+          this.dataAll.statuskelengkapan = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+      console.log(this.dataAll.idstatus);
     }
   }
 };

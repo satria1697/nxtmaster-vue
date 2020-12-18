@@ -18,9 +18,9 @@
       @modal-closed="changeFormulirModal"
       :dataStatus="dataStatus"
     ></form-formulir>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
-        <div class="col">
+        <div class="col-md-6">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
@@ -30,16 +30,24 @@
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    >
-    </data-table>
   </div>
 </template>
 
@@ -59,7 +67,6 @@ export default {
     FormFormulir
   },
   data() {
-    let self = this;
     return {
       dataAll: {},
       filter: {
@@ -108,7 +115,7 @@ export default {
           name: "Pilih",
           orderable: false,
           event: "click",
-          handler: self.changeFormulirModal,
+          handler: this.changeFormulirModal,
           component: actionbutton,
           width: 3
         },
@@ -117,7 +124,7 @@ export default {
           name: "Edit",
           orderable: false,
           event: "click",
-          handler: self.changeModal,
+          handler: this.changeModal,
           component: edit,
           width: 3
         },
@@ -126,7 +133,7 @@ export default {
           name: "Delete",
           oderable: false,
           event: "click",
-          handler: self.deleteData,
+          handler: this.deleteData,
           component: actiondelete,
           width: 3
         }
@@ -151,14 +158,12 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.isLoading = true;
-    self.init();
-    self.isLoading = false;
+    this.isLoading = true;
+    this.init();
+    this.isLoading = false;
   },
   methods: {
     init() {
-      let self = this;
       const params = {
         page: 1,
         find: "",
@@ -166,73 +171,70 @@ export default {
         column: "id",
         dir: "ASC"
       };
-      self.getData(params);
-      self.getDataFormulir();
-      self.getDataTenagaMedis();
-      self.getDataStatus();
-      self.getDataRanap();
+      this.getData(params);
+      this.getDataFormulir();
+      this.getDataTenagaMedis();
+      this.getDataStatus();
+      this.getDataRanap();
     },
     getData(params) {
-      let self = this;
-      self.isLoading = true;
-      self.filter.page = params.page;
-      self.filter.find = params.find;
-      self.filter.length = params.length;
-      self.filter.column = params.column;
-      self.filter.dir = params.dir;
+      this.isLoading = true;
+      this.filter.page = params.page;
+      this.filter.find = params.find;
+      this.filter.length = params.length;
+      this.filter.column = params.column;
+      this.filter.dir = params.dir;
       Api.analisisrawatinap
         .filter(params)
         .then(res => {
-          self.dataAll = res.data;
-          self.isLoading = false;
+          this.dataAll = res.data;
+          this.isLoading = false;
         })
         .catch(err => {
           console.log(err);
-          self.isLoading = false;
+          this.isLoading = false;
         });
     },
     getDataFormulir(params) {
-      let self = this;
       Api.formulir
         .filter(params)
         .then(resp => {
-          self.dataFormulir = resp.data.data;
+          this.dataFormulir = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     // getDataDokter(params) {
-    //   let self = this;
+    //
     //   Api.dokter
     //     .filter(params)
     //     .then(resp => {
-    //       self.dataDokter = resp.data.data;
+    //       this.dataDokter = resp.data.data;
     //     })
     //     .catch(err => {
     //       console.log(err);
     //     });
     // },
     // getDataPerawat(params) {
-    //   let self = this;
+    //
     //   Api.perawat
     //     .filter(params)
     //     .then(resp => {
-    //       self.dataPerawat = resp.data.data;
+    //       this.dataPerawat = resp.data.data;
     //     })
     //     .catch(err => {
     //       console.log(err);
     //     });
     // },
     getDataTenagaMedis(params) {
-      let self = this;
       Api.tenagamedis
         .filter(params)
         .then(res => {
-          self.dataDokter = res.data.data.filter(function(data) {
+          this.dataDokter = res.data.data.filter(function(data) {
             return data.jenis_id === 1;
           });
-          self.dataPerawat = res.data.data.filter(function(data) {
+          this.dataPerawat = res.data.data.filter(function(data) {
             return data.jenis_id === 2;
           });
         })
@@ -241,52 +243,47 @@ export default {
         });
     },
     getDataStatus(params) {
-      let self = this;
       Api.status
         .filter(params)
         .then(resp => {
-          self.dataStatus = resp.data.data;
+          this.dataStatus = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     getDataRanap(params) {
-      let self = this;
       Api.rawatinap
         .filter(params)
         .then(resp => {
-          self.dataRanap = resp.data.data;
+          this.dataRanap = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
+      this.getData(tableProps);
     },
     edit(data) {
-      self.changeModal(data.id);
+      this.changeModal(data.id);
     },
     changeModal(id) {
-      let self = this;
-      if (self.isModal === false) {
-        self.editId = id;
-        self.isModal = true;
+      if (this.isModal === false) {
+        this.editId = id;
+        this.isModal = true;
       } else {
-        self.init();
-        // self.getData(self.filter);
-        self.isModal = false;
+        this.init();
+        // this.getData(this.filter);
+        this.isModal = false;
       }
     },
     deleteData(id) {
-      let self = this;
       Api.analisisrawatinap
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
-            self.getData(self.filter);
+            this.getData(this.filter);
           }
         })
         .catch(() => {
@@ -294,14 +291,13 @@ export default {
         });
     },
     changeFormulirModal(id) {
-      let self = this;
-      if (self.isFormulirModal === false) {
-        self.editFormulirId = id;
-        self.isFormulirModal = true;
+      if (this.isFormulirModal === false) {
+        this.editFormulirId = id;
+        this.isFormulirModal = true;
       } else {
-        // self.init();
-        // self.getData(self.filter);
-        self.isFormulirModal = false;
+        // this.init();
+        // this.getData(this.filter);
+        this.isFormulirModal = false;
       }
     }
   }

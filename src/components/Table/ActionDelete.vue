@@ -7,7 +7,7 @@
       :data="data"
     >
     </delete-confirmation>
-    <div class="pointer col-1" @click="changeModal()">
+    <div class="pointer-event col-1" @click="changeModal()">
       <i class="fas fa-trash"></i>
     </div>
   </div>
@@ -30,33 +30,31 @@ export default {
     "delete-confirmation": DeleteConfirmation
   },
   data() {
-    let self = this;
     return {
       isModal: false,
-      id: self.data.id
+      id: this.data.id
     };
   },
   methods: {
     changeModal() {
-      let self = this;
-      if (self.isModal === false) {
-        self.isModal = true;
+      if (this.isModal === false) {
+        this.isModal = true;
       } else {
-        self.isModal = false;
+        this.isModal = false;
       }
     },
     deleteData() {
-      let self = this;
-      self.click(self.id);
-      self.changeModal();
+      this.click(this.id);
+      this.changeModal();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables";
+@import "src/style/abstracts/_variables";
 .fa-trash {
+  font-size: 1rem;
   color: $theme;
 }
 </style>
