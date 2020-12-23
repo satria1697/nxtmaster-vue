@@ -5,15 +5,6 @@
   background-color: $theme !important;
   color: $text !important;
 }
-//.btn.btn-default {
-//  background: linear-gradient(0deg, rgba(230,230,230,1) 0%, rgba(249,249,249,1) 74%);
-//  border: 1px solid rgba(0, 0, 0, 0.2);
-//  border-radius: 4px;
-//  margin-right: 2px;
-//  &:hover {
-//    background: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(252,252,252,1) 74%);
-//  }
-//}
 .btn.btn-default {
     background: #f8f9fa;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -97,9 +88,6 @@ i.fas {
 }
 .fa-trash {
   color: red;
-}
-.vue-picker-title-class {
-  background-color: $theme-bg-detail !important;
 }
 
 .btn-default {

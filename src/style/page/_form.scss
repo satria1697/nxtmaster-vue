@@ -1,19 +1,15 @@
 .form {
   .top {
-    // margin-top: 15px;
     padding: 0 5px;
     margin-bottom: -30px;
     position: absolute;
     top: -8px;
     margin-left: 8px;
     border-radius: 4px;
-    // border-top: 1px solid #ced4da;
-    // width: 80px;
-    background-color: $theme-bg-detail;
+    background-color: white;
     z-index: 99;
     &-disabled {
       background-color: #e9ecef;
-      // border-radius: 10px;
     }
   }
   &-title {
@@ -23,9 +19,6 @@
 .custom-file {
   position: relative;
   margin: 0 15px;
-}
-select.custom-select {
-  background-color: $theme-bg-detail;
 }
 .buttonBottom {
   display: grid;
@@ -40,15 +33,4 @@ a {
 label {
   font-size: 0.95em;
   color: #a0a0a0;
-}
-input.form-control {
-  // width: auto;
-  background-color: $theme-bg-detail;
-}
-select.form-control {
-  // width: auto;
-  background-color: $theme-bg-detail;
-}
-textarea.form-control {
-  background-color: $theme-bg-detail;
 }
