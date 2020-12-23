@@ -8,43 +8,37 @@
     ></Form>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-6">
-          <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+        <div class="col">
+          <!-- <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
-          </div>
+          </div> -->
           <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
         </div>
-        <div v-if="isLoading" class="offset-5 col-md-1">
-          <div class="spinner-border"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <data-table
-            :columns="columns"
-            :data="dataAll"
-            :classes="classes"
-            @loading="isLoading = true"
-            @finished-loading="isLoading = false"
-            @on-table-props-changed="reloadTable"
-          >
-          </data-table>
-        </div>
       </div>
     </div>
+    <!-- <data-table
+      :columns="columns"
+      :data="dataAll"
+      :classes="classes"
+      @on-table-props-changed="reloadTable"
+      class="outertable"
+    > -->
+    <h1 class="display-3">Struktur Organisasi</h1>
+    <vue2-org-tree :data="dataStructure" />
   </div>
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/StructureLevel/FormStructureLevel";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
-import store from "../../../store";
+import Api from "../../api";
+import Form from "../../components/Admin/Structure/FormStructure";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
+// import avatar from "../../components/Table/Avatar";
+import store from "../../store";
 
 export default {
   components: {
@@ -71,6 +65,16 @@ export default {
         {
           label: "Description",
           name: "description",
+          orderable: true
+        },
+        {
+          label: "Level",
+          name: "structurelevel.description",
+          orderable: true
+        },
+        {
+          label: "Signability",
+          name: "signability",
           orderable: true
         },
         {
@@ -101,7 +105,8 @@ export default {
         }
       },
       isModal: false,
-      editId: null
+      editId: null,
+      dataStructure: {}
     };
   },
   created() {
@@ -114,23 +119,24 @@ export default {
       const params = {
         page: 1,
         find: "",
-        length: 10,
-        column: "id",
-        dir: "ASC"
+        // length: 10,
+        orderColumn: "id",
+        orderBy: "ASC"
       };
       this.getData(params);
     },
     getData(params) {
       this.isLoading = true;
-      this.filter.page = params.page;
-      this.filter.find = params.find;
-      this.filter.length = params.length;
-      this.filter.orderColumn = params.orderColumn;
-      this.filter.orderBy = params.orderBy;
-      Api.structurelevel
+      // this.filter.page = params.page;
+      // this.filter.find = params.find;
+      // this.filter.length = params.length;
+      // this.filter.orderColumn = params.orderColumn;
+      // this.filter.orderBy = params.orderBy;
+      Api.structure
         .filter(params)
         .then(res => {
-          this.dataAll = res.data;
+          // this.dataAll = res.data;
+          this.dataStructure = res.data.data;
           this.isLoading = false;
         })
         .catch(err => {
@@ -170,7 +176,7 @@ export default {
       }
     },
     deleteData(id) {
-      Api.structurelevel
+      Api.structure
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
@@ -185,4 +191,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import url(https://unpkg.com/vue2-org-tree@1.3.4/dist/style.css);
+</style>

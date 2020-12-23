@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="detail">
     <Form
       v-if="isModal"
       :editId="editId"
-      title="Form Pengisian Data Akses"
+      title="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
     <div class="container-fluid">
@@ -40,12 +40,10 @@
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Akses/FormAkses";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-// import store from "../../../store";
+import Api from "../../api";
+import Form from "../../components/Admin/Level/FormLevel";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
 
 export default {
   components: {
@@ -61,6 +59,7 @@ export default {
         orderColumn: "",
         orderBy: ""
       },
+      isLoading: false,
       columns: [
         {
           label: "ID",
@@ -72,11 +71,6 @@ export default {
           label: "Description",
           name: "description",
           orderable: true
-        },
-        {
-          label: "Active",
-          name: "active",
-          orderable: false
         },
         {
           label: "Edit",
@@ -106,12 +100,13 @@ export default {
         }
       },
       isModal: false,
-      editId: null,
-      isLoading: false
+      editId: null
     };
   },
-  mounted() {
+  created() {
+    this.isLoading = true;
     this.init();
+    this.isLoading = false;
   },
   methods: {
     init() {
@@ -131,14 +126,11 @@ export default {
       this.filter.length = params.length;
       this.filter.orderColumn = params.orderColumn;
       this.filter.orderBy = params.orderBy;
-      Api.akses
+      Api.level
         .filter(params)
         .then(res => {
-          // console.log(res);
-          // console.log(Object.entries(this.dataAll))
           this.dataAll = res.data;
           this.isLoading = false;
-          // console.log(Object.entries(this.dataAll))
         })
         .catch(err => {
           console.log(err);
@@ -160,24 +152,8 @@ export default {
         this.isModal = false;
       }
     },
-    // openTab(name, label) {
-    //   let exists = false;
-    //   let tabState = store.state.tabState;
-    //   let isZero = tabState.length === 0;
-    //   if (!isZero) {
-    //     exists = tabState.some(tab => tab.name === name);
-    //   }
-    //   if (!exists) {
-    //     if (tabState.length > 4) {
-    //       console.log("tidak bisa menambah lebih dari 5");
-    //       store.commit("closeTab", 5);
-    //     } else {
-    //       store.commit("openTab", { name, label });
-    //     }
-    //   }
-    // },
     deleteData(id) {
-      Api.akses
+      Api.level
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {

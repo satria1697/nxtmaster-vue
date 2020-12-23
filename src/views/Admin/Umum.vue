@@ -4,7 +4,7 @@
       <div class="form-group col-md-3">
         <div class="img-container">
           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
-          <img v-else src="src/assets/image/table/blank_avatar.png" />
+          <img v-else src="../../assets/image/table/blank_avatar.png" />
           <div
             class="form-group"
             v-if="this.$store.getters['getLevelId'] === 1"
@@ -147,9 +147,9 @@
 </template>
 
 <script>
-import api from "../../../api";
+  import api from "../../api";
 
-export default {
+  export default {
   data() {
     return {
       dataAll: {
@@ -190,11 +190,11 @@ export default {
     selectImage(e) {
       const image = e.target.files[0];
       const reader = new FileReader();
-      reader.onloadend = function() {
-        let image64 = reader.result;
-        this.dataAll.avatar = image64;
-      };
       reader.readAsDataURL(image);
+      let self = this;
+      reader.onloadend = function() {
+        self.dataAll.avatar = reader.result;
+      };
     },
     register(id) {
       let rawData = {

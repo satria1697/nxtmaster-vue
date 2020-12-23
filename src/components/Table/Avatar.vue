@@ -1,5 +1,5 @@
 <template>
-  <img v-if="data.avatar === ''" :src="blankAvatar" />
+  <img v-if="data.avatar === null" :src="blankAvatar" />
   <img v-else :src="data.avatar" />
 </template>
 

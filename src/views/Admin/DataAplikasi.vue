@@ -40,10 +40,10 @@
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Level/FormLevel";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
+import Api from "../../api";
+import Form from "../../components/Admin/Aplikasi/FormAplikasi";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
 
 export default {
   components: {
@@ -68,8 +68,18 @@ export default {
           width: 5
         },
         {
+          label: "Nama",
+          name: "name",
+          orderable: true
+        },
+        {
           label: "Description",
           name: "description",
+          orderable: true
+        },
+        {
+          label: "Path",
+          name: "path",
           orderable: true
         },
         {
@@ -126,7 +136,7 @@ export default {
       this.filter.length = params.length;
       this.filter.orderColumn = params.orderColumn;
       this.filter.orderBy = params.orderBy;
-      Api.level
+      Api.application
         .filter(params)
         .then(res => {
           this.dataAll = res.data;
@@ -153,7 +163,7 @@ export default {
       }
     },
     deleteData(id) {
-      Api.level
+      Api.application
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {

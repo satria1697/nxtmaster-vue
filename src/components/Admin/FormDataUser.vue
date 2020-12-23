@@ -53,7 +53,7 @@
                           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
                           <img
                             v-else
-                            src="@/assets/image/table/blank_avatar.png"
+                            src="../../assets/image/table/blank_avatar.png"
                           />
                           <div class="form-group">
                             <label for="fileInputForm">

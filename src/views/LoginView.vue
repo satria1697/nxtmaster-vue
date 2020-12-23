@@ -232,9 +232,9 @@ export default {
   z-index: 9999;
 }
 
-  .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 </style>

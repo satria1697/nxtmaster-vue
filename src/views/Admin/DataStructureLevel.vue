@@ -40,10 +40,11 @@
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Aplikasi/FormAplikasi";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
+import Api from "../../api";
+import Form from "../../components/Admin/StructureLevel/FormStructureLevel";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
+import store from "../../store";
 
 export default {
   components: {
@@ -68,18 +69,8 @@ export default {
           width: 5
         },
         {
-          label: "Nama",
-          name: "name",
-          orderable: true
-        },
-        {
           label: "Description",
           name: "description",
-          orderable: true
-        },
-        {
-          label: "Path",
-          name: "path",
           orderable: true
         },
         {
@@ -136,7 +127,7 @@ export default {
       this.filter.length = params.length;
       this.filter.orderColumn = params.orderColumn;
       this.filter.orderBy = params.orderBy;
-      Api.application
+      Api.structurelevel
         .filter(params)
         .then(res => {
           this.dataAll = res.data;
@@ -162,8 +153,24 @@ export default {
         this.isModal = false;
       }
     },
+    openTab(name, label) {
+      let exists = false;
+      let tabState = store.state.tabState;
+      let isZero = tabState.length === 0;
+      if (!isZero) {
+        exists = tabState.some(tab => tab.name === name);
+      }
+      if (!exists) {
+        if (tabState.length > 4) {
+          console.log("tidak bisa menambah lebih dari 5");
+          store.commit("closeTab", 5);
+        } else {
+          store.commit("openTab", { name, label });
+        }
+      }
+    },
     deleteData(id) {
-      Api.application
+      Api.structurelevel
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {

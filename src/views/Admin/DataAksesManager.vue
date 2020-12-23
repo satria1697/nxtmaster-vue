@@ -197,8 +197,8 @@
 </template>
 
 <script>
-import DataModul from "../../../components/Admin/AksesManager/DataTableModul";
-import api from "../../../api";
+import DataModul from "../../components/Admin/AksesManager/DataTableModul";
+import api from "../../api";
 import VJstree from "vue-jstree";
 
 function initialDataAll() {
@@ -471,7 +471,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/_variables.scss";
+@import "../../style/abstracts/variables";
 .sidenav {
   /*min-height: 40vh;*/
   width: 230px;

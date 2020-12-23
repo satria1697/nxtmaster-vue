@@ -1,44 +1,51 @@
 <template>
-  <div class="detail">
+  <div>
     <Form
       v-if="isModal"
       :editId="editId"
-      title="Form Pengisian Data Pengguna"
+      title="Form Pengisian Data Akses"
       @modal-closed="changeModal"
     ></Form>
     <div class="container-fluid">
       <div class="row">
-        <div class="col">
-          <!-- <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+        <div class="col-md-6">
+          <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
-          </div> -->
+          </div>
           <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <!-- <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    > -->
-    <h1 class="display-3">Struktur Organisasi</h1>
-    <vue2-org-tree :data="dataStructure" />
   </div>
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Structure/FormStructure";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
+import Api from "../../api";
+import Form from "../../components/Admin/Akses/FormAkses";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
 // import avatar from "../../components/Table/Avatar";
-import store from "../../../store";
+// import store from "../../../store";
 
 export default {
   components: {
@@ -54,7 +61,6 @@ export default {
         orderColumn: "",
         orderBy: ""
       },
-      isLoading: false,
       columns: [
         {
           label: "ID",
@@ -68,14 +74,9 @@ export default {
           orderable: true
         },
         {
-          label: "Level",
-          name: "structurelevel.description",
-          orderable: true
-        },
-        {
-          label: "Signability",
-          name: "signability",
-          orderable: true
+          label: "Active",
+          name: "active",
+          orderable: false
         },
         {
           label: "Edit",
@@ -106,38 +107,38 @@ export default {
       },
       isModal: false,
       editId: null,
-      dataStructure: {}
+      isLoading: false
     };
   },
-  created() {
-    this.isLoading = true;
+  mounted() {
     this.init();
-    this.isLoading = false;
   },
   methods: {
     init() {
       const params = {
         page: 1,
         find: "",
-        // length: 10,
-        orderColumn: "id",
-        orderBy: "ASC"
+        length: 10,
+        column: "id",
+        dir: "ASC"
       };
       this.getData(params);
     },
     getData(params) {
       this.isLoading = true;
-      // this.filter.page = params.page;
-      // this.filter.find = params.find;
-      // this.filter.length = params.length;
-      // this.filter.orderColumn = params.orderColumn;
-      // this.filter.orderBy = params.orderBy;
-      Api.structure
+      this.filter.page = params.page;
+      this.filter.find = params.find;
+      this.filter.length = params.length;
+      this.filter.orderColumn = params.orderColumn;
+      this.filter.orderBy = params.orderBy;
+      Api.akses
         .filter(params)
         .then(res => {
-          // this.dataAll = res.data;
-          this.dataStructure = res.data.data;
+          // console.log(res);
+          // console.log(Object.entries(this.dataAll))
+          this.dataAll = res.data;
           this.isLoading = false;
+          // console.log(Object.entries(this.dataAll))
         })
         .catch(err => {
           console.log(err);
@@ -159,24 +160,24 @@ export default {
         this.isModal = false;
       }
     },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
-    },
+    // openTab(name, label) {
+    //   let exists = false;
+    //   let tabState = store.state.tabState;
+    //   let isZero = tabState.length === 0;
+    //   if (!isZero) {
+    //     exists = tabState.some(tab => tab.name === name);
+    //   }
+    //   if (!exists) {
+    //     if (tabState.length > 4) {
+    //       console.log("tidak bisa menambah lebih dari 5");
+    //       store.commit("closeTab", 5);
+    //     } else {
+    //       store.commit("openTab", { name, label });
+    //     }
+    //   }
+    // },
     deleteData(id) {
-      Api.structure
+      Api.akses
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
@@ -191,6 +192,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import url(https://unpkg.com/vue2-org-tree@1.3.4/dist/style.css);
-</style>
+<style lang="scss" scoped></style>

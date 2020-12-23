@@ -8,7 +8,7 @@
     ></Form>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md">
+        <div class="col-md-6">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
@@ -18,26 +18,32 @@
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    >
-    </data-table>
   </div>
 </template>
 
 <script>
-import Api from "../../../api";
-import Form from "../../../components/Admin/Rank/FormRank";
-import edit from "../../../components/Table/ActionEdit";
-import actiondelete from "../../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-import store from "../../../store";
+import Api from "../../api";
+import Form from "../../components/Admin/Modul/FormModul";
+import edit from "../../components/Table/ActionEdit";
+import actiondelete from "../../components/Table/ActionDelete";
 
 export default {
   components: {
@@ -62,8 +68,23 @@ export default {
           width: 5
         },
         {
+          label: "Nama",
+          name: "name",
+          orderable: true
+        },
+        {
           label: "Description",
           name: "description",
+          orderable: true
+        },
+        {
+          label: "Application",
+          name: "application.description",
+          orderable: true
+        },
+        {
+          label: "Path",
+          name: "path",
           orderable: true
         },
         {
@@ -120,7 +141,7 @@ export default {
       this.filter.length = params.length;
       this.filter.orderColumn = params.orderColumn;
       this.filter.orderBy = params.orderBy;
-      Api.rank
+      Api.modul
         .filter(params)
         .then(res => {
           this.dataAll = res.data;
@@ -146,24 +167,8 @@ export default {
         this.isModal = false;
       }
     },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
-      }
-    },
     deleteData(id) {
-      Api.rank
+      Api.modul
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {

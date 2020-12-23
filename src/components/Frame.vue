@@ -144,7 +144,7 @@
             class="dropdown-menu dropdown-menu-right col"
             aria-labelledby="navbarDropdown4"
           >
-            <button class="dropdown-item">
+            <button class="dropdown-item" v-on:click="goTo('profile')">
               Profil
             </button>
             <button class="dropdown-item" v-on:click="logout">
@@ -222,7 +222,7 @@ export default {
     return {
       tabs: ["/"],
       dataSidebar: [],
-      sidebarState: true
+      sidebarState: false
     };
   },
   mounted() {
@@ -243,8 +243,8 @@ export default {
           store.getters["getAkses"]
       );
       if (sidebarstate !== null) {
-        this.sidebarState = sidebarstate != "false";
-      } else if (store.getters["getAkses"] == 0) {
+        this.sidebarState = sidebarstate !== "false";
+      } else if (store.getters["getAkses"] === "0") {
         this.sidebarState = false;
       }
       if (window.outerWidth <= 768) {

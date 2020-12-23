@@ -44,7 +44,7 @@ const routes = [
       {
         path: "/admin/datalevel",
         name: "datalevel",
-        component: importPage("Admin/User/DataLevel"),
+        component: importPage("Admin/DataLevel"),
         meta: {
           requireAuth: true,
           title: "Manajemen Level",
@@ -54,7 +54,7 @@ const routes = [
       {
         path: "/admin/datarank",
         name: "datarank",
-        component: importPage("Admin/User/DataRank"),
+        component: importPage("Admin/DataRank"),
         meta: {
           requireAuth: true,
           title: "Manajemen Pangkat",
@@ -64,7 +64,7 @@ const routes = [
       {
         path: "/admin/datastructure",
         name: "datastructure",
-        component: importPage("Admin/User/DataStructure"),
+        component: importPage("Admin/DataStructure"),
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Organisasi",
@@ -74,7 +74,7 @@ const routes = [
       {
         path: "/admin/datastructurelevel",
         name: "datastructurelevel",
-        component: importPage("Admin/User/DataStructureLevel"),
+        component: importPage("Admin/DataStructureLevel"),
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Level",
@@ -84,7 +84,7 @@ const routes = [
       {
         path: "/admin/dataaplikasi",
         name: "dataaplikasi",
-        component: importPage("Admin/User/DataAplikasi"),
+        component: importPage("Admin/DataAplikasi"),
         meta: {
           requireAuth: true,
           title: "Manajemen Aplikasi",
@@ -94,7 +94,7 @@ const routes = [
       {
         path: "/admin/datamodul",
         name: "datamodul",
-        component: importPage("Admin/User/DataModul"),
+        component: importPage("Admin/DataModul"),
         meta: {
           requireAuth: true,
           title: "Manajemen Modul",
@@ -104,7 +104,7 @@ const routes = [
       {
         path: "/admin/dataakses",
         name: "dataakses",
-        component: importPage("Admin/User/DataAkses"),
+        component: importPage("Admin/DataAkses"),
         meta: {
           requireAuth: true,
           title: "Hak Akses",
@@ -114,7 +114,7 @@ const routes = [
       {
         path: "/admin/dataaksesmanager",
         name: "dataaksesmanager",
-        component: importPage("Admin/User/DataAksesManager"),
+        component: importPage("Admin/DataAksesManager"),
         meta: {
           requireAuth: true,
           title: "Manajemen Data Akses",
@@ -124,7 +124,7 @@ const routes = [
       {
         path: "admin/umum",
         name: "umum",
-        component: importPage("Admin/User/Umum"),
+        component: importPage("Admin/Umum"),
         meta: {
           requireAuth: true,
           title: "Manajemen Umum",
@@ -134,7 +134,7 @@ const routes = [
       {
         path: "admin/profile",
         name: "profile",
-        component: importPage("Admin/User/Profile"),
+        component: importPage("Admin/Profile"),
         meta: {
           requireAuth: true,
           title: "Profil",
