@@ -8,9 +8,6 @@ import store from "../store";
 import { RouterTabRoutes } from "vue-router-tab";
 import Frame from "../components/Frame";
 
-import HospitalRoutes from "./Hospital";
-import SiskaRoutes from "./Siska";
-
 Vue.use(VueRouter);
 
 const importPage = view => () =>
@@ -22,8 +19,6 @@ const routes = [
     component: Frame,
     children: [
       ...RouterTabRoutes,
-      ...HospitalRoutes,
-      ...SiskaRoutes,
       {
         path: "/",
         name: "Home",

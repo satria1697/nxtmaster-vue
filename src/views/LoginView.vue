@@ -62,8 +62,8 @@
         </div>
       </div>
     </div>
-    <div class="bg-default mt-auto">
-      <h1 class="display-1">NXTHospital2</h1>
+    <div class="footer">
+      <h1 class="display-1">NXT</h1>
     </div>
   </div>
 </template>
@@ -231,4 +231,10 @@ export default {
   border-radius: 8px;
   z-index: 9999;
 }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 </style>

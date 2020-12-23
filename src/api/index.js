@@ -2,9 +2,6 @@ import Axios from "axios";
 import Path from "../api/const";
 import store from "../store";
 
-import HospitalApi from "./Hospital";
-import SiskaApi from "./Siska";
-
 Axios.defaults.baseURL = "http://192.168.2.107:8000";
 // Axios.defaults.baseURL = "http://127.0.0.1:8000";
 Axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -36,8 +33,6 @@ export const setupInterceptors = () => {
 setupInterceptors();
 
 const api = {
-  ...HospitalApi,
-  ...SiskaApi,
   auth: {
     login: user => {
       return Axios.post(Path.auth.login, user);

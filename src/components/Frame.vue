@@ -242,11 +242,10 @@ export default {
           ":" +
           store.getters["getAkses"]
       );
-      if (store.getters["getAkses"] === 0) {
-        this.sidebarState = false;
-      }
       if (sidebarstate !== null) {
         this.sidebarState = sidebarstate != "false";
+      } else if (store.getters["getAkses"] == 0) {
+        this.sidebarState = false;
       }
       if (window.outerWidth <= 768) {
         this.sidebarState = false;
