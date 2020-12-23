@@ -61,18 +61,23 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formAkses" class="top">Spesialisasi</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.idspesialisasi"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataSpesialisasi"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.spesialisasi }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataSpesialisasi"
+                      label="description"
+                      v-model="dataAll.spesialisasi"
+                    ></v-select>
+                    <!--                    <select-->
+                    <!--                      class="form-control bottom custom-select"-->
+                    <!--                      id="formAkses"-->
+                    <!--                      v-model="dataAll.idspesialisasi"-->
+                    <!--                    >-->
+                    <!--                      <option-->
+                    <!--                        :value="data.id"-->
+                    <!--                        v-for="data in dataSpesialisasi"-->
+                    <!--                        :key="data.id"-->
+                    <!--                        >{{ data.id }} - {{ data.spesialisasi }}</option-->
+                    <!--                      >-->
+                    <!--                    </select>-->
                   </div>
                 </div>
               </div>

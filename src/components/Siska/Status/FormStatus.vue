@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-10">
+                  <div class="form form-group col">
                     <label for="formDesc" class="top">Status</label>
                     <input
                       id="formDesc"

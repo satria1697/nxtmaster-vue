@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col">
+                  <div class="form form-group col-md-4">
                     <label for="formAkses" class="top">No RM</label>
                     <select
                       class="form-control bottom custom-select"
@@ -55,7 +55,7 @@
                       >
                     </select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="tglkeluar" class="top">Tanggal Keluar</label>
                     <input
                       type="datetime-local"
@@ -64,7 +64,7 @@
                       v-model="dataAll.ranap.tglkeluar"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formDesc" class="top">Tanggal Input</label>
                     <input
                       type="datetime-local"
@@ -75,7 +75,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col">
+                  <div class="form form-group col-md">
                     <label for="formdokter" class="top">Dokter</label>
                     <select
                       class="form-control bottom custom-select"
@@ -90,7 +90,7 @@
                       >
                     </select>
                   </div>
-                  <div class="form form-group col">
+                  <div class="form form-group col-md">
                     <label for="formperawat" class="top">Perawat</label>
                     <select
                       class="form-control bottom custom-select"
@@ -118,12 +118,13 @@
                     button-class="btn btn-default btn-sm"
                     min-height="150px"
                     height="150px"
+                    min-width="100px"
                     :titleCentered="false"
                     title-class="vue-picker-title-class"
                   />
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formjatuhtempo" class="top">Jatuh Tempo</label>
                     <input
                       type="datetime-local"
@@ -132,7 +133,7 @@
                       v-model="dataAll.jatuhtempo"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formtgllengkap" class="top"
                       >Tanggal Lengkap</label
                     >
@@ -145,7 +146,7 @@
                     />
                   </div>
                   <div
-                    class="form form-group col-4"
+                    class="form form-group col-md-4"
                     v-if="
                       dataAll.tgllengkap !== '' || dataAll.tgllengkap !== null
                     "

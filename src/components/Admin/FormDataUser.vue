@@ -80,7 +80,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-9">
+                  <form class="col-md-9">
                     <div class="row">
                       <div class="form form-group col" v-if="!newForm">
                         <label for="formID" class="top top-disabled">ID</label>
@@ -296,7 +296,7 @@
                         title-class="vue-picker-title-class"
                       />
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

@@ -10,26 +10,34 @@
     ></Form>
     <div class="container-fluid">
       <div class="row">
-        <div class="col">
+        <div class="col-md-6">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(0)">
+          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    >
-    </data-table>
   </div>
 </template>
 

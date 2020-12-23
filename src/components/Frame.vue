@@ -4,159 +4,156 @@
       class="navbar navbar-expand bg-default sticky-top"
       :class="{ navbarClose: !sidebarState }"
     >
-      <div class="navbar-brand">NXTOffice</div>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i class="fas fa-ellipsis-v"></i>
-      </button>
+      <div class="navbar-brand">NXTHospital</div>
+      <!--      <button-->
+      <!--        class="navbar-toggler"-->
+      <!--        type="button"-->
+      <!--        data-toggle="collapse"-->
+      <!--        data-target="#navbarSupportedContent"-->
+      <!--        aria-controls="navbarSupportedContent"-->
+      <!--        aria-expanded="false"-->
+      <!--        aria-label="Toggle navigation"-->
+      <!--      >-->
+      <!--        <i class="fas fa-ellipsis-v"></i>-->
+      <!--      </button>-->
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
+      <!--      <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <div
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown1"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            aria-labelledby="navbarDropdown1"
+          >
+            <h6 class="dropdown-header">Pengaturan</h6>
+            <button class="dropdown-item" v-on:click="goTo('umum')">
+              Umum
+            </button>
+            <h6 class="dropdown-header">Manajemen Akses</h6>
+            <button class="dropdown-item" v-on:click="goTo('dataakses')">
+              Data Akses
+            </button>
+            <button class="dropdown-item" v-on:click="goTo('dataaksesmanager')">
+              Pengaturan Akses
+            </button>
+            <h6 class="dropdown-header">Manajemen Akses</h6>
+            <button class="dropdown-item" v-on:click="goTo('dataaplikasi')">
+              Data Aplikasi
+            </button>
+            <button class="dropdown-item" v-on:click="goTo('datamodul')">
+              Data Modul
+            </button>
+            <!--              <button class="dropdown-item">Api Klien</button>-->
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <div
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown2"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fas fa-users"></i>
+          </div>
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            aria-labelledby="navbarDropdown2"
+          >
+            <h6 class="dropdown-header">Manajemen Pengguna</h6>
+            <button class="dropdown-item" v-on:click="goTo('datauser')">
+              Data Pengguna
+            </button>
+            <button class="dropdown-item" v-on:click="goTo('datalevel')">
+              Tingkatan pengguna
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" v-on:click="goTo('datarank')">
+              Pangkat dan Golongan
+            </button>
             <div
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown1"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
+              class="dropdown-divider"
+              v-on:click="goTo('datastructure')"
+            ></div>
+            <button class="dropdown-item">
+              Struktur Organisasi
+            </button>
+            <button
+              class="dropdown-item"
+              v-on:click="goTo('datastructurelevel')"
             >
-              <i class="fas fa-cogs"></i>
+              Tingkatan Struktural
+            </button>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <div
+            class="nav-link dropdown-toggle"
+            id="navbarDropdown3"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            aria-labelledby="navbarDropdown3"
+          >
+            <div class="dropdown-item-text p-4" style="min-width: 20rem">
+              Next Integrated Application for Solutions Version
+              {{ JSON.stringify(require("../../package.json").version) }}
+              @{{ new Date().getFullYear() }}
+              Wish Enterprise
             </div>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="navbarDropdown1"
-            >
-              <h6 class="dropdown-header">Pengaturan</h6>
-              <button class="dropdown-item" v-on:click="goTo('umum')">
-                Umum
-              </button>
-              <h6 class="dropdown-header">Manajemen Akses</h6>
-              <button class="dropdown-item" v-on:click="goTo('dataakses')">
-                Data Akses
-              </button>
-              <button
-                class="dropdown-item"
-                v-on:click="goTo('dataaksesmanager')"
-              >
-                Pengaturan Akses
-              </button>
-              <h6 class="dropdown-header">Manajemen Akses</h6>
-              <button class="dropdown-item" v-on:click="goTo('dataaplikasi')">
-                Data Aplikasi
-              </button>
-              <button class="dropdown-item" v-on:click="goTo('datamodul')">
-                Data Modul
-              </button>
-              <!--              <button class="dropdown-item">Api Klien</button>-->
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <div
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown2"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="fas fa-users"></i>
-            </div>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="navbarDropdown2"
-            >
-              <h6 class="dropdown-header">Manajemen Pengguna</h6>
-              <button class="dropdown-item" v-on:click="goTo('datauser')">
-                Data Pengguna
-              </button>
-              <button class="dropdown-item" v-on:click="goTo('datalevel')">
-                Tingkatan pengguna
-              </button>
-              <div class="dropdown-divider"></div>
-              <button class="dropdown-item" v-on:click="goTo('datarank')">
-                Pangkat dan Golongan
-              </button>
-              <div
-                class="dropdown-divider"
-                v-on:click="goTo('datastructure')"
-              ></div>
-              <button class="dropdown-item">
-                Struktur Organisasi
-              </button>
-              <button
-                class="dropdown-item"
-                v-on:click="goTo('datastructurelevel')"
-              >
-                Tingkatan Struktural
-              </button>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <div
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown3"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="fas fa-info-circle"></i>
-            </div>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="navbarDropdown3"
-            >
-              <div class="dropdown-item-text p-4" style="min-width: 20rem">
-                Next Integrated Application for Solutions Version
-                {{ JSON.stringify(require("../../package.json").version) }}
-                @{{ new Date().getFullYear() }}
-                Wish Enterprise
-              </div>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <div
-              class="nav-link dropdown-toggle d-none d-lg-block"
-              id="navbarDropdown4"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              {{ this.$store.getters["getFullname"] }}
-            </div>
-            <div
-              class="nav-link dropdown-toggle d-md-block d-sm-block d-lg-none d-xl-none"
-              id="navbarDropdown4"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <div
-              class="dropdown-menu dropdown-menu-right col"
-              aria-labelledby="navbarDropdown4"
-            >
-              <button class="dropdown-item">
-                Profil
-              </button>
-              <button class="dropdown-item" v-on:click="logout">
-                Keluar
-              </button>
-            </div>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <div
+            class="nav-link dropdown-toggle d-none d-lg-block"
+            id="navbarDropdown4"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            {{ this.$store.getters["getFullname"] }}
+          </div>
+          <div
+            class="nav-link dropdown-toggle d-md-block d-sm-block d-lg-none d-xl-none"
+            id="navbarDropdown4"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div
+            class="dropdown-menu dropdown-menu-right col"
+            aria-labelledby="navbarDropdown4"
+          >
+            <button class="dropdown-item">
+              Profil
+            </button>
+            <button class="dropdown-item" v-on:click="logout">
+              Keluar
+            </button>
+          </div>
+        </li>
+      </ul>
+      <!--      </div>-->
     </nav>
     <!--    <nav class="sidebar flex-column bg-default ml-md-auto">-->
     <!--      <router-link to="/" class="nav-link">Home</router-link>-->
@@ -251,9 +248,31 @@ export default {
       if (sidebarstate !== null) {
         this.sidebarState = sidebarstate != "false";
       }
+      if (window.outerWidth <= 768) {
+        this.sidebarState = false;
+      }
+      // if ($(window).width() ===)
     },
     goTo(destination) {
-      this.$router.push({ name: destination });
+      if (typeof destination === "string") {
+        this.$router.push({ name: destination });
+        if (window.outerWidth <= 768) {
+          this.sidebarState = false;
+        }
+      }
+      if (destination.data.rolelevelid === 3) {
+        this.$router
+          .push(
+            "/" +
+              destination.data.application.path +
+              "/" +
+              destination.data.modul.path
+          )
+          .catch(() => {});
+        if (window.outerWidth <= 768) {
+          this.sidebarState = false;
+        }
+      }
     },
     getDataRootId(id) {
       api.aksesmanager
@@ -359,10 +378,23 @@ export default {
 }
 
 //nav
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+  80% {
+    transform: scaleY(1.1);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
 .dropdown {
   padding: 2px;
   .dropdown-menu {
     min-width: 20vw;
+    animation: growDown 200ms ease-in-out forwards;
+    transform-origin: top center;
     .dropdown-item {
       &:hover {
         padding: 0.15rem 1.4rem;
@@ -379,7 +411,7 @@ export default {
 
 //tab
 .router-tab {
-  min-height: calc(90vh - 1rem);
+  /*min-height: calc(90vh - 1rem);*/
 }
 ::v-deep .router-tab__header {
   margin: 0 0.5rem;
@@ -427,9 +459,6 @@ export default {
   /*background: white;*/
   background: white;
   border-top: 3px solid $theme;
-  border-bottom: none;
-  //border-right: 1px solid $theme;
-  //border-left: 1px solid $theme;
   box-shadow: none;
   .router-tab__item-title {
     color: $theme;
@@ -440,9 +469,13 @@ export default {
 }
 ::v-deep .router-tab__container {
   /*border: 1px solid #22333b;*/
+  min-height: calc(70vh - 1rem);
+  max-height: calc(86vh - 1rem);
   border-radius: 4px;
   padding: 10px 0;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  overflow-x: hidden;
+  overflow-y: auto;
   /*border: 1px solid rgba(0, 0, 0, 0.2);*/
 }
 ::v-deep {
@@ -477,12 +510,13 @@ export default {
   margin: 1rem 0 0 0.5rem;
   // overflow-y: auto;
   border-radius: 0;
+  z-index: 120;
   &-mask {
     background: $theme;
     position: fixed;
     width: 100vw;
     height: 100vh;
-    z-index: 10;
+    z-index: 110;
   }
   &-list {
     margin: 0 0 0 1rem;

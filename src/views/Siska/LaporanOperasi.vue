@@ -2,7 +2,7 @@
   <div class="detail">
     <div class="container-fluid">
       <div class="row">
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Awal</label>
           <input
             type="month"
@@ -12,7 +12,7 @@
             v-on:change="addMonths()"
           />
         </div>
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Akhir</label>
           <input
             type="month"

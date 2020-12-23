@@ -12,7 +12,7 @@
                 @click="closeModal()"
               ></i>
             </div>
-            <div class="modal-body">
+            <form class="modal-body">
               <user-modal
                 v-if="isUserModal"
                 :title="textTitle"
@@ -57,7 +57,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
             <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset

@@ -15,15 +15,15 @@ export default {
   },
   mounted() {
     // Overwriting base render method with actual data.
-
     this.makeChart();
   },
   methods: {
     makeChart() {
-      console.log(this.data);
       let datasets = [];
+      let bulan = this.bulan
       let j = 0;
       if (this.data.length) {
+
         this.data.forEach(function(data) {
           const letters = "0123456789ABCDEF";
           let color = "#";
@@ -31,7 +31,7 @@ export default {
             color += letters[Math.floor(Math.random() * 16)];
           }
           datasets.push({
-            label: this.bulan[j],
+            label: bulan[j],
             backgroundColor: color,
             barThickness: 50,
             data: data
@@ -43,6 +43,7 @@ export default {
       this.whodata.forEach(function(data) {
         who.push(data.nama);
       });
+
       let chartData = {
         labels: who,
         datasets: datasets

@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-10">
+                  <div class="form form-group col">
                     <label for="formDesc" class="top">Nama Bangsal</label>
                     <input
                       id="formDesc"
@@ -51,18 +51,23 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formAkses" class="top">Kelas Bangsal</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.idkelas"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataKelasRawatInap"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataKelasRawatInap"
+                      label="description"
+                      v-model="dataAll.kelas"
+                    ></v-select>
+                    <!--                    <select-->
+                    <!--                      class="form-control bottom custom-select"-->
+                    <!--                      id="formAkses"-->
+                    <!--                      v-model="dataAll.idkelas"-->
+                    <!--                    >-->
+                    <!--                      <option-->
+                    <!--                        :value="data.id"-->
+                    <!--                        v-for="data in dataKelasRawatInap"-->
+                    <!--                        :key="data.id"-->
+                    <!--                        >{{ data.id }} - {{ data.description }}</option-->
+                    <!--                      >-->
+                    <!--                    </select>-->
                   </div>
                 </div>
               </div>
@@ -176,7 +181,7 @@ export default {
     register(status, id) {
       let rawData = {
         description: this.dataAll.description,
-        idkelas: this.dataAll.idkelas
+        idkelas: this.dataAll.kelas.id
       };
       let formData = new FormData();
       for (let key in rawData) {

@@ -28,7 +28,7 @@
               />
               <div class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-md-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -39,23 +39,15 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formnamapasien" class="top">Nomer RM</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formnamapasien"
-                      v-model="dataAll.pasien_id"
-                      v-on:change="getDataPasien()"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPasien"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.norm }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataPasien"
+                      label="namapasien"
+                      v-model="dataAll.pasien"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formtglmsk" class="top">Tanggal Masuk</label>
                     <input
                       type="datetime-local"
@@ -64,7 +56,7 @@
                       v-model="dataAll.tglmasuk"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formtglkeluar" class="top"
                       >Tanggal Keluar</label
                     >
@@ -77,75 +69,47 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formkelranap" class="top"
                       >Kelas Rawat Inap</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formkelranap"
-                      v-model="dataAll.kelas_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataKelasrawatinap"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataKelasrawatinap"
+                      label="description"
+                      v-model="dataAll.kelas"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formbangsal" class="top">Bangsal</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formbangsal"
-                      v-model="dataAll.bangsal_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataBangsal"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataBangsal"
+                      label="description"
+                      v-model="dataAll.bangsal"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formkamarranap" class="top"
                       >Kamar Rawat Inap</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formkamarranap"
-                      v-model="dataAll.kamar_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataKamarrawatinap"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataKamarrawatinap"
+                      label="description"
+                      v-model="dataAll.kamar"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formdpjp" class="top"
                       >Dokter Penanggung Jawab</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formdpjp"
-                      v-model="dataAll.dokter_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataDokter"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.nama }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataDokter"
+                      label="nama"
+                      v-model="dataAll.dokter"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formmasuk" class="top">Jenis Kasus</label>
                     <select
                       class="form-control bottom custom-select"
@@ -156,7 +120,7 @@
                       <option value="2">Lama</option>
                     </select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formhowto" class="top">Cara Masuk</label>
                     <select
                       class="form-control bottom custom-select"
@@ -180,7 +144,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formpulang" class="top"
                       >Keterangan Pulang</label
                     >
@@ -195,7 +159,7 @@
                       <option value="4">Meninggal</option>
                     </select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formbayar" class="top">Cara Pembayaran</label>
                     <select
                       class="form-control bottom custom-select"
@@ -215,7 +179,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form form-group col-4">
+                    <div class="form form-group col-md-4">
                       <label for="formtglmsk" class="top"
                         >Tanggal Operasi</label
                       >
@@ -378,6 +342,10 @@ function initialDataAll() {
       description: ""
     },
     kamar_id: null,
+    kamar: {
+      id: null,
+      description: ""
+    },
     dokter_id: null,
     dokter: {
       id: null,

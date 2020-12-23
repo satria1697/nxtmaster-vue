@@ -28,26 +28,7 @@
               />
               <div class="container-fluid">
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formNRM" class="top">Nomer Rekam Medis</label>
-                    <input
-                      id="formNRM"
-                      class="bottom form-control"
-                      v-model="dataAll.norm"
-                    />
-                  </div>
-                  <div class="form form-group col-4">
-                    <label for="formjk" class="top">Jenis Kelamin</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formjk"
-                      v-model="dataAll.jeniskelamin"
-                    >
-                      <option value="0">Laki-laki</option>
-                      <option value="1">Perempuan</option>
-                    </select>
-                  </div>
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-md-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -55,6 +36,22 @@
                       v-model="dataAll.id"
                       disabled
                     />
+                  </div>
+                  <div class="form form-group col-md-4">
+                    <label for="formNRM" class="top">Nomer Rekam Medis</label>
+                    <input
+                      id="formNRM"
+                      class="bottom form-control"
+                      v-model="dataAll.norm"
+                    />
+                  </div>
+                  <div class="form form-group col-md-4">
+                    <label for="formjk" class="top">Jenis Kelamin</label>
+                    <v-select
+                      :options="dataJenisKelamin"
+                      label="description"
+                      v-model="dataAll.jeniskelamin"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
@@ -68,7 +65,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-3">
+                  <div class="form form-group col-6">
                     <label for="formTmptl" class="top">Tempat Lahir</label>
                     <input
                       id="formTmptl"
@@ -76,7 +73,7 @@
                       v-model="dataAll.tempatlahir"
                     />
                   </div>
-                  <div class="form form-group col-3">
+                  <div class="form form-group col-6">
                     <label for="formtgll" class="top">Tanggal Lahir</label>
                     <input
                       type="date"
@@ -86,7 +83,7 @@
                       v-on:change="getUsia()"
                     />
                   </div>
-                  <div class="form form-group col-6">
+                  <div class="form form-group col-md-6">
                     <label for="formusia" class="top top-disabled">Usia</label>
                     <input
                       id="formusia"
@@ -133,18 +130,11 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formagama" class="top">Agama</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formagama"
+                    <v-select
+                      :options="dataAgama"
+                      label="description"
                       v-model="dataAll.agama"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataAgama"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                   <div class="form form-group col">
                     <label for="formhp" class="top">Nomer Hp</label>
@@ -160,33 +150,19 @@
                     <label for="formpendidikan" class="top"
                       >Pendidikan Terakhir</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formpendidikan"
+                    <v-select
+                      :options="dataPendidikan"
+                      label="description"
                       v-model="dataAll.pendidikan"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPendidikan"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                   <div class="form form-group col">
                     <label for="formpekerjaan" class="top">Pekerjaan</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formpekerjaan"
+                    <v-select
+                      :options="dataPekerjaan"
+                      label="description"
                       v-model="dataAll.pekerjaan"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPekerjaan"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
@@ -254,12 +230,24 @@ function initialDataAll() {
     tanggallahir: "",
     usia: "",
     usiafront: "",
-    jeniskelamin: null,
-    agama: 0,
+    jeniskelamin: {
+      id: null,
+      description: null
+    },
+    agama: {
+      id: null,
+      description: null
+    },
     alamat: "",
     idwilayah: "",
-    pendidikan: "",
-    pekerjaan: "",
+    pendidikan: {
+      id: null,
+      description: null
+    },
+    pekerjaan: {
+      id: null,
+      description: null
+    },
     nohp: "",
     asuransi: "",
     nopeserta: "",
@@ -294,7 +282,17 @@ export default {
       deleted: false,
       isDeleteModal: false,
       textTitle: "",
-      isUserModal: false
+      isUserModal: false,
+      dataJenisKelamin: [
+        {
+          id: 1,
+          description: "laki-laki"
+        },
+        {
+          id: 2,
+          description: "perempuan"
+        }
+      ]
     };
   },
   created() {
@@ -325,6 +323,9 @@ export default {
           .find(this.editId)
           .then(resp => {
             this.dataAll = resp.data.data;
+            const usia = this.dataAll.usia.split(".");
+            this.dataAll.usiafront =
+              usia[0] + " tahun " + usia[1] + " bulan " + usia[2] + " hari ";
           })
           .catch(error => {
             console.log(error);
@@ -339,12 +340,12 @@ export default {
         tempatlahir: this.dataAll.tempatlahir,
         tanggallahir: this.dataAll.tanggallahir,
         usia: this.dataAll.usia,
-        jeniskelamin: this.dataAll.jeniskelamin,
-        agama: this.dataAll.agama,
+        jeniskelamin_id: this.dataAll.jeniskelamin.id,
+        agama_id: this.dataAll.agama.id,
         alamat: this.dataAll.alamat,
         idwilayah: this.dataAll.idwilayah,
-        pendidikan: this.dataAll.pendidikan,
-        pekerjaan: this.dataAll.pekerjaan,
+        pendidikan_id: this.dataAll.pendidikan.id,
+        pekerjaan_id: this.dataAll.pekerjaan.id,
         nohp: this.dataAll.nohp,
         asuransi: this.dataAll.asuransi,
         nopeserta: this.dataAll.nopeserta,

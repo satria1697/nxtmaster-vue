@@ -89,7 +89,23 @@
                           v-for="(datas, indexs) in data.formulirdata"
                           :key="datas.id"
                         >
-                          <td>{{ datas.description }}</td>
+                          <td>
+                            {{ datas.description }}
+                            <div
+                              class="form form-group col-md"
+                              v-if="datas.keterangan === 1"
+                            >
+                              <!--                              <label for="formUsername" class="top">Keterangan</label>-->
+                              <input
+                                id="formUsername"
+                                class="bottom form-control"
+                                type="text"
+                                v-model="
+                                  checkedbox[index].value[indexs].keterangan
+                                "
+                              />
+                            </div>
+                          </td>
                           <td v-for="dataz in dataStatus" :key="dataz.id">
                             <input
                               class="form-check-input"
@@ -254,7 +270,8 @@ export default {
               this.checkedbox[this.totalData].value.push({
                 id: data.formulirdata[idx].id,
                 value: this.dataStatus.length,
-                nilai: 0
+                nilai: 0,
+                keterangan: ""
               });
             }
             this.formulirData.push(resp.data.data);

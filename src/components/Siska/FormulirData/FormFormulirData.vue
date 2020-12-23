@@ -49,7 +49,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col">
+                  <div class="form form-group col-md">
                     <label for="formAkses" class="top">Formulir</label>
                     <select
                       class="form-control bottom custom-select"
@@ -71,6 +71,17 @@
                       class="bottom form-control"
                       v-model="dataAll.keyid"
                     />
+                  </div>
+                  <div class="form-group form-check col">
+                    <input
+                      id="formActive"
+                      class="form-check-input"
+                      type="checkbox"
+                      v-model="dataAll.keterangan"
+                    />
+                    <label for="formActive" class="form-check-label"
+                      >Form Keterangan</label
+                    >
                   </div>
                 </div>
               </div>
@@ -115,7 +126,8 @@ function initialDataAll() {
   return {
     description: "",
     formulirid: null,
-    keyid: 0
+    keyid: 0,
+    keterangan: null
   };
 }
 
@@ -182,7 +194,8 @@ export default {
       let rawData = {
         description: this.dataAll.description,
         formulirid: this.dataAll.formulirid,
-        keyid: this.dataAll.keyid
+        keyid: this.dataAll.keyid,
+        keterangan: this.dataAll.keterangan === true ? 1 : 0
       };
       let formData = new FormData();
       for (let key in rawData) {

@@ -43,7 +43,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container-fluid">
+              <form class="container-fluid">
                 <div class="row">
                   <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
@@ -112,7 +112,7 @@
                     </select>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
             <div v-if="editId === null" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">

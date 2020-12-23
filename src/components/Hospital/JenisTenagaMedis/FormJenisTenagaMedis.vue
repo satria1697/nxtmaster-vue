@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-10">
+                  <div class="form form-group col">
                     <label for="formnama" class="top">Jenis Tenaga Medis</label>
                     <input
                       id="formnama"

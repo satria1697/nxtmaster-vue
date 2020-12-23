@@ -3,7 +3,7 @@
     <Form
       v-if="isModal"
       :editId="editId"
-      title="Form Pengisian Data Spesialisasi"
+      title="Form Pengisian Jenis Formulir"
       @modal-closed="changeModal"
     ></Form>
     <div class="container-fluid">

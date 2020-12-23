@@ -1,11 +1,11 @@
 <template>
   <div class="detail">
-    <Form
-      v-if="isModal"
-      :editId="editId"
-      title="Form Pengisian Status Siska"
-      @modal-closed="changeModal"
-    ></Form>
+    <!--    <Form-->
+    <!--      v-if="isModal"-->
+    <!--      :editId="editId"-->
+    <!--      title="Form Pengisian Status Siska"-->
+    <!--      @modal-closed="changeModal"-->
+    <!--    ></Form>-->
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6">
@@ -13,10 +13,10 @@
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
-            <i class="fas fa-plus-circle"></i>
-            Tambah
-          </div>
+          <!--          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">-->
+          <!--            <i class="fas fa-plus-circle"></i>-->
+          <!--            Tambah-->
+          <!--          </div>-->
         </div>
         <div v-if="isLoading" class="offset-5 col-md-1">
           <div class="spinner-border"></div>
@@ -41,7 +41,7 @@
 
 <script>
 import Api from "../../api";
-import Form from "../../components/Siska/Status/FormStatus";
+// import Form from "../../components/Siska/Status/FormStatus";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import EditColorSpan from "../../components/Table/EditColorSpan.vue";
@@ -49,7 +49,7 @@ import EditColorSpan from "../../components/Table/EditColorSpan.vue";
 
 export default {
   components: {
-    Form
+    // Form
   },
   data() {
     return {

@@ -18,7 +18,6 @@ export default {
   },
   methods: {
     makeChart() {
-      console.log(this.data);
       let datasets = [];
       let who = ["dokter", "Perawat"];
       if (this.data.length) {

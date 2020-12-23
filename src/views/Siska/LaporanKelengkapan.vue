@@ -2,7 +2,7 @@
   <div class="detail">
     <div class="container-fluid">
       <div class="row">
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Awal</label>
           <input
             type="month"
@@ -12,7 +12,7 @@
             v-on:change="addMonths()"
           />
         </div>
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Akhir</label>
           <input
             type="month"
@@ -25,7 +25,7 @@
       <div class="row">
         <div
           v-if="dataSend.pengambilanData !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formAkses" class="top">Pengambilan Data</label>
           <select
@@ -65,7 +65,7 @@
         ref="chart"
       ></chart-laporan-kelengkapan>
       <div class="row" id="printableArea">
-        <div class="col" v-if="printed" v-show="printed">
+        <div class="col" v-if="printpage" v-show="printpage">
           <h3>Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.text }}</h3>
           <p>
             Persentase kelengkapan berkas dari {{ dataPDF.tglawal }} sampai
@@ -200,7 +200,7 @@ export default {
       dataChart: null,
       bulanChart: null,
       dataPDF: null,
-      printed: false
+      printpage: false
     };
   },
   created() {
@@ -249,7 +249,7 @@ export default {
         });
     },
     printPDF(whereprint) {
-      this.printed = true;
+      this.printpage = true;
       setTimeout(function() {
         //giving it 200 milliseconds time to load
 
@@ -282,13 +282,14 @@ export default {
       </html>`);
 
         setTimeout(function() {
+          console.log(this.dataPDF)
           WinPrint.document.title = this.dataPDF.filename;
           WinPrint.document.close();
           WinPrint.focus();
           WinPrint.print();
           WinPrint.close();
         }, 100);
-        this.printed = false;
+        this.printpage = false;
       }, 100);
     },
     reloadTable(tableProps) {

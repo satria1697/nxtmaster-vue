@@ -32,27 +32,12 @@ export default {
     return {
       avatar: this.avatarProps,
       fullname: store.getters["getFullname"],
-      // isSideBar: false,
       isActive: false,
       dataRoot: {},
       dataParent: [],
       dataSidebar: []
     };
   },
-  // created() {
-  //
-  //   store.watch(
-  //     state => {
-  //       return state.isSideBar;
-  //     },
-  //     () => {
-  //       this.isSideBar = store.state.isSideBar;
-  //     },
-  //     {
-  //       deep: true
-  //     }
-  //   );
-  // },
   mounted() {
     let id = store.getters["getAkses"];
     this.getDataRootId(id);

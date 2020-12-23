@@ -28,7 +28,7 @@
               />
               <div class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== 0" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -39,30 +39,23 @@
                   </div>
                   <div class="form form-group col">
                     <label for="formtjm" class="top">Jenis Tenaga Medis</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formtjm"
-                      v-model="dataAll.jenis_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataJenisTM"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      label="description"
+                      :options="dataJenisTM"
+                      v-model="dataAll.jenis"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formnama" class="top">nama</label>
+                  <div class="form form-group col-md-4">
+                    <label for="formnama" class="top">Nama</label>
                     <input
                       id="formnama"
                       class="bottom form-control"
                       v-model="dataAll.nama"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formnohp" class="top">Nomer HP</label>
                     <input
                       id="formnohp"
@@ -71,24 +64,17 @@
                     />
                   </div>
                   <div
-                    v-if="dataAll.jenis_id === 1"
-                    class="form form-group col-4"
+                    v-if="dataAll.jenis.id === 1"
+                    class="form form-group col-md-4"
                   >
                     <label for="formspesialisasi" class="top"
                       >Spesialisasi</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formspesialisasi"
-                      v-model="dataAll.spesialisasi_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataSpesialisasi"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      label="description"
+                      :options="dataSpesialisasi"
+                      v-model="dataAll.spesialisasi"
+                    ></v-select>
                   </div>
                 </div>
               </div>
@@ -212,8 +198,8 @@ export default {
       let rawData = {
         nama: this.dataAll.nama,
         nohp: this.dataAll.nohp,
-        jenis_id: this.dataAll.jenis_id,
-        spesialisasi_id: this.dataAll.spesialisasi_id
+        jenis_id: this.dataAll.jenis.id,
+        spesialisasi_id: this.dataAll.spesialisasi.id
       };
       let formData = new FormData();
       for (let key in rawData) {

@@ -8,8 +8,20 @@
       :dataFormulir="dataFormulir"
     ></Form>
     <div class="container-fluid">
-      <div v-if="isLoading" class="offset-5 col-md-1">
-        <div class="spinner-border"></div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="btn btn-default btn-md" v-on:click="getData(filter)">
+            <i class="fas fa-sync"></i>
+            Perbaharui Data
+          </div>
+          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+            <i class="fas fa-plus-circle"></i>
+            Tambah
+          </div>
+        </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
       </div>
       <div class="row">
         <div class="col">

@@ -1,8 +1,8 @@
 <template>
-  <div class="detail">
+  <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Awal</label>
           <input
             type="month"
@@ -12,7 +12,7 @@
             v-on:change="addMonths()"
           />
         </div>
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Akhir</label>
           <input
             type="month"
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="form form-group col-4">
+        <div class="form form-group col-md-4">
           <label for="formAkses" class="top">Filter Data</label>
           <select
             class="form-control bottom custom-select"
@@ -40,7 +40,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formAkses" class="top">Terhadap</label>
           <select
@@ -55,7 +55,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData === 3 && dataSend.terhadap !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formAkses" class="top">Nama Dokter</label>
           <select
@@ -70,7 +70,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData === 4 && dataSend.terhadap !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formnamaperawat" class="top">Nama Perawat</label>
           <select
@@ -85,12 +85,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">
+        <div class="col-md-2">
           <button class="btn btn-default" v-on:click="getData()">
             <i class="fas fa-eye"></i> Preview
           </button>
         </div>
-        <div class="col-2 offset-8">
+        <div class="col-md-2 offset-md-8">
           <button
             class="btn btn-default right"
             v-on:click="printPDF('printableArea')"
@@ -100,15 +100,19 @@
           </button>
         </div>
       </div>
-      <chart-laporan-klpcm
-        v-if="dataChart !== null"
-        :bulan="bulanChart"
-        :data="dataChart"
-        :whodata="whodata"
-        ref="chart"
-      ></chart-laporan-klpcm>
+      <div class="row">
+        <div class="col">
+          <chart-laporan-klpcm
+            v-if="dataChart !== null"
+            :bulan="bulanChart"
+            :data="dataChart"
+            :whodata="whodata"
+            ref="chart"
+          ></chart-laporan-klpcm>
+        </div>
+      </div>
       <div class="row" id="printableArea">
-        <div class="col" v-if="printed" v-show="printed">
+        <div class="col" v-if="printpage" v-show="printpage">
           <h3>
             Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.who }} terhadap
             {{ dataPDF.terhadap }}
@@ -126,7 +130,7 @@
                 <th colspan="3" style="text-align: center">Bulan</th>
               </tr>
               <tr>
-                <th v-for="(bulan, index) in dataPDF.bulan" :key="index">
+                <th v-for="(bulan, indek) in dataPDF.bulan" :key="indek">
                   {{ bulan }}
                 </th>
               </tr>
@@ -135,8 +139,9 @@
               <tr v-for="(data, index) in dataPDF.whodata" :key="index">
                 <td>{{ data.nama }}</td>
                 <td v-for="indexs in dataPDF.bulan.length" :key="indexs">
-                  {{ dataPDF.data[index - 1][indexs - 1] }}%
+                  {{ dataPDF.data[indexs - 1][index] }}%
                 </td>
+
               </tr>
             </tbody>
           </table>
@@ -278,16 +283,16 @@ export default {
       bulanChart: null,
       whodata: null,
       dataPDF: null,
-      printed: false
+      printpage: false
     };
   },
   created() {
     this.init();
-    this.setTglawal();
   },
   methods: {
     init() {
       this.getDataTenagaMedis();
+      this.setTglawal();
     },
     getData() {
       const params = {
@@ -327,7 +332,7 @@ export default {
           this.bulanChart = res.data.data.bulan;
           this.whodata = res.data.data.whodata;
           this.dataPDF = res.data.data;
-          console.log(this.dataPDF.data[1][0]);
+          this.dataPDF.data = f;
           this.dataSend = initialDataSend();
         })
         .catch(err => {
@@ -335,7 +340,7 @@ export default {
         });
     },
     printPDF(whereprint) {
-      this.printed = true;
+      this.printpage = true;
       setTimeout(function() {
         //giving it 200 milliseconds time to load
 
@@ -370,11 +375,12 @@ export default {
         setTimeout(function() {
           WinPrint.document.title = this.dataPDF.filename;
           WinPrint.document.close();
+
           WinPrint.focus();
           WinPrint.print();
           WinPrint.close();
         }, 100);
-        this.printed = false;
+        this.printpage = false;
       }, 100);
     },
     reloadTable(tableProps) {

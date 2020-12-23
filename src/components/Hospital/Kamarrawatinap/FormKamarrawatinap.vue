@@ -51,18 +51,23 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formAkses" class="top">Terdapat di</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formAkses"
-                      v-model="dataAll.idbangsal"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataBangsal"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataBangsal"
+                      label="description"
+                      v-model="dataAll.bangsal"
+                    ></v-select>
+                    <!--                    <select-->
+                    <!--                      class="form-control bottom custom-select"-->
+                    <!--                      id="formAkses"-->
+                    <!--                      v-model="dataAll.idbangsal"-->
+                    <!--                    >-->
+                    <!--                      <option-->
+                    <!--                        :value="data.id"-->
+                    <!--                        v-for="data in dataBangsal"-->
+                    <!--                        :key="data.id"-->
+                    <!--                        >{{ data.id }} - {{ data.description }}</option-->
+                    <!--                      >-->
+                    <!--                    </select>-->
                   </div>
                 </div>
               </div>
@@ -176,7 +181,7 @@ export default {
     register(status, id) {
       let rawData = {
         description: this.dataAll.description,
-        idbangsal: this.dataAll.idbangsal
+        idbangsal: this.dataAll.bangsal.id
       };
       let formData = new FormData();
       for (let key in rawData) {

@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col">
+                  <div class="form form-group col-md">
                     <label for="formtgll" class="top">Jenis Formulir</label>
                     <input
                       id="formtgll"
@@ -47,7 +47,7 @@
                       v-model="dataAll.description"
                     />
                   </div>
-                  <div class="form form-group col">
+                  <div class="form form-group col-md">
                     <label for="formtgll" class="top">Dibutuhkan</label>
                     <input
                       id="formtgll"
