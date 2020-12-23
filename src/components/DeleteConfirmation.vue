@@ -2,7 +2,7 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <login-confirmation
             v-if="isLoginConfirmedModal"
             @login="loginConfirmed"
@@ -48,30 +48,26 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.$refs.btndelete.focus();
+    this.$refs.btndelete.focus();
   },
   methods: {
     closeModal() {
-      let self = this;
-      if (self.isConfirmed === true) {
-        self.isConfirmed = false;
+      if (this.isConfirmed === true) {
+        this.isConfirmed = false;
       }
-      self.$emit("modal-closed");
+      this.$emit("modal-closed");
     },
     deleteYes() {
-      let self = this;
-      if (self.isConfirmed === true) {
-        self.closeModal();
-        self.$emit("delete-data", self.data);
+      if (this.isConfirmed === true) {
+        this.closeModal();
+        this.$emit("delete-data", this.data);
       } else {
-        self.isLoginConfirmedModal = true;
+        this.isLoginConfirmedModal = true;
       }
     },
     loginConfirmed(payload) {
-      let self = this;
-      self.isConfirmed = payload ? true : false;
-      self.isLoginConfirmedModal = false;
+      this.isConfirmed = payload ? true : false;
+      this.isLoginConfirmedModal = false;
     }
   }
 };

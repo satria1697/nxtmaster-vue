@@ -2,12 +2,12 @@
   <transition class="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fas fa-window-close pull-right pointer"
+                class="fas fa-window-close pull-right pointer-event"
                 @click="closeModal()"
               ></i>
             </div>
@@ -39,7 +39,6 @@ export default {
     }
   },
   data() {
-    let self = this;
     return {
       dataAll: {},
       classes: {
@@ -66,7 +65,7 @@ export default {
           name: "Pilih",
           orderable: false,
           event: "click",
-          handler: self.select,
+          handler: this.select,
           component: button
         }
       ],
@@ -80,12 +79,10 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.init();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
       const params = {
         page: 1,
         find: "",
@@ -93,39 +90,35 @@ export default {
         column: "id",
         dir: "ASC"
       };
-      self.getData(params);
+      this.getData(params);
     },
     getData(params) {
-      let self = this;
-      self.isLoading = true;
-      self.filter.page = params.page;
-      self.filter.find = params.find;
-      self.filter.length = params.length;
-      self.filter.orderColumn = params.orderColumn;
-      self.filter.orderBy = params.orderBy;
+      this.isLoading = true;
+      this.filter.page = params.page;
+      this.filter.find = params.find;
+      this.filter.length = params.length;
+      this.filter.orderColumn = params.orderColumn;
+      this.filter.orderBy = params.orderBy;
       Api.level
         .filter(params)
         .then(res => {
-          self.dataAll = res.data;
+          this.dataAll = res.data;
         })
         .catch(err => {
           console.log(err);
-          self.notFound = true;
+          this.notFound = true;
         });
     },
     reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
+      this.getData(tableProps);
     },
     select(id) {
-      let self = this;
       console.log(id);
-      self.$emit("id-selected", id);
-      self.$emit("modal-closed");
+      this.$emit("id-selected", id);
+      this.$emit("modal-closed");
     },
     closeModal() {
-      let self = this;
-      self.$emit("modal-closed");
+      this.$emit("modal-closed");
     }
   }
 };

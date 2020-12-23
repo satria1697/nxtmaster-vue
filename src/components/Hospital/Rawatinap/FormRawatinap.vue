@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,9 +26,9 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-md-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -39,23 +39,15 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formnamapasien" class="top">Nama Pasien</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formnamapasien"
-                      v-model="dataAll.pasien_id"
-                      v-on:change="getDataPasien()"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPasien"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.namapasien }}</option
-                      >
-                    </select>
+                  <div class="form form-group col-md-4">
+                    <label for="formnamapasien" class="top">Nomer RM</label>
+                    <v-select
+                      :options="dataPasien"
+                      label="namapasien"
+                      v-model="dataAll.pasien"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formtglmsk" class="top">Tanggal Masuk</label>
                     <input
                       type="datetime-local"
@@ -64,7 +56,7 @@
                       v-model="dataAll.tglmasuk"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formtglkeluar" class="top"
                       >Tanggal Keluar</label
                     >
@@ -77,76 +69,48 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formkelranap" class="top"
                       >Kelas Rawat Inap</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formkelranap"
-                      v-model="dataAll.kelas_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataKelasrawatinap"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataKelasrawatinap"
+                      label="description"
+                      v-model="dataAll.kelas"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formbangsal" class="top">Bangsal</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formbangsal"
-                      v-model="dataAll.bangsal_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataBangsal"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataBangsal"
+                      label="description"
+                      v-model="dataAll.bangsal"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formkamarranap" class="top"
                       >Kamar Rawat Inap</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formkamarranap"
-                      v-model="dataAll.kamar_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataKamarrawatinap"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataKamarrawatinap"
+                      label="description"
+                      v-model="dataAll.kamar"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-10">
+                  <div class="form form-group col-md-4">
                     <label for="formdpjp" class="top"
                       >Dokter Penanggung Jawab</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formdpjp"
-                      v-model="dataAll.dokter_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataDokter"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.nama }}</option
-                      >
-                    </select>
+                    <v-select
+                      :options="dataDokter"
+                      label="nama"
+                      v-model="dataAll.dokter"
+                    ></v-select>
                   </div>
-                  <div class="form form-group col-2">
-                    <label for="formmasuk" class="top">Cara Masuk</label>
+                  <div class="form form-group col-md-4">
+                    <label for="formmasuk" class="top">Jenis Kasus</label>
                     <select
                       class="form-control bottom custom-select"
                       id="formmasuk"
@@ -154,6 +118,17 @@
                     >
                       <option value="1">Baru</option>
                       <option value="2">Lama</option>
+                    </select>
+                  </div>
+                  <div class="form form-group col-md-4">
+                    <label for="formhowto" class="top">Cara Masuk</label>
+                    <select
+                      class="form-control bottom custom-select"
+                      id="formhowto"
+                      v-model="dataAll.caramasuk"
+                    >
+                      <option value="1">Poliklinik</option>
+                      <option value="2">IGD</option>
                     </select>
                   </div>
                 </div>
@@ -169,18 +144,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formhowto" class="top">Cara Masuk</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formhowto"
-                      v-model="dataAll.caramasuk"
-                    >
-                      <option value="1">Poliklinik</option>
-                      <option value="2">IGD</option>
-                    </select>
-                  </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formpulang" class="top"
                       >Keterangan Pulang</label
                     >
@@ -195,7 +159,7 @@
                       <option value="4">Meninggal</option>
                     </select>
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formbayar" class="top">Cara Pembayaran</label>
                     <select
                       class="form-control bottom custom-select"
@@ -215,7 +179,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form form-group col-4">
+                    <div class="form form-group col-md-4">
                       <label for="formtglmsk" class="top"
                         >Tanggal Operasi</label
                       >
@@ -378,6 +342,10 @@ function initialDataAll() {
       description: ""
     },
     kamar_id: null,
+    kamar: {
+      id: null,
+      description: ""
+    },
     dokter_id: null,
     dokter: {
       id: null,
@@ -445,50 +413,45 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
+      this.dataAll = initialDataAll();
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.rawatinap
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
-            if (self.dataAll.tglmasuk !== null) {
-              self.dataAll.tglmasuk = self.dataAll.tglmasuk.replace(" ", "T");
+            this.dataAll = resp.data.data;
+            if (this.dataAll.tglmasuk !== null) {
+              this.dataAll.tglmasuk = this.dataAll.tglmasuk.replace(" ", "T");
             } else {
-              self.dataAll.tglmasuk = "";
+              this.dataAll.tglmasuk = "";
             }
-            if (self.dataAll.tglkeluar !== null) {
-              self.dataAll.tglkeluar = self.dataAll.tglkeluar.replace(" ", "T");
+            if (this.dataAll.tglkeluar !== null) {
+              this.dataAll.tglkeluar = this.dataAll.tglkeluar.replace(" ", "T");
             } else {
-              self.dataAll.tglkeluar = "";
+              this.dataAll.tglkeluar = "";
             }
             if (resp.data.data.operasi === null) {
-              self.dataAll.operasi = {
+              this.dataAll.operasi = {
                 iddokter: null,
                 idperawat: null,
                 tgloperasi: "",
@@ -497,48 +460,47 @@ export default {
                 tindakan: ""
               };
             }
-            if (self.dataAll.operasi.tgloperasi !== null) {
-              self.dataAll.operasi.tgloperasi = self.dataAll.operasi.tgloperasi.replace(
+            if (this.dataAll.operasi.tgloperasi !== null) {
+              this.dataAll.operasi.tgloperasi = this.dataAll.operasi.tgloperasi.replace(
                 " ",
                 "T"
               );
             } else {
-              self.dataAll.operasi.tgloperasi = "";
+              this.dataAll.operasi.tgloperasi = "";
             }
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(status, id) {
-      let self = this;
       let operasi = {
-        dokter_id: self.dataAll.operasi.dokter_id,
-        perawat_id: self.dataAll.operasi.perawat_id,
-        tgloperasi: self.dataAll.operasi.tgloperasi,
-        dokteranestesi_id: self.dataAll.operasi.dokteranestesi_id,
-        jenisanestesi: self.dataAll.operasi.jenisanestesi,
-        tindakan: self.dataAll.operasi.tindakan
+        dokter_id: this.dataAll.operasi.dokter_id,
+        perawat_id: this.dataAll.operasi.perawat_id,
+        tgloperasi: this.dataAll.operasi.tgloperasi.replace("T", " "),
+        dokteranestesi_id: this.dataAll.operasi.dokteranestesi_id,
+        jenisanestesi: this.dataAll.operasi.jenisanestesi,
+        tindakan: this.dataAll.operasi.tindakan
       };
       let operasiJson = JSON.stringify(operasi);
       let rawData = {
-        tglmasuk: self.dataAll.tglmasuk,
-        pasien_id: self.dataAll.pasien_id,
-        norm: self.dataAll.pasien.norm,
-        tglkeluar: self.dataAll.tglkeluar,
-        kelas_id: self.dataAll.kelas_id,
-        bangsal_id: self.dataAll.bangsal_id,
-        kamar_id: self.dataAll.kamar_id,
-        dokter_id: self.dataAll.dokter_id,
-        jeniskasus: self.dataAll.jeniskasus,
-        tindakan: self.dataAll.tindakan,
-        caramasuk: self.dataAll.caramasuk,
-        ketpulang: self.dataAll.ketpulang,
-        carabayar: self.dataAll.carabayar,
-        operasi_id: self.dataAll.operasi_id,
-        isoperasi: self.formOperasi === true ? 1 : 0,
+        tglmasuk: this.dataAll.tglmasuk.replace("T", " "),
+        pasien_id: this.dataAll.pasien_id,
+        norm: this.dataAll.pasien.norm,
+        tglkeluar: this.dataAll.tglkeluar.replace("T", " "),
+        kelas_id: this.dataAll.kelas_id,
+        bangsal_id: this.dataAll.bangsal_id,
+        kamar_id: this.dataAll.kamar_id,
+        dokter_id: this.dataAll.dokter_id,
+        jeniskasus: this.dataAll.jeniskasus,
+        tindakan: this.dataAll.tindakan,
+        caramasuk: this.dataAll.caramasuk,
+        ketpulang: this.dataAll.ketpulang,
+        carabayar: this.dataAll.carabayar,
+        operasi_id: this.dataAll.operasi_id,
+        isoperasi: this.formOperasi === true ? 1 : 0,
         operasi: operasiJson
       };
       let formData = new FormData();
@@ -550,79 +512,77 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.rawatinap
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.rawatinap
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
     getDataPasien() {
-      let self = this;
       Api.pasien
-        .find(self.dataAll.pasien_id)
+        .find(this.dataAll.pasien_id)
         .then(resp => {
           if (resp.status === 200) {
-            self.dataAll.pasien = resp.data.data;
+            this.dataAll.pasien = resp.data.data;
           }
         })
         .catch(err => {

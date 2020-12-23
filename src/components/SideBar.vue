@@ -3,12 +3,12 @@
     <div v-if="!this.$store.state.isSideBar" class="sidenav-list">
       <span class="font-weight-bold"
         ><i class="fas fa-th-large"></i> Menu
-        <span class="pointer" v-on:click="sidebar()"
+        <span class="pointer-event" v-on:click="sidebar()"
           ><i class="fas fa-times"></i></span
       ></span>
       <v-jstree :data="dataSidebar" whole-row @item-click="goTo"></v-jstree>
     </div>
-    <div v-else class="sidenav-list pointer" v-on:click="sidebar()">
+    <div v-else class="sidenav-list pointer-event" v-on:click="sidebar()">
       <span class="menu">Menu</span>
     </div>
   </div>
@@ -29,47 +29,29 @@ export default {
     }
   },
   data() {
-    let self = this;
     return {
-      avatar: self.avatarProps,
+      avatar: this.avatarProps,
       fullname: store.getters["getFullname"],
-      // isSideBar: false,
       isActive: false,
       dataRoot: {},
       dataParent: [],
       dataSidebar: []
     };
   },
-  // created() {
-  //   let self = this;
-  //   store.watch(
-  //     state => {
-  //       return state.isSideBar;
-  //     },
-  //     () => {
-  //       self.isSideBar = store.state.isSideBar;
-  //     },
-  //     {
-  //       deep: true
-  //     }
-  //   );
-  // },
   mounted() {
-    let self = this;
     let id = store.getters["getAkses"];
-    self.getDataRootId(id);
+    this.getDataRootId(id);
   },
   methods: {
     sidebar() {
       store.commit("sideBarChange");
     },
     getDataRootId(id) {
-      let self = this;
       api.aksesmanager
         .findRoot(id)
         .then(resp => {
-          self.dataSidebar = resp.data.data;
-          self.dataSidebar.forEach(data => {
+          this.dataSidebar = resp.data.data;
+          this.dataSidebar.forEach(data => {
             data.children.forEach(data => {
               data.children.forEach(leaf => {
                 if (leaf.icon === "") {
@@ -84,21 +66,19 @@ export default {
         });
     },
     getDataFolder(params) {
-      let self = this;
       api.aksesmanager
         .filterParent(params)
         .then(resp => {
-          self.dataSidebar = resp.data.data;
+          this.dataSidebar = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     goTo(payload) {
-      let self = this;
       // console.log("/" + payload.data.application.path + "/" + payload.data.modul.path);
       if (payload.data.rolelevelid === 3) {
-        self.$router
+        this.$router
           .push(
             "/" + payload.data.application.path + "/" + payload.data.modul.path
           )
@@ -117,7 +97,7 @@ export default {
   position: fixed;
   z-index: 100;
   background: #f0f0f0;
-  color: $text-theme-alt;
+  color: $text-alt;
   padding: 0;
   // overflow-y: auto;
   // overflow-x: hidden;
@@ -143,7 +123,7 @@ export default {
     border-radius: 4px;
     margin-top: 30px;
     background-color: $theme-bg-detail;
-    color: $text-theme-alt;
+    color: $text-alt;
     border: 1px solid rgba($color: #000000, $alpha: 0.2);
     -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
@@ -164,7 +144,7 @@ span.font-weight-bold {
   position: absolute;
   top: 1px;
   z-index: 10;
-  color: $text-theme-alt;
+  color: $text-alt;
 }
 .sidenav.closeSide {
   width: 30px;
@@ -182,7 +162,7 @@ span.font-weight-bold {
     font-size: 13px;
     font-weight: bold;
     background-color: $theme;
-    color: $text-theme;
+    color: $text;
     -ms-writing-mode: tb-rl;
     writing-mode: tb-rl;
   }

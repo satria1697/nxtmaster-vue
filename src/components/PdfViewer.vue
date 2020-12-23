@@ -69,13 +69,11 @@ export default {
     };
   },
   mounted() {
-    let self = this;
-    self.getPdfSrc();
+    this.getPdfSrc();
   },
   methods: {
     getPdfSrc() {
-      let self = this;
-      var raw = window.atob(self.src);
+      var raw = window.atob(this.src);
       var rawLength = raw.length;
       var array = new Uint8Array(new ArrayBuffer(rawLength));
 
@@ -83,18 +81,16 @@ export default {
         array[i] = raw.charCodeAt(i);
       }
 
-      self.pdfsrc = array;
+      this.pdfsrc = array;
     },
     printPdf() {
-      let self = this;
-      document.title = self.title;
-      self.$refs.pdf.print();
+      document.title = this.title;
+      this.$refs.pdf.print();
     }
   },
   watch: {
     src: function() {
-      let self = this;
-      self.getPdfSrc();
+      this.getPdfSrc();
     }
   }
 };

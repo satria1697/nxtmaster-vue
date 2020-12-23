@@ -1,8 +1,8 @@
 <template>
-  <div class="detail">
-    <div class="container">
+  <div>
+    <div class="container-fluid">
       <div class="row">
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Awal</label>
           <input
             type="month"
@@ -12,7 +12,7 @@
             v-on:change="addMonths()"
           />
         </div>
-        <div class="form form-group col-3">
+        <div class="form form-group col-md-3">
           <label for="formtgll" class="top">Bulan Akhir</label>
           <input
             type="month"
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="form form-group col-4">
+        <div class="form form-group col-md-4">
           <label for="formAkses" class="top">Filter Data</label>
           <select
             class="form-control bottom custom-select"
@@ -40,7 +40,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formAkses" class="top">Terhadap</label>
           <select
@@ -55,7 +55,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData === 3 && dataSend.terhadap !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formAkses" class="top">Nama Dokter</label>
           <select
@@ -70,7 +70,7 @@
         </div>
         <div
           v-if="dataSend.pengambilanData === 4 && dataSend.terhadap !== null"
-          class="form form-group col-4"
+          class="form form-group col-md-4"
         >
           <label for="formnamaperawat" class="top">Nama Perawat</label>
           <select
@@ -85,12 +85,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">
+        <div class="col-md-2">
           <button class="btn btn-default" v-on:click="getData()">
             <i class="fas fa-eye"></i> Preview
           </button>
         </div>
-        <div class="col-2 offset-8">
+        <div class="col-md-2 offset-md-8">
           <button
             class="btn btn-default right"
             v-on:click="printPDF('printableArea')"
@@ -100,15 +100,19 @@
           </button>
         </div>
       </div>
-      <chart-laporan-klpcm
-        v-if="dataChart !== null"
-        :bulan="bulanChart"
-        :data="dataChart"
-        :whodata="whodata"
-        ref="chart"
-      ></chart-laporan-klpcm>
+      <div class="row">
+        <div class="col">
+          <chart-laporan-klpcm
+            v-if="dataChart !== null"
+            :bulan="bulanChart"
+            :data="dataChart"
+            :whodata="whodata"
+            ref="chart"
+          ></chart-laporan-klpcm>
+        </div>
+      </div>
       <div class="row" id="printableArea">
-        <div class="col" v-if="printed" v-show="printed">
+        <div class="col" v-if="printpage" v-show="printpage">
           <h3>
             Laporan Hasil Rekapitulasi Perbandingan {{ dataPDF.who }} terhadap
             {{ dataPDF.terhadap }}
@@ -126,7 +130,7 @@
                 <th colspan="3" style="text-align: center">Bulan</th>
               </tr>
               <tr>
-                <th v-for="(bulan, index) in dataPDF.bulan" :key="index">
+                <th v-for="(bulan, indek) in dataPDF.bulan" :key="indek">
                   {{ bulan }}
                 </th>
               </tr>
@@ -135,8 +139,9 @@
               <tr v-for="(data, index) in dataPDF.whodata" :key="index">
                 <td>{{ data.nama }}</td>
                 <td v-for="indexs in dataPDF.bulan.length" :key="indexs">
-                  {{ dataPDF.data[index - 1][indexs - 1] }}%
+                  {{ dataPDF.data[indexs - 1][index] }}%
                 </td>
+
               </tr>
             </tbody>
           </table>
@@ -174,7 +179,6 @@ export default {
     // Form
   },
   data() {
-    let self = this;
     return {
       dataAll: {},
       filter: {
@@ -212,7 +216,7 @@ export default {
           name: "Edit",
           orderable: false,
           event: "click",
-          handler: self.changeModal,
+          handler: this.changeModal,
           component: edit,
           width: 5
         },
@@ -221,7 +225,7 @@ export default {
           name: "Delete",
           oderable: false,
           event: "click",
-          handler: self.deleteData,
+          handler: this.deleteData,
           component: actiondelete,
           width: 5
         }
@@ -279,30 +283,27 @@ export default {
       bulanChart: null,
       whodata: null,
       dataPDF: null,
-      printed: false
+      printpage: false
     };
   },
   created() {
-    let self = this;
-    self.init();
-    self.setTglawal();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
-      self.getDataTenagaMedis();
+      this.getDataTenagaMedis();
+      this.setTglawal();
     },
     getData() {
-      let self = this;
       const params = {
-        tglawal: self.dataSend.tglawal,
-        tglakhir: self.dataSend.tglakhir,
-        pengambilanData: self.dataSend.pengambilanData,
-        dokter_id: self.dataSend.dokter_id,
-        perawat_id: self.dataSend.perawat_id,
-        namadokter: self.dataDokter[self.dataSend.dokter_id],
-        namaperawat: self.dataPerawat[self.dataSend.perawat_id],
-        terhadap: self.dataSend.terhadap,
+        tglawal: this.dataSend.tglawal,
+        tglakhir: this.dataSend.tglakhir,
+        pengambilanData: this.dataSend.pengambilanData,
+        dokter_id: this.dataSend.dokter_id,
+        perawat_id: this.dataSend.perawat_id,
+        namadokter: this.dataDokter[this.dataSend.dokter_id],
+        namaperawat: this.dataPerawat[this.dataSend.perawat_id],
+        terhadap: this.dataSend.terhadap,
         page: 1,
         find: "",
         length: 10000,
@@ -314,7 +315,7 @@ export default {
       Api.laporan
         .filter(params)
         .then(res => {
-          // self.dataChart = res.data.data.data;
+          // this.dataChart = res.data.data.data;
           let arr = res.data.data.data;
           let m = arr.length;
           let n = arr[0].length;
@@ -327,20 +328,19 @@ export default {
             }
             f.push(t);
           }
-          self.dataChart = f;
-          self.bulanChart = res.data.data.bulan;
-          self.whodata = res.data.data.whodata;
-          self.dataPDF = res.data.data;
-          console.log(self.dataPDF.data[1][0]);
-          self.dataSend = initialDataSend();
+          this.dataChart = f;
+          this.bulanChart = res.data.data.bulan;
+          this.whodata = res.data.data.whodata;
+          this.dataPDF = res.data.data;
+          this.dataPDF.data = f;
+          this.dataSend = initialDataSend();
         })
         .catch(err => {
           console.log(err);
         });
     },
     printPDF(whereprint) {
-      let self = this;
-      self.printed = true;
+      this.printpage = true;
       setTimeout(function() {
         //giving it 200 milliseconds time to load
 
@@ -373,39 +373,37 @@ export default {
       </html>`);
 
         setTimeout(function() {
-          WinPrint.document.title = self.dataPDF.filename;
+          WinPrint.document.title = this.dataPDF.filename;
           WinPrint.document.close();
+
           WinPrint.focus();
           WinPrint.print();
           WinPrint.close();
         }, 100);
-        self.printed = false;
+        this.printpage = false;
       }, 100);
     },
     reloadTable(tableProps) {
-      let self = this;
-      self.getData(tableProps);
+      this.getData(tableProps);
     },
     edit(data) {
-      self.changeModal(data.id);
+      this.changeModal(data.id);
     },
     changeModal(id) {
-      let self = this;
-      if (self.isModal === false) {
-        self.editId = id;
-        self.isModal = true;
+      if (this.isModal === false) {
+        this.editId = id;
+        this.isModal = true;
       } else {
-        self.getData(self.filter);
-        self.isModal = false;
+        this.getData(this.filter);
+        this.isModal = false;
       }
     },
     deleteData(id) {
-      let self = this;
       Api.status
         .delete(id)
         .then(resp => {
           if (resp.status === 204) {
-            self.getData(self.filter);
+            this.getData(this.filter);
           }
         })
         .catch(() => {
@@ -413,27 +411,24 @@ export default {
         });
     },
     addMonths() {
-      let self = this;
-      self.dataSend.tglakhir = moment(self.dataSend.tglawal)
+      this.dataSend.tglakhir = moment(this.dataSend.tglawal)
         .add(2, "months")
         .format("YYYY-MM");
     },
     setTglawal() {
-      let self = this;
-      self.dataSend.tglawal = moment()
+      this.dataSend.tglawal = moment()
         .subtract(3, "months")
         .format("YYYY-MM");
-      self.addMonths();
+      this.addMonths();
     },
     getDataTenagaMedis(params) {
-      let self = this;
       Api.tenagamedis
         .filter(params)
         .then(res => {
-          self.dataDokter = res.data.data.filter(function(data) {
+          this.dataDokter = res.data.data.filter(function(data) {
             return data.jenis_id === 1;
           });
-          self.dataPerawat = res.data.data.filter(function(data) {
+          this.dataPerawat = res.data.data.filter(function(data) {
             return data.jenis_id === 2;
           });
         })

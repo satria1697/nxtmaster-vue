@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,9 +26,9 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== 0" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -39,30 +39,23 @@
                   </div>
                   <div class="form form-group col">
                     <label for="formtjm" class="top">Jenis Tenaga Medis</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formtjm"
-                      v-model="dataAll.jenis_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataJenisTM"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      label="description"
+                      :options="dataJenisTM"
+                      v-model="dataAll.jenis"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formnama" class="top">nama</label>
+                  <div class="form form-group col-md-4">
+                    <label for="formnama" class="top">Nama</label>
                     <input
                       id="formnama"
                       class="bottom form-control"
                       v-model="dataAll.nama"
                     />
                   </div>
-                  <div class="form form-group col-4">
+                  <div class="form form-group col-md-4">
                     <label for="formnohp" class="top">Nomer HP</label>
                     <input
                       id="formnohp"
@@ -71,24 +64,17 @@
                     />
                   </div>
                   <div
-                    v-if="dataAll.jenis_id === 1"
-                    class="form form-group col-4"
+                    v-if="dataAll.jenis.id === 1"
+                    class="form form-group col-md-4"
                   >
                     <label for="formspesialisasi" class="top"
                       >Spesialisasi</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formspesialisasi"
-                      v-model="dataAll.spesialisasi_id"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataSpesialisasi"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    <v-select
+                      label="description"
+                      :options="dataSpesialisasi"
+                      v-model="dataAll.spesialisasi"
+                    ></v-select>
                   </div>
                 </div>
               </div>
@@ -174,52 +160,46 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
+      this.dataAll = initialDataAll();
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== 0) {
+      if (this.editId !== 0) {
         Api.tenagamedis
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
+            this.dataAll = resp.data.data;
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(status, id) {
-      let self = this;
       let rawData = {
-        nama: self.dataAll.nama,
-        nohp: self.dataAll.nohp,
-        jenis_id: self.dataAll.jenis_id,
-        spesialisasi_id: self.dataAll.spesialisasi_id
+        nama: this.dataAll.nama,
+        nohp: this.dataAll.nohp,
+        jenis_id: this.dataAll.jenis.id,
+        spesialisasi_id: this.dataAll.spesialisasi.id
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -231,70 +211,69 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.tenagamedis
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.tenagamedis
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     }
   }

@@ -2,7 +2,7 @@
   <div class="Loading" v-if="isLoading">
     <span>Data is Loading</span>
   </div>
-  <div v-else-if="dataAll" class="container">
+  <div v-else-if="dataAll" class="container-fluid">
     <Form v-if="isModal()" v-on:refreshData="init()" />
     <div class="row">
       <div class="col">
@@ -11,11 +11,11 @@
       <div class="col-2">
         <i
           v-on:click="openModal()"
-          class="fas fa-plus-circle fa-2x pointer icon-top"
+          class="fas fa-plus-circle fa-2x pointer-event icon-top"
         ></i>
         <i
           v-on:click="updateData()"
-          class="fas fa-sync fa-2x pointer icon-top"
+          class="fas fa-sync fa-2x pointer-event icon-top"
         ></i>
       </div>
     </div>
@@ -74,10 +74,10 @@
             <td>{{ data.id }}</td>
             <td>{{ data.fullname }}</td>
             <td class="buttonClass">
-              <div v-on:click="openModalEdit(data.id)" class="pointer">
+              <div v-on:click="openModalEdit(data.id)" class="pointer-event">
                 <i class="far fa-edit fa-xs"></i>
               </div>
-              <div v-on:click="deletePerson(data.id)" class="pointer">
+              <div v-on:click="deletePerson(data.id)" class="pointer-event">
                 <i class="far fa-trash-alt fa-xs"></i>
               </div>
             </td>
@@ -203,113 +203,104 @@ export default {
     };
   },
   created() {
-    let self = this;
     store.watch(
       state => {
         return state.isModal;
       },
       () => {
-        self.isModal();
+        this.isModal();
       }
     );
   },
   mounted() {
-    let self = this;
-    self.init();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
-      self.isLoading = true;
-      self.updateData();
+      this.isLoading = true;
+      this.updateData();
       //
-      self.isLoading = false;
+      this.isLoading = false;
     },
     isModal() {
-      let self = this;
-      return self.$store.state.isModal;
+      return this.$store.state.isModal;
     },
     openModal() {
       store.commit("modalChange");
     },
     openModalEdit(id) {
-      // let self = this;
+      //
       store.commit("openModalEditMuta", id);
     },
     deletePerson(ids) {
-      let self = this;
       let link = "http://127.0.0.1:8000/api/person/{id}";
       let linknew = link.replace("{id}", ids);
       axios.delete(linknew).then(response => {
         response;
-        self.updateData();
-        self.updateState();
+        this.updateData();
+        this.updateState();
       });
     },
     updateData() {
-      let self = this;
       const params = {
-        page: self.page,
-        find: self.searchQuery,
-        perPage: self.perPage,
-        orderColumn: self.orderColumn,
-        orderBy: self.orderBy
+        page: this.page,
+        find: this.searchQuery,
+        perPage: this.perPage,
+        orderColumn: this.orderColumn,
+        orderBy: this.orderBy
       };
       Api.user
         .filter(params)
         .then(res => {
           console.log(res.data);
-          self.dataAll = res.data.data.data;
-          self.response = res.data.data;
-          self.updateState();
+          this.dataAll = res.data.data.data;
+          this.response = res.data.data;
+          this.updateState();
         })
         .catch(err => {
           console.log(err);
-          self.notFound = true;
+          this.notFound = true;
         });
     },
     nextPage() {
-      let self = this;
-      let page = self.page;
-      if (page + 1 <= self.response.last_page) {
-        self.page += 1;
+      let page = this.page;
+      if (page + 1 <= this.response.last_page) {
+        this.page += 1;
       }
     },
     prevPage() {
-      let self = this;
-      let page = self.page;
+      let page = this.page;
       if (page - 1 >= 1) {
-        self.page -= 1;
+        this.page -= 1;
       }
     },
     updateState() {
-      let self = this;
-      self.currentState = self.response.current_page;
-      self.lastState = self.response.last_page;
-      let nextState = self.currentState + 1;
-      if (nextState <= self.lastState - 2) {
-        if (nextState + 1 >= self.lastState) {
-          self.nextState = self.lastState - 2;
+      this.currentState = this.response.current_page;
+      this.lastState = this.response.last_page;
+      let nextState = this.currentState + 1;
+      if (nextState <= this.lastState - 2) {
+        if (nextState + 1 >= this.lastState) {
+          this.nextState = this.lastState - 2;
         } else {
-          self.nextState = nextState;
+          this.nextState = nextState;
         }
       } else {
-        self.nextState = self.lastState - 2;
+        this.nextState = this.lastState - 2;
       }
-      let doubleState = self.currentState + 2;
-      if (doubleState <= self.lastState - 1) {
-        if (doubleState >= self.lastState) {
-          self.doubleState = self.lastState - 1;
+      let doubleState = this.currentState + 2;
+      if (doubleState <= this.lastState - 1) {
+        if (doubleState >= this.lastState) {
+          this.doubleState = this.lastState - 1;
         } else {
-          self.doubleState = doubleState;
+          this.doubleState = doubleState;
         }
       } else {
-        self.doubleState = self.lastState - 1;
+        this.doubleState = this.lastState - 1;
       }
-      if (self.currentState + 2 >= self.lastState) {
-        self.last = true;
+      if (this.currentState + 2 >= this.lastState) {
+        this.last = true;
       } else {
-        self.last = false;
+        this.last = false;
       }
     },
     // openTab(name, label) {
@@ -329,18 +320,16 @@ export default {
     //   }
     // },
     changeOrder(column) {
-      let self = this;
-      if (self.orderBy === "ASC") {
-        self.orderColumn = column;
-        self.orderBy = "DESC";
+      if (this.orderBy === "ASC") {
+        this.orderColumn = column;
+        this.orderBy = "DESC";
       } else {
-        self.orderColumn = column;
-        self.orderBy = "ASC";
+        this.orderColumn = column;
+        this.orderBy = "ASC";
       }
     },
     goTo(route) {
-      let self = this;
-      return self.$router.push({ name: route });
+      return this.$router.push({ name: route });
     },
     downloadAsCsv() {
       Api.download.ascsv().then(resp => {
@@ -373,44 +362,38 @@ export default {
       Api.download
         .aspdf()
         .then(resp => {
-          let self = this;
-          self.pdfLink = resp.config.url;
+          this.pdfLink = resp.config.url;
           console.log(resp);
         })
         .catch(err => {
           console.log("middle" + err);
         });
-      self.isLoading = false;
+      this.isLoading = false;
     }
   },
   watch: {
     page: function() {
-      let self = this;
-      self.updateData();
+      this.updateData();
     },
     searchQuery: function() {
-      let self = this;
-      self.updateData();
-      self.updateState();
-      self.page = 1;
+      this.updateData();
+      this.updateState();
+      this.page = 1;
     },
     perPage: function() {
-      let self = this;
-      self.updateData();
-      self.updateState();
-      self.page = 1;
+      this.updateData();
+      this.updateState();
+      this.page = 1;
     },
     orderBy: function() {
-      let self = this;
-      self.updateData();
-      self.updateState();
-      self.page = 1;
+      this.updateData();
+      this.updateState();
+      this.page = 1;
     },
     orderColumn: function() {
-      let self = this;
-      self.updateData();
-      self.updateState();
-      self.page = 1;
+      this.updateData();
+      this.updateState();
+      this.page = 1;
     }
   }
 };

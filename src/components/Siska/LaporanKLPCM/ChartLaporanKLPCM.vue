@@ -15,24 +15,23 @@ export default {
   },
   mounted() {
     // Overwriting base render method with actual data.
-    let self = this;
-    self.makeChart();
+    this.makeChart();
   },
   methods: {
     makeChart() {
-      let self = this;
-      console.log(self.data);
       let datasets = [];
+      let bulan = this.bulan
       let j = 0;
-      if (self.data.length) {
-        self.data.forEach(function(data) {
+      if (this.data.length) {
+
+        this.data.forEach(function(data) {
           const letters = "0123456789ABCDEF";
           let color = "#";
           for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
           }
           datasets.push({
-            label: self.bulan[j],
+            label: bulan[j],
             backgroundColor: color,
             barThickness: 50,
             data: data
@@ -41,9 +40,10 @@ export default {
         });
       }
       let who = [];
-      self.whodata.forEach(function(data) {
+      this.whodata.forEach(function(data) {
         who.push(data.nama);
       });
+
       let chartData = {
         labels: who,
         datasets: datasets
@@ -65,13 +65,12 @@ export default {
         }
       };
 
-      self.renderChart(chartData, options);
+      this.renderChart(chartData, options);
     }
   },
   watch: {
     data: function() {
-      let self = this;
-      self.makeChart();
+      this.makeChart();
     }
   }
 };

@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -26,28 +26,9 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
-                  <div class="form form-group col-4">
-                    <label for="formNRM" class="top">Nomer Rekam Medis</label>
-                    <input
-                      id="formNRM"
-                      class="bottom form-control"
-                      v-model="dataAll.norm"
-                    />
-                  </div>
-                  <div class="form form-group col-4">
-                    <label for="formjk" class="top">Jenis Kelamin</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formjk"
-                      v-model="dataAll.jeniskelamin"
-                    >
-                      <option value="0">Laki-laki</option>
-                      <option value="1">Perempuan</option>
-                    </select>
-                  </div>
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== null" class="form form-group col-md-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -55,6 +36,22 @@
                       v-model="dataAll.id"
                       disabled
                     />
+                  </div>
+                  <div class="form form-group col-md-4">
+                    <label for="formNRM" class="top">Nomer Rekam Medis</label>
+                    <input
+                      id="formNRM"
+                      class="bottom form-control"
+                      v-model="dataAll.norm"
+                    />
+                  </div>
+                  <div class="form form-group col-md-4">
+                    <label for="formjk" class="top">Jenis Kelamin</label>
+                    <v-select
+                      :options="dataJenisKelamin"
+                      label="description"
+                      v-model="dataAll.jeniskelamin"
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
@@ -68,7 +65,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form form-group col-3">
+                  <div class="form form-group col-6">
                     <label for="formTmptl" class="top">Tempat Lahir</label>
                     <input
                       id="formTmptl"
@@ -76,7 +73,7 @@
                       v-model="dataAll.tempatlahir"
                     />
                   </div>
-                  <div class="form form-group col-3">
+                  <div class="form form-group col-6">
                     <label for="formtgll" class="top">Tanggal Lahir</label>
                     <input
                       type="date"
@@ -86,7 +83,7 @@
                       v-on:change="getUsia()"
                     />
                   </div>
-                  <div class="form form-group col-6">
+                  <div class="form form-group col-md-6">
                     <label for="formusia" class="top top-disabled">Usia</label>
                     <input
                       id="formusia"
@@ -133,18 +130,11 @@
                 <div class="row">
                   <div class="form form-group col">
                     <label for="formagama" class="top">Agama</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formagama"
+                    <v-select
+                      :options="dataAgama"
+                      label="description"
                       v-model="dataAll.agama"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataAgama"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                   <div class="form form-group col">
                     <label for="formhp" class="top">Nomer Hp</label>
@@ -160,33 +150,19 @@
                     <label for="formpendidikan" class="top"
                       >Pendidikan Terakhir</label
                     >
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formpendidikan"
+                    <v-select
+                      :options="dataPendidikan"
+                      label="description"
                       v-model="dataAll.pendidikan"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPendidikan"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                   <div class="form form-group col">
                     <label for="formpekerjaan" class="top">Pekerjaan</label>
-                    <select
-                      class="form-control bottom custom-select"
-                      id="formpekerjaan"
+                    <v-select
+                      :options="dataPekerjaan"
+                      label="description"
                       v-model="dataAll.pekerjaan"
-                    >
-                      <option
-                        :value="data.id"
-                        v-for="data in dataPekerjaan"
-                        :key="data.id"
-                        >{{ data.id }} - {{ data.description }}</option
-                      >
-                    </select>
+                    ></v-select>
                   </div>
                 </div>
                 <div class="row">
@@ -254,12 +230,24 @@ function initialDataAll() {
     tanggallahir: "",
     usia: "",
     usiafront: "",
-    jeniskelamin: null,
-    agama: 0,
+    jeniskelamin: {
+      id: null,
+      description: null
+    },
+    agama: {
+      id: null,
+      description: null
+    },
     alamat: "",
     idwilayah: "",
-    pendidikan: "",
-    pekerjaan: "",
+    pendidikan: {
+      id: null,
+      description: null
+    },
+    pekerjaan: {
+      id: null,
+      description: null
+    },
     nohp: "",
     asuransi: "",
     nopeserta: "",
@@ -294,67 +282,74 @@ export default {
       deleted: false,
       isDeleteModal: false,
       textTitle: "",
-      isUserModal: false
+      isUserModal: false,
+      dataJenisKelamin: [
+        {
+          id: 1,
+          description: "laki-laki"
+        },
+        {
+          id: 2,
+          description: "perempuan"
+        }
+      ]
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.checkEdit();
+    this.checkEdit();
   },
   methods: {
     closeModal() {
-      let self = this;
-      self.$emit("get-data");
-      self.$emit("modal-closed");
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
+      this.dataAll = initialDataAll();
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.pasien
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
+            this.dataAll = resp.data.data;
+            const usia = this.dataAll.usia.split(".");
+            this.dataAll.usiafront =
+              usia[0] + " tahun " + usia[1] + " bulan " + usia[2] + " hari ";
           })
           .catch(error => {
             console.log(error);
-            self.reset();
+            this.reset();
           });
       }
     },
     register(status, id) {
-      let self = this;
       let rawData = {
-        norm: self.dataAll.norm,
-        namapasien: self.dataAll.namapasien,
-        tempatlahir: self.dataAll.tempatlahir,
-        tanggallahir: self.dataAll.tanggallahir,
-        usia: self.dataAll.usia,
-        jeniskelamin: self.dataAll.jeniskelamin,
-        agama: self.dataAll.agama,
-        alamat: self.dataAll.alamat,
-        idwilayah: self.dataAll.idwilayah,
-        pendidikan: self.dataAll.pendidikan,
-        pekerjaan: self.dataAll.pekerjaan,
-        nohp: self.dataAll.nohp,
-        asuransi: self.dataAll.asuransi,
-        nopeserta: self.dataAll.nopeserta,
-        penanggungjawab: self.dataAll.penanggungjawab
+        norm: this.dataAll.norm,
+        namapasien: this.dataAll.namapasien,
+        tempatlahir: this.dataAll.tempatlahir,
+        tanggallahir: this.dataAll.tanggallahir,
+        usia: this.dataAll.usia,
+        jeniskelamin_id: this.dataAll.jeniskelamin.id,
+        agama_id: this.dataAll.agama.id,
+        alamat: this.dataAll.alamat,
+        idwilayah: this.dataAll.idwilayah,
+        pendidikan_id: this.dataAll.pendidikan.id,
+        pekerjaan_id: this.dataAll.pekerjaan.id,
+        nohp: this.dataAll.nohp,
+        asuransi: this.dataAll.asuransi,
+        nopeserta: this.dataAll.nopeserta,
+        penanggungjawab: this.dataAll.penanggungjawab
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -365,80 +360,78 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.pasien
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
-              self.reset();
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
+              this.reset();
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
             if (err.status === 422) {
-              self.textTitle =
+              this.textTitle =
                 err.response.data.error[
                   Object.keys(err.response.data.error)[0]
                 ];
             } else {
-              self.textTitle = "Input data salah, silahkan cek kembali";
+              this.textTitle = "Input data salah, silahkan cek kembali";
             }
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.pasien
         .delete(id)
         .then(resp => {
           console.log(resp);
-          self.berhasil = true;
-          self.deleted = true;
+          this.berhasil = true;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          self.berhasil = false;
+          this.berhasil = false;
         });
     },
     getUsia() {
-      let self = this;
       var now = new Date();
       var yearNow = now.getYear();
       var monthNow = now.getMonth();
       var dateNow = now.getDate();
 
-      let date = new Date(self.dataAll.tanggallahir);
+      let date = new Date(this.dataAll.tanggallahir);
       var yearDob = date.getYear();
       var monthDob = date.getMonth();
       var dateDob = date.getDate();
@@ -467,8 +460,8 @@ export default {
         months: monthAge,
         days: dateAge
       };
-      self.dataAll.usia = age.years + "." + age.months + "." + age.days;
-      self.dataAll.usiafront =
+      this.dataAll.usia = age.years + "." + age.months + "." + age.days;
+      this.dataAll.usiafront =
         age.years + " tahun " + age.months + " bulan " + age.days + " hari ";
     }
   }

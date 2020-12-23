@@ -2,12 +2,12 @@
   <transition class="modal" tabindex="-1" role="dialog" v-if="!isLoading">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
-            <div class="modal-header bg-theme">
+            <div class="modal-header bg-default">
               <span class="font-weight-bold">{{ title }}</span>
               <i
-                class="fa fa-window-close pull-right pointer"
+                class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
                 @click="closeModal()"
               ></i>
@@ -44,12 +44,12 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row">
-                  <div class="col-3">
+                  <div class="col-md-3">
                     <div class="row">
                       <div class="form-group col">
-                        <div class="img-container">
+                        <div class="img-container-fluid">
                           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
                           <img
                             v-else
@@ -57,7 +57,7 @@
                           />
                           <div class="form-group">
                             <label for="fileInputForm">
-                              <span class="fa-stack fa-2x pointer">
+                              <span class="fa-stack fa-2x pointer-event">
                                 <i
                                   class="fa fa-circle fa-stack-2x"
                                   aria-hidden="true"
@@ -80,7 +80,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-9">
+                  <form class="col-md-9">
                     <div class="row">
                       <div class="form form-group col" v-if="!newForm">
                         <label for="formID" class="top top-disabled">ID</label>
@@ -95,7 +95,7 @@
                     <div class="row">
                       <div
                         v-if="dataAll.id === null"
-                        class="form form-group col"
+                        class="form form-group col-md"
                       >
                         <label for="formUsername" class="top">Username</label>
                         <input
@@ -105,7 +105,7 @@
                           v-model="dataAll.username"
                         />
                       </div>
-                      <div v-else class="form form-group col">
+                      <div v-else class="form form-group col-md-5">
                         <label
                           for="formusernamedisabled"
                           class="top top-disabled"
@@ -119,7 +119,7 @@
                           disabled
                         />
                       </div>
-                      <div class="form form-group col input-group">
+                      <div class="form form-group col-md-5 input-group">
                         <label for="formLvlid" class="top top-disabled"
                           >Level Pengguna</label
                         >
@@ -140,7 +140,7 @@
                           </button>
                         </div>
                       </div>
-                      <div class="form-group form-check col">
+                      <div class="form-group form-check col-md-2">
                         <input
                           id="formActive"
                           class="form-check-input"
@@ -153,7 +153,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col-8">
+                      <div class="form form-group col-md-8">
                         <label for="formNama" class="top">Full Name</label>
                         <input
                           id="formNama"
@@ -162,8 +162,8 @@
                           v-model="dataAll.fullname"
                         />
                       </div>
-                      <div class="form form-group col-4">
-                        <label for="formEmpid" class="top">Employment ID</label>
+                      <div class="form form-group col-md-4">
+                        <label for="formEmpid" class="top">Emp ID</label>
                         <input
                           id="formEmpid"
                           class="bottom form-control"
@@ -173,7 +173,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col input-group">
+                      <div class="form form-group col-md input-group">
                         <label for="formStrcId" class="top top-disabled"
                           >Structure</label
                         >
@@ -194,7 +194,7 @@
                           </button>
                         </div>
                       </div>
-                      <div class="form form-group col input-group">
+                      <div class="form form-group col-md input-group">
                         <label for="formRankid" class="top top-disabled"
                           >Tingkat</label
                         >
@@ -217,7 +217,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formEmail" class="top">Email</label>
                         <input
                           id="formEmail"
@@ -226,7 +226,7 @@
                           v-model="dataAll.email"
                         />
                       </div>
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formPhone" class="top">Phone</label>
                         <input
                           id="formPhone"
@@ -237,7 +237,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formAddress" class="top">Address</label>
                         <input
                           id="formAddress"
@@ -246,7 +246,7 @@
                           v-model="dataAll.address"
                         />
                       </div>
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formCity" class="top">City</label>
                         <input
                           id="formCity"
@@ -257,7 +257,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formPwd" class="top">Password</label>
                         <input
                           id="formPwd"
@@ -267,7 +267,7 @@
                         />
                         <password-meter :password="dataAll.password" />
                       </div>
-                      <div class="form form-group col">
+                      <div class="form form-group col-md">
                         <label for="formPwdconf" class="top"
                           >Password Confirmation</label
                         >
@@ -291,11 +291,12 @@
                         button-class="btn btn-default btn-sm"
                         min-height="150px"
                         height="150px"
+                        min-width="100px"
                         :titleCentered="false"
                         title-class="vue-picker-title-class"
                       />
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -388,7 +389,7 @@ export default {
     }
   },
   data() {
-    // let self = this;
+    //
     return {
       isLoading: false,
       newForm: true,
@@ -413,150 +414,135 @@ export default {
     };
   },
   created() {
-    let self = this;
     const escapeHandler = e => {
       if (e.key === "Escape") {
-        self.closeModal();
+        this.closeModal();
       }
     };
     document.addEventListener("keydown", escapeHandler);
-    self.$once("hook:destroyed", () => {
+    this.$once("hook:destroyed", () => {
       document.removeEventListener("keydown", escapeHandler);
     });
   },
   mounted() {
-    let self = this;
-    self.isLoading = true;
-    self.init();
-    self.isLoading = false;
+    this.isLoading = true;
+    this.init();
+    this.isLoading = false;
   },
   methods: {
     init() {
-      let self = this;
-      self.getAksesData();
-      self.checkEdit();
+      this.getAksesData();
+      this.checkEdit();
     },
     getAksesData(params) {
-      let self = this;
       Api.akses
         .filter(params)
         .then(resp => {
-          self.dataAkses = resp.data.data;
+          this.dataAkses = resp.data.data;
         })
         .catch(err => {
           console.log(err);
         });
     },
     findLevel() {
-      let self = this;
-      if (self.isLevelModal === false) {
-        self.isLevelModal = true;
+      if (this.isLevelModal === false) {
+        this.isLevelModal = true;
       } else {
-        self.isLevelModal = false;
+        this.isLevelModal = false;
       }
     },
     levelSelected(data) {
-      let self = this;
-      self.dataAll.levelid = data.id;
-      self.dataAll.level.id = data.id;
-      self.dataAll.level.description = data.description;
+      this.dataAll.levelid = data.id;
+      this.dataAll.level.id = data.id;
+      this.dataAll.level.description = data.description;
     },
     findStructure() {
-      let self = this;
-      if (self.isStructureModal === false) {
-        self.isStructureModal = true;
+      if (this.isStructureModal === false) {
+        this.isStructureModal = true;
       } else {
-        self.isStructureModal = false;
+        this.isStructureModal = false;
       }
     },
     structureSelected(data) {
-      let self = this;
       console.log(data);
-      self.dataAll.structureid = data.id;
-      self.dataAll.structure.id = data.id;
-      self.dataAll.structure.label = data.label;
+      this.dataAll.structureid = data.id;
+      this.dataAll.structure.id = data.id;
+      this.dataAll.structure.label = data.label;
     },
     findRank() {
-      let self = this;
-      if (self.isRankModal === false) {
-        self.isRankModal = true;
+      if (this.isRankModal === false) {
+        this.isRankModal = true;
       } else {
-        self.isRankModal = false;
+        this.isRankModal = false;
       }
     },
     rankSelected(data) {
-      let self = this;
-      self.dataAll.rankid = data.id;
-      self.dataAll.rank.id = data.id;
-      self.dataAll.rank.description = data.description;
+      this.dataAll.rankid = data.id;
+      this.dataAll.rank.id = data.id;
+      this.dataAll.rank.description = data.description;
     },
     closeModal() {
-      let self = this;
-      if (self.berhasil) {
-        self.reset();
-        self.$emit("get-data");
-        self.$emit("modal-closed");
+      if (this.berhasil) {
+        this.reset();
+        this.$emit("get-data");
+        this.$emit("modal-closed");
       } else {
-        self.isUserModal = false;
+        this.isUserModal = false;
       }
     },
     reset() {
-      let self = this;
-      self.dataAll = initialDataAll();
-      self.confirmedAkses = [];
-      self.avatarChange = false;
+      this.dataAll = initialDataAll();
+      this.confirmedAkses = [];
+      this.avatarChange = false;
     },
     checkEdit() {
-      let self = this;
-      if (self.editId !== null) {
+      if (this.editId !== null) {
         Api.user
-          .find(self.editId)
+          .find(this.editId)
           .then(resp => {
-            self.dataAll = resp.data.data;
-            self.dataAll.active = self.dataAll.active === 1 ? true : false;
-            self.dataAll.akses.forEach(data => {
-              self.confirmedAkses.push(data);
+            this.dataAll = resp.data.data;
+            this.dataAll.active = this.dataAll.active === 1 ? true : false;
+            this.dataAll.akses.forEach(data => {
+              this.confirmedAkses.push(data);
             });
-            self.dataAkses = self.dataAkses.filter(
-              elem => !self.confirmedAkses.find(({ id }) => elem.id === id)
+            this.dataAkses = this.dataAkses.filter(
+              elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
             );
           })
           .catch(error => {
             console.log(error);
-            // self.reset();
-            // self.unauthorized = true;
+            // this.reset();
+            // this.unauthorized = true;
           });
       }
     },
     deleteData(id) {
-      let self = this;
       Api.user.delete(id).then(resp => {
         console.log(resp);
-        self.closeModal();
+        this.closeModal();
       });
     },
     register(setup, id) {
-      let self = this;
-      let jsonAkses = JSON.stringify(self.confirmedAkses);
-      let active = self.dataAll.active === true ? 1 : 0;
+      let jsonAkses = JSON.stringify(this.confirmedAkses);
+      let active = this.dataAll.active === true ? 1 : 0;
       let rawData = {
-        username: self.dataAll.username,
-        password: self.dataAll.password,
-        password_confirmation: self.dataAll.password_confirmation,
-        empid: self.dataAll.empid,
-        fullname: self.dataAll.fullname,
-        rankid: self.dataAll.rankid,
-        city: self.dataAll.city,
-        address: self.dataAll.address,
-        email: self.dataAll.email,
-        phone: self.dataAll.phone,
-        levelid: self.dataAll.levelid,
+        username: this.dataAll.username,
+        password: this.dataAll.password,
+        password_confirmation: this.dataAll.password_confirmation,
+        empid: this.dataAll.empid,
+        fullname: this.dataAll.fullname,
+        rankid: this.dataAll.rankid,
+        city: this.dataAll.city,
+        address: this.dataAll.address,
+        email: this.dataAll.email,
+        phone: this.dataAll.phone,
+        levelid: this.dataAll.levelid,
         neverexpired: 1,
         active: active,
-        structureid: self.dataAll.structureid,
-        avatar: self.dataAll.avatar,
+        structureid: this.dataAll.structureid,
+        avatar: this.dataAll.avatar,
         akses: jsonAkses,
-        avatarChange: self.avatarChange
+        avatarChange: this.avatarChange
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -567,51 +553,50 @@ export default {
           .register(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil disimpan";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil disimpan";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
-            self.textTitle =
+            this.textTitle =
               err.response.data.error[Object.keys(err.response.data.error)[0]];
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.isUserModal = true;
           });
       } else {
         Api.user
           .update(id, formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.textTitle = "Data berhasil diperbaharui";
-              self.berhasil = true;
-              self.isUserModal = true;
+              this.textTitle = "Data berhasil diperbaharui";
+              this.berhasil = true;
+              this.isUserModal = true;
             } else {
-              self.berhasil = false;
-              self.textTitle = "Terjadi kesalahan pada server";
-              self.isUserModal = true;
+              this.berhasil = false;
+              this.textTitle = "Terjadi kesalahan pada server";
+              this.isUserModal = true;
             }
           })
           .catch(err => {
-            self.textTitle = "Input data salah, silahkan cek kembali";
-            self.berhasil = false;
-            self.isUserModal = true;
+            this.textTitle = "Input data salah, silahkan cek kembali";
+            this.berhasil = false;
+            this.isUserModal = true;
             console.log(err);
           });
       }
     },
     selectImage(e) {
-      let self = this;
       const image = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = function() {
         let image64 = reader.result;
-        self.dataAll.avatar = image64;
-        self.avatarChange = true;
+        this.dataAll.avatar = image64;
+        this.avatarChange = true;
       };
       reader.readAsDataURL(image);
     }
@@ -620,7 +605,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/abstracts/_variables.scss";
+@import "src/style/abstracts/_variables.scss";
 .modal {
   overflow-y: auto;
 }
@@ -633,12 +618,25 @@ export default {
   max-width: 1000px;
   overflow-y: auto;
 }
-.img-container {
+.img-container-fluid {
   text-align: center;
   span {
-    position: absolute;
-    bottom: -40px;
-    left: 90px;
+    //position: absolute;
+    //bottom: -40px;
+    //left: 90px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
   }
   img {
     width: 200px;

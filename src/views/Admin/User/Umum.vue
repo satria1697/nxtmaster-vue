@@ -1,16 +1,16 @@
 <template>
-  <div class="detail">
+  <div class="container-fluid">
     <div class="row">
-      <div class="form-group col-3">
+      <div class="form-group col-md-3">
         <div class="img-container">
           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
-          <img v-else src="@/assets/image/table/blank_avatar.png" />
+          <img v-else src="src/assets/image/table/blank_avatar.png" />
           <div
             class="form-group"
             v-if="this.$store.getters['getLevelId'] === 1"
           >
             <label for="fileInputForm">
-              <span class="fa-stack fa-2x pointer">
+              <span class="fa-stack fa-2x pointer-event">
                 <i class="fa fa-circle fa-stack-2x" aria-hidden="true"></i>
                 <i
                   class="fas fa-camera fa-stack-1x fa-inverse"
@@ -28,9 +28,9 @@
           </div>
         </div>
       </div>
-      <div class="col-9">
+      <div class="col-md-9">
         <div class="row">
-          <div class="form form-group col-6">
+          <div class="form form-group col-md-6">
             <label for="formHeader1" class="top">Header 1</label>
             <input
               id="formHeader1"
@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-6">
+          <div class="form form-group col-md-6">
             <label for="formHeader2" class="top">Header 2</label>
             <input
               id="formHeader2"
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-6">
+          <div class="form form-group col-md-6">
             <label for="formCode" class="top">Kode Perusahaan</label>
             <input
               id="formCode"
@@ -66,7 +66,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-8">
+          <div class="form form-group col-md-8">
             <label for="formNama" class="top">Nama Perusahaan</label>
             <input
               id="formNama"
@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-5">
+          <div class="form form-group col-md-5">
             <label for="formAlamat" class="top">Alamat</label>
             <input
               id="formAlamat"
@@ -88,7 +88,7 @@
               v-on:focus="resetSpan()"
             />
           </div>
-          <div class="form form-group col-3">
+          <div class="form form-group col-md-3">
             <label for="formCity" class="top">Kota/Kabupaten</label>
             <input
               id="formCity"
@@ -100,7 +100,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-4">
+          <div class="form form-group col-md-4">
             <label for="formPhone" class="top">No Telepon</label>
             <input
               id="formPhone"
@@ -110,7 +110,7 @@
               v-on:focus="resetSpan()"
             />
           </div>
-          <div class="form form-group col-4">
+          <div class="form form-group col-md-4">
             <label for="formFax" class="top">No Fax</label>
             <input
               id="formFax"
@@ -122,7 +122,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="form form-group col-4">
+          <div class="form form-group col-md-4">
             <label for="formEmail" class="top">Email</label>
             <input
               id="formEmail"
@@ -134,10 +134,12 @@
           </div>
         </div>
         <div class="row" v-if="this.$store.getters['getLevelId'] === 1">
-          <button class="btn btn-default" v-on:click="register(1)">
-            <i class="fas fa-save"></i>
-            Simpan Perubahan
-          </button>
+          <div class="col">
+            <button class="btn btn-default" v-on:click="register(1)">
+              <i class="fas fa-save"></i>
+              Simpan Perubahan
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -167,21 +169,18 @@ export default {
     };
   },
   created() {
-    let self = this;
-    self.init();
+    this.init();
   },
   methods: {
     init() {
-      let self = this;
-      self.getDataUmum();
+      this.getDataUmum();
     },
     getDataUmum(params) {
-      let self = this;
       api.umum
         .filter(params)
         .then(resp => {
           if (resp.data.status === "success") {
-            self.dataAll = resp.data.data[0];
+            this.dataAll = resp.data.data[0];
           }
         })
         .catch(err => {
@@ -189,30 +188,28 @@ export default {
         });
     },
     selectImage(e) {
-      let self = this;
       const image = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = function() {
         let image64 = reader.result;
-        self.dataAll.avatar = image64;
+        this.dataAll.avatar = image64;
       };
       reader.readAsDataURL(image);
     },
     register(id) {
-      let self = this;
       let rawData = {
-        header1: self.dataAll.header1,
-        header2: self.dataAll.header2,
-        companycode: self.dataAll.companycode,
-        companyname: self.dataAll.companyname,
-        companyaddress: self.dataAll.companyaddress,
-        companycity: self.dataAll.companycity,
-        companyphone: self.dataAll.companyphone,
-        companyfax: self.dataAll.companyfax,
-        companyemail: self.dataAll.companyemail,
-        companyfacebookid: self.dataAll.companyfacebookid,
-        companytwitterid: self.dataAll.companytwitterid,
-        avatar: self.dataAll.avatar
+        header1: this.dataAll.header1,
+        header2: this.dataAll.header2,
+        companycode: this.dataAll.companycode,
+        companyname: this.dataAll.companyname,
+        companyaddress: this.dataAll.companyaddress,
+        companycity: this.dataAll.companycity,
+        companyphone: this.dataAll.companyphone,
+        companyfax: this.dataAll.companyfax,
+        companyemail: this.dataAll.companyemail,
+        companyfacebookid: this.dataAll.companyfacebookid,
+        companytwitterid: this.dataAll.companytwitterid,
+        avatar: this.dataAll.avatar
       };
       let formData = new FormData();
       for (let key in rawData) {
@@ -222,24 +219,24 @@ export default {
         .update(id, formData)
         .then(resp => {
           if (resp.data.status === "success") {
-            self.textTitle = "Data berhasil disimpan";
-            self.berhasil = true;
-            self.isUserModal = true;
+            this.textTitle = "Data berhasil disimpan";
+            this.berhasil = true;
+            this.isUserModal = true;
           } else {
-            self.berhasil = false;
-            self.textTitle = "Terjadi kesalahan pada server";
-            self.isUserModal = true;
+            this.berhasil = false;
+            this.textTitle = "Terjadi kesalahan pada server";
+            this.isUserModal = true;
           }
         })
         .catch(err => {
           if (err.status === 422) {
-            self.textTitle =
+            this.textTitle =
               err.response.data.error[Object.keys(err.response.data.error)[0]];
           } else {
-            self.textTitle = "Kesalahan isian, silahkan coba lagi";
+            this.textTitle = "Kesalahan isian, silahkan coba lagi";
           }
-          self.berhasil = false;
-          self.isUserModal = true;
+          this.berhasil = false;
+          this.isUserModal = true;
         });
     }
   }
@@ -250,9 +247,19 @@ export default {
 .img-container {
   text-align: center;
   span {
-    position: absolute;
-    bottom: 80px;
-    left: 100px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
   }
   img {
     width: 200px;

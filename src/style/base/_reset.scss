@@ -1,23 +1,35 @@
 .row {
   margin: 2px 0;
 }
-.bg-theme {
-  background-color: $theme !important;
-  color: $text-theme !important;
-}
 .btn-theme {
   background-color: $theme !important;
-  color: $text-theme !important;
+  color: $text !important;
 }
+//.btn.btn-default {
+//  background: linear-gradient(0deg, rgba(230,230,230,1) 0%, rgba(249,249,249,1) 74%);
+//  border: 1px solid rgba(0, 0, 0, 0.2);
+//  border-radius: 4px;
+//  margin-right: 2px;
+//  &:hover {
+//    background: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(252,252,252,1) 74%);
+//  }
+//}
 .btn.btn-default {
-  background: linear-gradient(0deg, rgba(230,230,230,1) 0%, rgba(249,249,249,1) 74%);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  margin-right: 2px;
-  &:hover {
-    background: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(252,252,252,1) 74%);
-  }
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    transition: all 0.1s ease-in-out;
+    margin: 0 2px 0 0;
+    color: $theme;
+    &:hover {
+      background: $theme;
+      color: $text;
+    }
+    &:active {
+      opacity: 0.3;
+    }
 }
+
 .span-theme {
   color: $theme !important;
 }
@@ -34,10 +46,10 @@
 }
 
 .content-theme {
-  color: $text-theme-alt;
+  color: $text-alt;
   padding: 3px 2px;
   &:hover{
-    color: $text-theme !important;
+    color: $text !important;
     background-color: $theme;
   }
 }
@@ -48,13 +60,13 @@
       color: $theme-alt;
     }
     span {
-      color: $text-theme;
+      color: $text;
     }
   }
 }
 a {
   text-decoration: none;
-  color: $text-theme;
+  color: $text;
   &:hover {
     text-decoration: none;
     color: $theme;
@@ -66,7 +78,7 @@ li {
       // background-color: $theme;
       .page-link {
         // background-color: $theme !important;
-        color: $text-theme;
+        color: $text;
         background-color: $theme;
         border-color: $theme;
       }
@@ -88,4 +100,15 @@ i.fas {
 }
 .vue-picker-title-class {
   background-color: $theme-bg-detail !important;
+}
+
+.btn-default {
+  background: $theme;
+}
+.bg-default {
+  background: $theme;
+}
+
+.pointer-event {
+  cursor: pointer;
 }

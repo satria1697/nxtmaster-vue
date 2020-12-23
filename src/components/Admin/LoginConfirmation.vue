@@ -2,7 +2,7 @@
   <transition class="modal" tabindex="-1" role="dialog">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered container-md">
           <div class="modal-content">
             <div class="modal-header">
               <span>Konfirmasi Password</span>
@@ -74,19 +74,18 @@ export default {
   },
   methods: {
     login() {
-      let self = this;
-      self.isLoading = true;
-      if (self.password === "") {
-        self.berhasil = false;
-        self.isLoading = false;
+      this.isLoading = true;
+      if (this.password === "") {
+        this.berhasil = false;
+        this.isLoading = false;
       } else {
         let user =
           store.getters["getLevelId"] <= 3
             ? store.getters["getUsername"]
-            : self.dataLogin.username;
+            : this.dataLogin.username;
         let rawData = {
           username: user,
-          password: self.dataLogin.password
+          password: this.dataLogin.password
         };
         let formData = new FormData();
         for (let key in rawData) {
@@ -96,20 +95,19 @@ export default {
           .loginconfirm(formData)
           .then(resp => {
             if (resp.data.status === "success") {
-              self.$emit("login", true);
+              this.$emit("login", true);
             }
           })
           .catch(error => {
-            self.isLoading = false;
-            self.berhasil = false;
-            self.dataLogin = initialDataLogin();
+            this.isLoading = false;
+            this.berhasil = false;
+            this.dataLogin = initialDataLogin();
             console.log(error);
           });
       }
     },
     closeModal() {
-      let self = this;
-      self.$emit("login", false);
+      this.$emit("login", false);
     }
   }
 };
