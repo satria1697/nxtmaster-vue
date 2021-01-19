@@ -1,5 +1,8 @@
 <template>
-  <div class="detail">
+  <div class="detail" v-if="isLoading">
+    <b-spinner></b-spinner>
+  </div>
+  <div class="detail" v-else>
     <data-modul
       title="Modul"
       :appIdProps="dataAll.application.id"
@@ -76,26 +79,12 @@
           </div>
           <div class="row">
             <div class="form form-group col-md-4">
-              <label for="formTingkat" class="top">Tingkat</label>
+              <label class="top">Tingkat</label>
               <v-select
                 :options="dataRoleLevel"
                 label="description"
                 v-model="dataAll.rolelevel"
               ></v-select>
-              <!--              <select-->
-              <!--                class="form-control bottom custom-select"-->
-              <!--                id="formTingkat"-->
-              <!--                v-model="dataAll.rolelevelid"-->
-              <!--                value="idRoleLevel"-->
-              <!--              >-->
-              <!--                <option-->
-              <!--                  :value="data.id"-->
-              <!--                  v-for="data in dataRoleLevel"-->
-              <!--                  :key="data.id"-->
-              <!--                >-->
-              <!--                  {{ data.id }} - {{ data.description }}-->
-              <!--                </option>-->
-              <!--              </select>-->
             </div>
             <div
               v-if="dataAll.rolelevel.id > 1"
@@ -105,21 +94,8 @@
               <v-select
                 :options="dataParent"
                 label="text"
-                v-model="dataAll.parentid"
+                v-model="dataAll.parent"
               ></v-select>
-              <!--              <select-->
-              <!--                class="form-control bottom custom-select"-->
-              <!--                id="formMenuInduk"-->
-              <!--                v-model="dataAll.parentid"-->
-              <!--              >-->
-              <!--                <option-->
-              <!--                  :value="data.id"-->
-              <!--                  v-for="data in dataParent"-->
-              <!--                  :key="data.id"-->
-              <!--                >-->
-              <!--                  {{ data.id }} - {{ data.text }}-->
-              <!--                </option>-->
-              <!--              </select>-->
             </div>
           </div>
           <div v-if="dataAll.rolelevel.id === 3" class="row">
@@ -128,17 +104,8 @@
               <v-select
                 :options="dataApp"
                 label="description"
-                v-model="dataAll.application.id"
+                v-model="dataAll.application"
               ></v-select>
-              <!--              <select-->
-              <!--                class="form-control bottom custom-select"-->
-              <!--                id="formApp"-->
-              <!--                v-model="dataAll.application.id"-->
-              <!--              >-->
-              <!--                <option :value="data.id" v-for="data in dataApp" :key="data.id">-->
-              <!--                  {{ data.description }}-->
-              <!--                </option>-->
-              <!--              </select>-->
             </div>
           </div>
           <div
@@ -150,7 +117,7 @@
               type="text"
               class="form-control bottom"
               id="formModul"
-              v-model="dataAll.modul.description"
+              :value="dataAll.modul.description"
             />
             <div class="input-group-append">
               <button
@@ -234,9 +201,7 @@ export default {
     return {
       dataAll: initialDataAll(),
       dataDir: [],
-      dataRoot: {},
       dataParent: [],
-      dataChild: [],
       dataRoleLevel: [],
       dataApp: [],
       dataAkses: [],
@@ -261,13 +226,16 @@ export default {
       this.dataAll = initialDataAll();
     },
     getDataAkses(params) {
+      this.isLoading = true;
       api.akses
         .filter(params)
         .then(resp => {
           this.dataAkses = resp.data.data;
+          this.isLoading = false;
         })
         .catch(err => {
           console.log(err);
+          this.isLoading = false;
         });
     },
     getDataApp(params) {
@@ -281,24 +249,7 @@ export default {
         });
     },
     findModul() {
-      if (this.isModulModal === false) {
-        this.isModulModal = true;
-      } else {
-        this.isModulModal = false;
-      }
-    },
-    getDataModul() {
-      let params = {
-        applicationid: this.dataAll.applicationid
-      };
-      api.modul
-        .filterApp(params)
-        .then(resp => {
-          this.dataModul = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.isModulModal = this.isModulModal === false;
     },
     getModulId(data) {
       api.modul
@@ -375,9 +326,8 @@ export default {
       api.aksesmanager
         .find(payload.data.id)
         .then(resp => {
-          console.log(resp.data.data[0]);
-          this.dataAll = resp.data.data[0];
-          if (resp.data.data[0].modul === null) {
+          this.dataAll = resp.data.data;
+          if (resp.data.data.modul === null) {
             this.dataAll.modul = {
               id: null,
               description: ""
@@ -405,19 +355,19 @@ export default {
       let rawData = {
         text: this.dataAll.text,
         icon: this.dataAll.icon,
-        rolelevelid: this.dataAll.rolelevelid,
-        roleid: this.idAkses
+        rolelevelid: this.dataAll.rolelevel.id,
+        roleid: this.akses.id
       };
       let formData = new FormData();
       for (let key in rawData) {
         formData.append(key, rawData[key]);
       }
-      if (this.dataAll.rolelevelid === 2) {
-        formData.append("parentid", this.dataAll.parentid);
+      if (this.dataAll.rolelevel.id === 2) {
+        formData.append("parentid", this.dataAll.parent.id);
       }
-      if (this.dataAll.rolelevelid === 3) {
+      if (this.dataAll.rolelevel.id === 3) {
         let childData = {
-          parentid: this.dataAll.parentid,
+          parentid: this.dataAll.parent.id,
           applicationid: this.dataAll.application.id,
           moduleid: this.dataAll.modul.id
         };
@@ -471,17 +421,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../style/abstracts/variables";
+@import "../../assets/styles/abstracts/variables";
 .sidenav {
-  /*min-height: 40vh;*/
   width: 230px;
-  /*position: fixed;*/
   z-index: 100;
-  // background: #f0f0f0;
   color: $text-alt;
   padding: 0;
-  // overflow-y: auto;
-  // overflow-x: hidden;
   border-radius: 0px;
   &-list {
     margin: 5px;
@@ -527,7 +472,4 @@ span.font-weight-bold {
   z-index: 10;
   color: $text-alt;
 }
-// .position-absolute {
-//   right: 10px;
-// }
 </style>

@@ -353,7 +353,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/variables";
+@import "../assets/styles/abstracts/variables";
 .detail {
   margin: 1rem 1rem 0 calc(250px + 1rem);
   transition: 0.2s;

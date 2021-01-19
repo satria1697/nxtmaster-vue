@@ -214,7 +214,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/variables";
+@import "../assets/styles/abstracts/variables";
 .login-page {
   height: 100vh;
   width: 100vw;

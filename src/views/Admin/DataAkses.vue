@@ -13,7 +13,11 @@
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div
+            class="btn btn-default btn-md"
+            v-on:click="changeModal(0)"
+            v-if="!isLoading"
+          >
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
@@ -44,8 +48,6 @@ import Api from "../../api";
 import Form from "../../components/Admin/Akses/FormAkses";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-// import store from "../../../store";
 
 export default {
   components: {
@@ -125,7 +127,6 @@ export default {
       this.getData(params);
     },
     getData(params) {
-      this.isLoading = true;
       this.filter.page = params.page;
       this.filter.find = params.find;
       this.filter.length = params.length;
@@ -134,15 +135,10 @@ export default {
       Api.akses
         .filter(params)
         .then(res => {
-          // console.log(res);
-          // console.log(Object.entries(this.dataAll))
           this.dataAll = res.data;
-          this.isLoading = false;
-          // console.log(Object.entries(this.dataAll))
         })
         .catch(err => {
           console.log(err);
-          this.isLoading = false;
         });
     },
     reloadTable(tableProps) {
@@ -160,22 +156,6 @@ export default {
         this.isModal = false;
       }
     },
-    // openTab(name, label) {
-    //   let exists = false;
-    //   let tabState = store.state.tabState;
-    //   let isZero = tabState.length === 0;
-    //   if (!isZero) {
-    //     exists = tabState.some(tab => tab.name === name);
-    //   }
-    //   if (!exists) {
-    //     if (tabState.length > 4) {
-    //       console.log("tidak bisa menambah lebih dari 5");
-    //       store.commit("closeTab", 5);
-    //     } else {
-    //       store.commit("openTab", { name, label });
-    //     }
-    //   }
-    // },
     deleteData(id) {
       Api.akses
         .delete(id)

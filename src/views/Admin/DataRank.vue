@@ -8,26 +8,38 @@
     ></Form>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md">
+        <div class="col-md-6">
           <div class="btn btn-default btn-md" v-on:click="getData(filter)">
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div
+            class="btn btn-default btn-md"
+            v-on:click="changeModal(0)"
+            v-if="!isLoading"
+          >
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
         </div>
+        <div v-if="isLoading" class="offset-5 col-md-1">
+          <div class="spinner-border"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <data-table
+            :columns="columns"
+            :data="dataAll"
+            :classes="classes"
+            @loading="isLoading = true"
+            @finished-loading="isLoading = false"
+            @on-table-props-changed="reloadTable"
+          >
+          </data-table>
+        </div>
       </div>
     </div>
-    <data-table
-      :columns="columns"
-      :data="dataAll"
-      :classes="classes"
-      @on-table-props-changed="reloadTable"
-      class="outertable"
-    >
-    </data-table>
   </div>
 </template>
 
@@ -36,8 +48,6 @@ import Api from "../../api";
 import Form from "../../components/Admin/Rank/FormRank";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
-// import avatar from "../../components/Table/Avatar";
-import store from "../../store";
 
 export default {
   components: {
@@ -97,10 +107,8 @@ export default {
       editId: null
     };
   },
-  created() {
-    this.isLoading = true;
+  mounted() {
     this.init();
-    this.isLoading = false;
   },
   methods: {
     init() {
@@ -144,22 +152,6 @@ export default {
       } else {
         this.getData(this.filter);
         this.isModal = false;
-      }
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
       }
     },
     deleteData(id) {

@@ -13,7 +13,11 @@
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div
+            class="btn btn-default btn-md"
+            v-on:click="changeModal(0)"
+            v-if="!isLoading"
+          >
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
@@ -44,7 +48,6 @@ import Api from "../../api";
 import Form from "../../components/Admin/StructureLevel/FormStructureLevel";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
-import store from "../../store";
 
 export default {
   components: {
@@ -104,10 +107,8 @@ export default {
       editId: null
     };
   },
-  created() {
-    this.isLoading = true;
+  mounted() {
     this.init();
-    this.isLoading = false;
   },
   methods: {
     init() {
@@ -135,7 +136,6 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          this.isLoading = false;
         });
     },
     reloadTable(tableProps) {
@@ -151,22 +151,6 @@ export default {
       } else {
         this.getData(this.filter);
         this.isModal = false;
-      }
-    },
-    openTab(name, label) {
-      let exists = false;
-      let tabState = store.state.tabState;
-      let isZero = tabState.length === 0;
-      if (!isZero) {
-        exists = tabState.some(tab => tab.name === name);
-      }
-      if (!exists) {
-        if (tabState.length > 4) {
-          console.log("tidak bisa menambah lebih dari 5");
-          store.commit("closeTab", 5);
-        } else {
-          store.commit("openTab", { name, label });
-        }
       }
     },
     deleteData(id) {

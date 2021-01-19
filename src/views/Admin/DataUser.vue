@@ -13,7 +13,11 @@
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div>
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div
+            class="btn btn-default btn-md"
+            v-on:click="changeModal(0)"
+            v-if="!isLoading"
+          >
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
@@ -45,7 +49,6 @@ import Form from "../../components/Admin/FormDataUser";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import avatar from "../../components/Table/Avatar";
-// import store from "../../store";
 export default {
   components: {
     Form
@@ -141,7 +144,7 @@ export default {
       this.getData(params);
     },
     getData(params) {
-      // this.$isLoading(true);
+      this.isLoading = true;
       this.filter.page = params.page;
       this.filter.find = params.find;
       this.filter.length = params.length;
@@ -151,11 +154,11 @@ export default {
         .filter(params)
         .then(res => {
           this.dataAll = res.data;
-          // this.$isLoading(false);
+          this.isLoading = false;
         })
         .catch(err => {
           console.log(err);
-          // this.$isLoading(false);
+          this.isLoading = false;
         });
     },
     reloadTable(tableProps) {

@@ -21,5 +21,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/_variables";
+@import "../../assets/styles/abstracts/_variables";
 </style>

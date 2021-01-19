@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/_variables";
+@import "../../assets/styles/abstracts/_variables";
 .fa-trash {
   font-size: 1rem;
   color: $theme;

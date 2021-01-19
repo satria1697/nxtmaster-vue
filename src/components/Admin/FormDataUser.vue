@@ -605,7 +605,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/abstracts/_variables.scss";
+@import "../../assets/styles/abstracts/_variables.scss";
 .modal {
   overflow-y: auto;
 }

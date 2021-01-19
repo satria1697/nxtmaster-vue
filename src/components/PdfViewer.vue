@@ -1,7 +1,7 @@
 <template>
   <div class="pdf-sub">
     <!-- <input type="checkbox" v-model="show" /> -->
-    <!-- <select v-model="src" style="width: 30em">
+    <!-- <select v-model="src" styles="width: 30em">
       <option v-for="item in pdfList" :value="item" v-text="item"></option>
     </select> -->
     <div class="row pdf">

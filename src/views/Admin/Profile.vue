@@ -545,7 +545,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "src/style/abstracts/variables";
+@import "../../assets/styles/abstracts/variables";
 .img-container-fluid {
   text-align: center;
   span {
@@ -606,7 +606,7 @@ export default {
   ::v-deep .list-picker-container {
     flex: 1 1 auto;
     /* border: 1px solid #ddd; */
-     background: inherit;
+    background: inherit;
     border-radius: 4px;
     overflow: auto;
     display: flex;

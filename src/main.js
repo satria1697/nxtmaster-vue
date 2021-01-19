@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import "bootstrap/dist/css/bootstrap.css";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 import VueJWT from "vuejs-jwt";
 
@@ -43,6 +43,9 @@ Vue.component("vue-navigation-bar", VueNavigationBar);
 Vue.use(VueStripeMenu);
 
 Vue.use(VueListPicker);
+
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 Vue.component("user-modal", UserModal);
 Vue.component("delete-modal", DeleteModal);

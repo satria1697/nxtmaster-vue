@@ -13,7 +13,7 @@
             <i class="fas fa-sync"></i>
             Perbaharui Data
           </div> -->
-          <div class="btn btn-default btn-md" v-on:click="changeModal(null)">
+          <div class="btn btn-default btn-md" v-on:click="changeModal(0)">
             <i class="fas fa-plus-circle"></i>
             Tambah
           </div>
