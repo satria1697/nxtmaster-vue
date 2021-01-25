@@ -113,7 +113,6 @@ export default {
       this.getData(tableProps);
     },
     select(id) {
-      console.log(id);
       this.$emit("id-selected", id);
       this.$emit("modal-closed");
     },

@@ -8,8 +8,8 @@
               <span
                 class="font-weight-bold"
                 :class="{
-                  'text-danger': textDanger,
-                  'text-success': textSuccess
+                  'text-danger': !success,
+                  'text-success': success
                 }"
               >
                 {{ title }}
@@ -41,10 +41,7 @@ export default {
       type: String,
       required: true
     },
-    textDanger: {
-      type: Boolean
-    },
-    textSuccess: {
+    success: {
       type: Boolean
     }
   },

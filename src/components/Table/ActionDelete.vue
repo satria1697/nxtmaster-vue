@@ -37,11 +37,7 @@ export default {
   },
   methods: {
     changeModal() {
-      if (this.isModal === false) {
-        this.isModal = true;
-      } else {
-        this.isModal = false;
-      }
+      this.isModal = this.isModal === false;
     },
     deleteData() {
       this.click(this.id);

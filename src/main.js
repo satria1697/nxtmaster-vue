@@ -22,7 +22,7 @@ import VueListPicker from "vue-list-picker";
 import VueStripeMenu from "vue-stripe-menu";
 import "vue-stripe-menu/dist/vue-stripe-menu.css";
 
-import UserModal from "./components/UserModal.vue";
+import InfoModal from "./components/InfoModal.vue";
 import DeleteModal from "./components/DeleteConfirmation";
 
 import vSelect from "vue-select";
@@ -47,7 +47,7 @@ Vue.use(VueListPicker);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
-Vue.component("user-modal", UserModal);
+Vue.component("info-modal", InfoModal);
 Vue.component("delete-modal", DeleteModal);
 
 new Vue({

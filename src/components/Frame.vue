@@ -85,7 +85,7 @@
               class="dropdown-divider"
               v-on:click="goTo('datastructure')"
             ></div>
-            <button class="dropdown-item">
+            <button class="dropdown-item" disabled>
               Struktur Organisasi
             </button>
             <button

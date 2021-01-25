@@ -1,299 +1,290 @@
 <template>
-  <div>
-    <data-table-level
-      title="User Level"
-      v-if="isLevelModal"
-      @id-selected="levelSelected"
-      @modal-closed="findLevel"
-    />
-    <data-table-structure
-      title="User Structure"
-      v-if="isStructureModal"
-      @id-selected="structureSelected"
-      @modal-closed="findStructure"
-    />
-    <data-table-rank
-      title="User Rank"
-      v-if="isRankModal"
-      @id-selected="rankSelected"
-      @modal-closed="findRank"
-    />
-    <user-modal
-      v-if="isUserModal"
-      :title="textTitle"
-      :textSuccess="berhasil"
-      :textDanger="!berhasil"
-      @modal-closed="closeModal"
-    />
-    <delete-modal
-      :data="dataAll"
-      v-if="isDeleteModal"
-      @modal-closed="isDeleteModal = false"
-      @delete-data="deleteData"
-    />
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="row">
-            <div class="form-group col">
-              <div class="img-container-fluid">
-                <img
-                  v-if="dataAll.avatar === null"
-                  src="../../assets/image/table/blank_avatar.png"
-                />
-                <img v-else :src="dataAll.avatar" />
-                <div class="form-group">
-                  <label for="fileInputForm">
-                    <span class="fa-stack fa-2x pointer-event">
-                      <i
-                        class="fa fa-circle fa-stack-2x"
-                        aria-hidden="true"
-                      ></i>
-                      <i
-                        class="fas fa-camera fa-stack-1x fa-inverse"
-                        aria-hidden="true"
-                      ></i>
-                    </span>
-                    <input
-                      id="fileInputForm"
-                      type="file"
-                      class="d-none"
-                      @change="selectImage"
-                      accept="image/*"
-                    />
-                  </label>
+  <div class="container-fluid">
+    <div class="text-center" v-if="dataAll === null">
+      <b-spinner></b-spinner>
+    </div>
+    <div v-else>
+      <data-table-level
+        title="User Level"
+        v-if="isLevelModal"
+        @id-selected="levelSelected"
+        @modal-closed="isLevelModal = false"
+      />
+      <data-table-structure
+        title="User Structure"
+        v-if="isStructureModal"
+        @id-selected="structureSelected"
+        @modal-closed="isStructureModal = false"
+      />
+      <data-table-rank
+        title="User Rank"
+        v-if="isRankModal"
+        @id-selected="rankSelected"
+        @modal-closed="isRankModal = false"
+      />
+      <info-modal
+        v-if="info.modal"
+        :title="info.text"
+        :success="success"
+        @modal-closed="info.modal = false"
+      />
+      <delete-modal
+        :data="dataAll"
+        v-if="isDeleteModal"
+        @modal-closed="isDeleteModal = false"
+        @delete-data="deleteData"
+      />
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="row">
+              <div class="form-group col">
+                <div class="img-container-fluid">
+                  <img v-if="dataAll.avatar" :src="dataAll.avatar" />
+                  <img v-else :src="avatar" />
+                  <div class="form-group">
+                    <label for="fileInputForm">
+                      <span class="fa-stack fa-2x pointer-event">
+                        <i
+                          class="fa fa-circle fa-stack-2x"
+                          aria-hidden="true"
+                        ></i>
+                        <i
+                          class="fas fa-camera fa-stack-1x fa-inverse"
+                          aria-hidden="true"
+                        ></i>
+                      </span>
+                      <input
+                        id="fileInputForm"
+                        type="file"
+                        class="d-none"
+                        @change="selectImage"
+                        accept="image/*"
+                      />
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-9">
-          <div class="row">
-            <div class="form form-group col-md" v-if="!newForm">
-              <label for="formID" class="top top-disabled">ID</label>
-              <input
-                id="formID"
-                class="bottom form-control disabled"
-                disabled
-                v-model="dataAll.id"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div v-if="dataAll.id === null" class="form form-group col-md">
-              <label for="formUsername" class="top">Username</label>
-              <input
-                id="formUsername"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.username"
-              />
-            </div>
-            <div v-else class="form form-group col-md">
-              <label for="formUsername" class="top top-disabled"
-                >Username</label
-              >
-              <input
-                id="formUsername"
-                class="bottom form-control disabled"
-                type="text"
-                v-model="dataAll.username"
-                disabled
-              />
-            </div>
-            <div class="form form-group col-md input-group">
-              <label for="formLvlid" class="top top-disabled"
-                >Level Pengguna</label
-              >
-              <input
-                type="text"
-                class="form-control bottom"
-                id="formLvlid"
-                v-model="dataAll.level.description"
-                disabled
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-default"
-                  type="button"
-                  v-on:click="findLevel()"
-                >
-                  <i class="fas fa-search"></i> Cari
-                </button>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="form form-group col" v-if="!newForm">
+                <label for="formID" class="top top-disabled">ID</label>
+                <input
+                  id="formID"
+                  class="bottom form-control disabled"
+                  disabled
+                  v-model="dataAll.id"
+                />
               </div>
             </div>
-            <div class="form-group form-check col-md">
-              <input
-                id="formActive"
-                class="form-check-input"
-                type="checkbox"
-                v-model="dataAll.active"
-              />
-              <label for="formActive" class="form-check-label">Aktif</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form form-group col-md-8">
-              <label for="formNama" class="top">Full Name</label>
-              <input
-                id="formNama"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.fullname"
-              />
-            </div>
-            <div class="form form-group col-md-4">
-              <label for="formEmpid" class="top">Employment ID</label>
-              <input
-                id="formEmpid"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.empid"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form form-group col-md input-group">
-              <label for="formStrcId" class="top top-disabled">Structure</label>
-              <input
-                type="text"
-                class="form-control bottom"
-                id="formStrcId"
-                v-model="dataAll.structure.label"
-                disabled
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-default"
-                  type="button"
-                  v-on:click="findStructure()"
+            <div class="row">
+              <div v-if="dataAll.id === null" class="form form-group col-md">
+                <label for="formUsername" class="top">Username</label>
+                <input
+                  id="formUsername"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.username"
+                />
+              </div>
+              <div v-else class="form form-group col-md-5">
+                <label for="formusernamedisabled" class="top top-disabled"
+                  >Username</label
                 >
-                  <i class="fas fa-search"></i> Cari
-                </button>
+                <input
+                  id="formusernamedisabled"
+                  class="bottom form-control disabled"
+                  type="text"
+                  v-model="dataAll.username"
+                  disabled
+                />
+              </div>
+              <div class="form form-group col-md-5 input-group">
+                <label for="formLvlid" class="top top-disabled"
+                  >Level Pengguna</label
+                >
+                <input
+                  type="text"
+                  class="form-control bottom"
+                  id="formLvlid"
+                  v-model="dataAll.level.description"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    v-on:click="isLevelModal = true"
+                  >
+                    <i class="fas fa-search"></i> Cari
+                  </button>
+                </div>
+              </div>
+              <div class="form-group form-check col-md-2">
+                <input
+                  id="formActive"
+                  class="form-check-input"
+                  type="checkbox"
+                  v-model="dataAll.active"
+                />
+                <label for="formActive" class="form-check-label">Aktif</label>
               </div>
             </div>
-            <div class="form form-group col-md input-group">
-              <label for="formRankid" class="top top-disabled">Tingkat</label>
-              <input
-                type="text"
-                class="form-control bottom"
-                id="formRankid"
-                v-model="dataAll.rank.description"
-                disabled
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-default"
-                  type="button"
-                  v-on:click="findRank()"
-                >
-                  <i class="fas fa-search"></i> Cari
-                </button>
+            <div class="row">
+              <div class="form form-group col-md-8">
+                <label for="formNama" class="top">Full Name</label>
+                <input
+                  id="formNama"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.fullname"
+                />
+              </div>
+              <div class="form form-group col-md-4">
+                <label for="formEmpid" class="top">Emp ID</label>
+                <input
+                  id="formEmpid"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.empid"
+                />
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="form form-group col-md">
-              <label for="formEmail" class="top">Email</label>
-              <input
-                id="formEmail"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.email"
+            <div class="row">
+              <div class="form form-group col-md input-group">
+                <label for="formStrcId" class="top top-disabled"
+                  >Structure</label
+                >
+                <input
+                  type="text"
+                  class="form-control bottom"
+                  id="formStrcId"
+                  v-model="dataAll.structure.label"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    v-on:click="isStructureModal = true"
+                  >
+                    <i class="fas fa-search"></i> Cari
+                  </button>
+                </div>
+              </div>
+              <div class="form form-group col-md input-group">
+                <label for="formRankid" class="top top-disabled">Tingkat</label>
+                <input
+                  type="text"
+                  class="form-control bottom"
+                  id="formRankid"
+                  v-model="dataAll.rank.description"
+                  disabled
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    v-on:click="isRankModal = true"
+                  >
+                    <i class="fas fa-search"></i> Cari
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form form-group col-md">
+                <label for="formEmail" class="top">Email</label>
+                <input
+                  id="formEmail"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.email"
+                />
+              </div>
+              <div class="form form-group col-md">
+                <label for="formPhone" class="top">Phone</label>
+                <input
+                  id="formPhone"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.phone"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form form-group col-md">
+                <label for="formAddress" class="top">Address</label>
+                <input
+                  id="formAddress"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.address"
+                />
+              </div>
+              <div class="form form-group col-md">
+                <label for="formCity" class="top">City</label>
+                <input
+                  id="formCity"
+                  class="bottom form-control"
+                  type="text"
+                  v-model="dataAll.city"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="form form-group col-md">
+                <label for="formPwd" class="top">Password</label>
+                <input
+                  id="formPwd"
+                  class="bottom form-control"
+                  type="password"
+                  v-model="dataAll.password"
+                />
+                <password-meter :password="dataAll.password" />
+              </div>
+              <div class="form form-group col-md">
+                <label for="formPwdconf" class="top"
+                  >Password Confirmation</label
+                >
+                <input
+                  id="formPwdconf"
+                  class="bottom form-control"
+                  type="password"
+                  v-model="dataAll.password_confirmation"
+                />
+              </div>
+            </div>
+            <div class="row" v-if="dataAkses !== null">
+              <vue-list-picker
+                :left-items="dataAkses"
+                :right-items="confirmedAkses"
+                title-left="Akses Tersedia"
+                title-right="Akses Terpilih"
+                content-key="id"
+                content-attr="description"
+                class="akses col"
+                button-class="btn btn-default btn-sm"
+                min-height="150px"
+                height="150px"
+                min-width="100px"
+                :titleCentered="false"
               />
             </div>
-            <div class="form form-group col-md">
-              <label for="formPhone" class="top">Phone</label>
-              <input
-                id="formPhone"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.phone"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form form-group col-md">
-              <label for="formAddress" class="top">Address</label>
-              <input
-                id="formAddress"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.address"
-              />
-            </div>
-            <div class="form form-group col-md">
-              <label for="formCity" class="top">City</label>
-              <input
-                id="formCity"
-                class="bottom form-control"
-                type="text"
-                v-model="dataAll.city"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form form-group col-md">
-              <label for="formPwd" class="top">Password</label>
-              <input
-                id="formPwd"
-                class="bottom form-control"
-                type="password"
-                v-model="dataAll.password"
-              />
-            </div>
-            <div class="form form-group col-md">
-              <label for="formPwdconf" class="top">Password Confirmation</label>
-              <input
-                id="formPwdconf"
-                class="bottom form-control"
-                type="password"
-                v-model="dataAll.password_confirmation"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <vue-list-picker
-              :left-items="dataAkses"
-              :right-items="confirmedAkses"
-              title-left="Akses Tersedia"
-              title-right="Akses Terpilih"
-              content-key="id"
-              content-attr="description"
-              class="akses col"
-              button-class="btn btn-default btn-sm"
-              min-height="150px"
-              height="150px"
-              min-width="100px"
-              :titleCentered="false"
-              title-class="vue-picker-title-class"
-            />
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="dataAll.id === null" class="modal-footer">
-      <button class="btn btn-default" v-on:click="reset()">
-        <i class="fas fa-eraser"></i> Reset
-      </button>
-      <button class="btn btn-default" v-on:click="register('submit', null)">
-        <i class="fas fa-save"></i> Simpan
-      </button>
-    </div>
-    <div v-if="dataAll.id !== null" class="modal-footer">
-      <button
-        class="btn btn-default float-left"
-        v-on:click="deleteData(dataAll.id)"
-      >
-        <i class="fas fa-trash"></i> Delete
-      </button>
-      <button
-        class="btn btn-default"
-        v-on:click="register('update', dataAll.id)"
-      >
-        <i class="fas fa-save"></i>
-        Simpan Perubahan
-      </button>
+      <div class="text-right">
+        <button
+          class="btn btn-default"
+          v-on:click="register('update', dataAll.id)"
+        >
+          <i class="fas fa-save"></i>
+          Simpan Perubahan
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -303,11 +294,13 @@ import Api from "../../api";
 import DataTableLevel from "../../components/Admin/DataTableLevel.vue";
 import DataTableStructure from "../../components/Admin/DataTableStructure.vue";
 import DataTableRank from "../../components/Admin/DataTableRank.vue";
+import passwordMeter from "vue-simple-password-meter";
+import avatar from "../../assets/image/table/blank_avatar.png";
 import store from "../../store";
 
 function initialDataAll() {
   return {
-    id: store.getters["getId"],
+    id: null,
     fullname: "",
     address: "",
     city: "",
@@ -342,16 +335,25 @@ export default {
   components: {
     "data-table-level": DataTableLevel,
     "data-table-structure": DataTableStructure,
-    "data-table-rank": DataTableRank
+    "data-table-rank": DataTableRank,
+    "password-meter": passwordMeter
+  },
+  props: {
+    editId: {
+      type: Number
+    },
+    title: {
+      type: String
+    }
   },
   data() {
-    //
     return {
+      avatar: avatar,
       isLoading: false,
       newForm: true,
-      dataAll: initialDataAll(),
+      dataAll: null,
       confirmedAkses: [],
-      berhasil: true,
+      success: true,
       nikEn: true,
       image: null,
       levelData: [],
@@ -363,21 +365,35 @@ export default {
       idnotfound: false,
       unauthorized: false,
       isDeleteModal: false,
-      textTitle: "",
-      isUserModal: false,
+      info: {
+        text: null,
+        modal: false
+      },
       dataAkses: [],
       avatarChange: false
     };
   },
+  created() {
+    this.eschandler();
+  },
   mounted() {
-    this.isLoading = true;
     this.init();
-    this.isLoading = false;
   },
   methods: {
+    eschandler() {
+      const escapeHandler = e => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      };
+      document.addEventListener("keydown", escapeHandler);
+      this.$once("hook:destroyed", () => {
+        document.removeEventListener("keydown", escapeHandler);
+      });
+    },
     init() {
       this.getAksesData();
-      this.checkEdit();
+      this.getData();
     },
     getAksesData(params) {
       Api.akses
@@ -389,75 +405,41 @@ export default {
           console.log(err);
         });
     },
-    findLevel() {
-      if (this.isLevelModal === false) {
-        this.isLevelModal = true;
-      } else {
-        this.isLevelModal = false;
-      }
-    },
     levelSelected(data) {
-      this.dataAll.levelid = data.id;
-      this.dataAll.level.id = data.id;
-      this.dataAll.level.description = data.description;
-    },
-    findStructure() {
-      if (this.isStructureModal === false) {
-        this.isStructureModal = true;
-      } else {
-        this.isStructureModal = false;
-      }
+      this.dataAll.level = data;
     },
     structureSelected(data) {
-      console.log(data);
-      this.dataAll.structureid = data.id;
-      this.dataAll.structure.id = data.id;
-      this.dataAll.structure.label = data.label;
-    },
-    findRank() {
-      if (this.isRankModal === false) {
-        this.isRankModal = true;
-      } else {
-        this.isRankModal = false;
-      }
+      this.dataAll.structure = data;
     },
     rankSelected(data) {
-      this.dataAll.rankid = data.id;
-      this.dataAll.rank.id = data.id;
-      this.dataAll.rank.description = data.description;
+      this.dataAll.rank = data;
     },
     closeModal() {
-      if (this.berhasil) {
-        this.reset();
-        this.$emit("get-data");
-        this.$emit("modal-closed");
-      } else {
-        this.isUserModal = false;
-      }
+      this.reset();
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
       this.dataAll = initialDataAll();
       this.confirmedAkses = [];
+      this.avatarChange = false;
     },
-    checkEdit() {
-      if (this.dataAll.id !== null) {
-        Api.user
-          .find(this.dataAll.id)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-            this.dataAll.akses.forEach(data => {
-              this.confirmedAkses.push(data);
-            });
-            this.dataAkses = this.dataAkses.filter(
-              elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
-            );
-          })
-          .catch(error => {
-            console.log(error);
-            // this.reset();
-            // this.unauthorized = true;
+    getData() {
+      Api.user
+        .find(store.getters["getId"])
+        .then(resp => {
+          this.dataAll = resp.data.data;
+          this.dataAll.active = this.dataAll.active === 1;
+          this.dataAll.akses.forEach(data => {
+            this.confirmedAkses.push(data);
           });
-      }
+          this.dataAkses = this.dataAkses.filter(
+            elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
+          );
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     deleteData(id) {
       Api.user.delete(id).then(resp => {
@@ -466,77 +448,74 @@ export default {
       });
     },
     register(setup, id) {
-      let jsonAkses = JSON.stringify(this.confirmedAkses);
-      let active = this.dataAll.active === true ? 1 : 0;
-      console.log(this.avatarChange);
       let rawData = {
         username: this.dataAll.username,
         password: this.dataAll.password,
         password_confirmation: this.dataAll.password_confirmation,
         empid: this.dataAll.empid,
         fullname: this.dataAll.fullname,
-        rankid: this.dataAll.rankid,
+        rankid: this.dataAll.rank.id,
         city: this.dataAll.city,
         address: this.dataAll.address,
         email: this.dataAll.email,
         phone: this.dataAll.phone,
-        levelid: this.dataAll.levelid,
+        levelid: this.dataAll.level.id,
         neverexpired: 1,
-        active: active,
-        structureid: this.dataAll.structureid,
+        active: this.dataAll.active === true ? 1 : 0,
+        structureid: this.dataAll.structure.id,
         avatar: this.dataAll.avatar,
-        akses: jsonAkses,
+        akses: JSON.stringify(this.confirmedAkses),
         avatarChange: this.avatarChange
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
       if (setup === "submit") {
         Api.user
-          .register(formData)
+          .register(rawData)
           .then(resp => {
-            if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil disimpan";
-              this.berhasil = true;
-              this.isUserModal = true;
+            if (resp.status === 200) {
+              this.info.text = "Data berhasil disimpan";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.berhasil = false;
+              this.info.text = "Terjadi kesalahan pada server";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
             console.log(err);
-            this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
+            this.info.text = "Data gagal disimpan";
+            this.success = false;
+            this.info.modal = true;
           });
       } else {
         Api.user
-          .update(id, formData)
+          .update(id, rawData)
           .then(resp => {
-            if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil diperbaharui";
-              this.berhasil = true;
-              this.isUserModal = true;
+            if (resp.status === 200) {
+              this.info.text = "Data berhasil diunggah";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.berhasil = false;
+              this.info.text = "Terjadi kesalahan pada server";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
-            this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
             console.log(err);
+            this.info.text = "Data gagal diunggah";
+            this.success = false;
+            this.info.modal = true;
           });
       }
     },
     selectImage(e) {
+      let self = this;
       const image = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = function() {
-        let image64 = reader.result;
-        this.avatarChange = true;
-        this.dataAll.avatar = image64;
+        self.dataAll.avatar = reader.result;
+        self.avatarChange = true;
       };
       reader.readAsDataURL(image);
     }
@@ -545,13 +524,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/styles/abstracts/variables";
+@import "../../assets/styles/abstracts/_variables.scss";
+.modal {
+  overflow-y: auto;
+}
+.modal-mask {
+  z-index: 9900;
+  overflow-y: auto;
+  display: inline;
+}
+.modal-dialog {
+  max-width: 1000px;
+  overflow-y: auto;
+}
 .img-container-fluid {
   text-align: center;
   span {
-    //position: absolute;
-    //bottom: -40px;
-    //left: 90px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -571,47 +559,13 @@ export default {
     height: 200px;
   }
 }
-.akses {
-  ::v-deep .list-picker-item {
-    border: none;
-    padding: 3px;
-  }
-  ::v-deep .list-picker-title {
-    background: inherit;
-    /* color: #0052c0; */
-    /*position: absolute;*/
-    /* top: 1px; */
-    font-size: 1.1em;
-    font-weight: 600;
-    width: auto;
-    /*border: 1px solid #ccc;*/
-    border-bottom: none;
-    padding: 5px 5px 3px 5px;
-    /* z-index: 199999; */
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    color: $text-alt;
-  }
-  ::v-deep .list-picker-actions {
-    button {
-      margin: 1px 0;
-      min-width: 20px;
-      min-height: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-  ::v-deep .list-picker-container {
-    flex: 1 1 auto;
-    /* border: 1px solid #ddd; */
-    background: inherit;
-    border-radius: 4px;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    margin-top: 5px;
+::v-deep .list-picker-item {
+  border: none;
+  padding: 3px;
+}
+::v-deep .vue-list-picker {
+  .list-picker-title {
+    color: inherit;
   }
 }
 </style>

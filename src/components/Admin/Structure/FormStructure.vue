@@ -13,25 +13,25 @@
               ></i>
             </div>
             <div class="modal-body">
-              <user-modal
+              <info-modal
                 v-if="berhasil && uploaded"
                 title="Data berhasil diunggah."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
-              <user-modal
+              <info-modal
                 v-if="berhasil && updated"
                 title="Data berhasil diperbaharui."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
-              <user-modal
+              <info-modal
                 v-if="berhasil && deleted"
                 title="Data berhasil dihapus."
                 :textSuccess="true"
                 @modal-closed="closeModal"
               />
-              <user-modal
+              <info-modal
                 v-if="!berhasil"
                 title="Terdapat Kesalahan Data"
                 :textDanger="true"

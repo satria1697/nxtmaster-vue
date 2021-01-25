@@ -1,5 +1,5 @@
-.row {
-  margin: 2px 0;
+div.row {
+  margin: 2px -15px ;
 }
 .btn-theme {
   background-color: $theme !important;
@@ -99,4 +99,8 @@ i.fas {
 
 .pointer-event {
   cursor: pointer;
+}
+
+.vs__dropdown-toggle, {
+  background: #ffffff !important;
 }
