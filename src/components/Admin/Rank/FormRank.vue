@@ -12,13 +12,15 @@
                 @click="closeModal()"
               ></i>
             </div>
-            <div class="modal-body">
-              <user-modal
-                v-if="isUserModal"
-                :title="textTitle"
-                :textSuccess="berhasil"
-                :textDanger="!berhasil"
-                @modal-closed="closeModal"
+            <div class="modal-body text-center" v-if="dataAll === null">
+              <b-spinner></b-spinner>
+            </div>
+            <div class="modal-body" v-else>
+              <info-modal
+                v-if="info.modal"
+                :title="info.text"
+                :success="success"
+                @modal-closed="info.modal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -28,15 +30,7 @@
               />
               <form class="container-fluid">
                 <div class="row">
-                  <div v-if="editId === null" class="form form-group col-4">
-                    <label for="formID" class="top">ID</label>
-                    <input
-                      id="formID"
-                      class="bottom form-control"
-                      v-model="dataAll.id"
-                    />
-                  </div>
-                  <div v-else class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -58,24 +52,24 @@
                 </div>
               </form>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
               <button
                 class="btn btn-default"
-                v-on:click="register('submit', null)"
+                v-on:click="submit('register')"
               >
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
               <button
                 class="btn btn-default"
-                v-on:click="regiser('update', dataAll.id)"
+                v-on:click="submit('update', dataAll.id)"
               >
                 <i class="fas fa-save"></i>
                 Simpan Perubahan
@@ -91,6 +85,13 @@
 <script>
 import Api from "../../../api";
 
+function initData() {
+return {
+  id: null,
+  description: ""
+}
+}
+
 export default {
   props: {
     editId: {
@@ -102,47 +103,49 @@ export default {
   },
   data() {
     return {
-      dataAll: {
-        id: null,
-        description: ""
+      dataAll: null,
+      info: {
+        text: null,
+        modal: false
       },
-      berhasil: true,
+      success: true,
       uploaded: false,
       updated: false,
       deleted: false,
       isDeleteModal: false,
-      textTitle: "",
-      isUserModal: false
     };
   },
   created() {
-    const escapeHandler = e => {
-      // console.log(e);
-      if (e.key === "Escape") {
-        this.closeModal();
-      }
-    };
-    document.addEventListener("keydown", escapeHandler);
-    this.$once("hook:destroyed", () => {
-      document.removeEventListener("keydown", escapeHandler);
-    });
+    this.eschandler();
   },
   mounted() {
-    this.checkEdit();
+    this.init();
   },
   methods: {
+    eschandler() {
+      const escapeHandler = e => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      };
+      document.addEventListener("keydown", escapeHandler);
+      this.$once("hook:destroyed", () => {
+        document.removeEventListener("keydown", escapeHandler);
+      });
+    },
+    init() {
+      this.checkEdit();
+    },
     closeModal() {
       this.reset();
       this.$emit("get-data");
       this.$emit("modal-closed");
     },
     reset() {
-      this.dataAll.id = null;
-      this.dataAll.description = "";
-      // this.editId = null;
+      this.dataAll = initData();
     },
     checkEdit() {
-      if (this.editId !== null) {
+      if (this.editId !== 0) {
         Api.rank
           .find(this.editId)
           .then(resp => {
@@ -152,81 +155,75 @@ export default {
             console.log(error);
             this.reset();
           });
+      } else {
+        this.dataAll = initData();
       }
     },
-    register(setup, id) {
+    submit(setup, id) {
       let rawData = {
         id: this.dataAll.id,
         description: this.dataAll.description
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
-      if (setup === "submit") {
+      if (setup === "register") {
         Api.rank
-          .register(formData)
+          .register(rawData)
           .then(resp => {
-            if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil disimpan";
-              this.berhasil = true;
-              this.isUserModal = true;
+            if (resp.status === 200) {
+              this.info.text = "Data berhasil disimpan";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.textTitle =
-                "Input belum masuk kedatabase, silahkan coba lagi";
-              this.berhasil = false;
-              this.isUserModal = true;
+              this.info.text = "Data gagal disimpan";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
             console.log(err);
-            this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
+            this.info.text = "Data gagal disimpan";
+            this.success = false;
+            this.info.modal = true;
           });
       } else {
         Api.rank
-          .update(id, formData)
+          .update(id, rawData)
           .then(resp => {
             if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil diperbaharui";
-              this.berhasil = true;
-              this.isUserModal = true;
+              this.info.text = "Data success diperbaharui";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.textTitle =
-                "Input belum masuk kedatabase, silahkan coba lagi";
-              this.berhasil = false;
-              this.isUserModal = true;
+              this.info.text = "Data gagal diperbaharui";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
-            this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
+            this.info.text = "Data gagal diperbaharui";
+            this.success = false;
+            this.info.modal = true;
             console.log(err);
           });
       }
     },
     deleteData(data) {
-      console.log(data);
-
       Api.rank
         .delete(data.id)
         .then(resp => {
           if (resp.status === 204) {
-            this.textTitle = "Data berhasil dihapus";
-            this.berhasil = true;
-            this.isUserModal = true;
+            this.info.text = "Data berhasil dihapus";
+            this.success = true;
+            this.info.modal = true;
           } else {
-            this.textTitle = "Data gagal dihapus";
-            this.berhasil = false;
-            this.isUserModal = true;
+            this.info.text = "Data gagal dihapus";
+            this.success = false;
+            this.info.modal = true;
           }
         })
         .catch(err => {
-          this.textTitle = "Data gagal dihapus";
-          this.berhasil = false;
-          this.isUserModal = true;
+          this.info.text = "Data gagal dihapus";
+          this.success = false;
+          this.info.modal = true;
           console.log(err);
         });
     }

@@ -66,7 +66,7 @@ export default {
       }
     },
     loginConfirmed(payload) {
-      this.isConfirmed = payload ? true : false;
+      this.isConfirmed = !!payload;
       this.isLoginConfirmedModal = false;
     }
   }

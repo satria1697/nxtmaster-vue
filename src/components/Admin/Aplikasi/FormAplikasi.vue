@@ -12,30 +12,15 @@
                 @click="closeModal()"
               ></i>
             </div>
-            <div class="modal-body">
-              <user-modal
-                v-if="berhasil && uploaded"
-                title="Data berhasil diunggah."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && updated"
-                title="Data berhasil diperbaharui."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="berhasil && deleted"
-                title="Data berhasil dihapus."
-                :textSuccess="true"
-                @modal-closed="closeModal"
-              />
-              <user-modal
-                v-if="!berhasil"
-                title="Terdapat Kesalahan Data"
-                :textDanger="true"
-                @modal-closed="berhasil = true"
+            <div class="modal-body text-center" v-if="dataAll === null">
+              <b-spinner></b-spinner>
+            </div>
+            <div class="modal-body" v-else>
+              <info-modal
+                v-if="info.isModal"
+                :title="info.text"
+                :success="success"
+                @modal-closed="info.isModal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -45,7 +30,7 @@
               />
               <form class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -87,19 +72,22 @@
                 </div>
               </form>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button class="btn btn-default" v-on:click="submit()">
+              <button class="btn btn-default" v-on:click="submit(register)">
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
-              <button class="btn btn-default" v-on:click="update(editId)">
+              <button
+                class="btn btn-default"
+                v-on:click="submit(update, editId)"
+              >
                 <i class="fas fa-save"></i>
                 Simpan Perubahan
               </button>
@@ -114,6 +102,14 @@
 <script>
 import Api from "../../../api";
 
+function initData() {
+  return {
+    name: "",
+    description: "",
+    path: ""
+  };
+}
+
 export default {
   props: {
     editId: {
@@ -125,35 +121,46 @@ export default {
   },
   data() {
     return {
-      dataAll: {
-        id: null,
-        name: "",
-        description: "",
-        path: ""
-      },
-      berhasil: true,
+      dataAll: null,
+      success: true,
       uploaded: false,
       updated: false,
       deleted: false,
-      isDeleteModal: false
+      isDeleteModal: false,
+      info: {
+        text: null,
+        isModal: null
+      }
     };
+  },
+  created() {
+    this.eschandler();
   },
   mounted() {
     this.checkEdit();
   },
   methods: {
+    eschandler() {
+      const escapeHandler = e => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      };
+      document.addEventListener("keydown", escapeHandler);
+      this.$once("hook:destroyed", () => {
+        document.removeEventListener("keydown", escapeHandler);
+      });
+    },
     closeModal() {
       this.reset();
       this.$emit("get-data");
       this.$emit("modal-closed");
     },
     reset() {
-      this.dataAll.id = null;
-      this.dataAll.description = "";
-      this.editId = null;
+      this.dataAll = initData();
     },
     checkEdit() {
-      if (this.editId !== null) {
+      if (this.editId !== 0) {
         Api.application
           .find(this.editId)
           .then(resp => {
@@ -163,74 +170,73 @@ export default {
             console.log(error);
             this.reset();
           });
+      } else {
+        this.dataAll = initData();
       }
     },
-    submit() {
+    submit(status, id) {
       let rawData = {
         id: this.dataAll.id,
         name: this.dataAll.name,
         description: this.dataAll.description,
         path: this.dataAll.path
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
+      if (status === "register") {
+        Api.application
+          .register(rawData)
+          .then(resp => {
+            if (resp.status === 200) {
+              this.success = true;
+              this.info.text = "Data berhasil di update";
+              this.info.isModal = true;
+            } else {
+              this.success = false;
+              this.info.text = "Data gagal di update";
+              this.info.isModal = true;
+            }
+          })
+          .catch(err => {
+            this.success = false;
+            this.info.text = "Data gagal di update";
+            this.info.isModal = true;
+            console.log(err);
+          });
+      } else {
+        Api.application
+          .update(id, rawData)
+          .then(resp => {
+            if (resp.status === 200) {
+              this.success = true;
+              this.info.text = "Data berhasil di update";
+              this.info.isModal = true;
+            } else {
+              this.success = false;
+              this.info.text = "Data gagal di update";
+              this.info.isModal = true;
+            }
+          })
+          .catch(err => {
+            this.success = false;
+            this.info.text = "Data gagal di update";
+            this.info.isModal = true;
+            console.log(err);
+          });
       }
-      Api.application
-        .register(formData)
-        .then(resp => {
-          if (resp.data.status === "success") {
-            this.reset();
-            this.berhasil = true;
-            this.uploaded = true;
-          } else {
-            this.berhasil = false;
-          }
-        })
-        .catch(err => {
-          console.log(err.response);
-          this.berhasil = false;
-        });
-    },
-    update(id) {
-      let rawData = {
-        id: this.dataAll.id,
-        name: this.dataAll.name,
-        description: this.dataAll.description,
-        path: this.dataAll.path
-      };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
-      Api.application
-        .update(id, formData)
-        .then(resp => {
-          if (resp.status === "error") {
-            this.berhasil = false;
-          } else {
-            this.berhasil = true;
-            this.updated = true;
-          }
-        })
-        .catch(err => {
-          this.berhasil = false;
-          console.log(err);
-        });
     },
     deleteData() {
       Api.application
         .delete(this.dataAll.id)
         .then(resp => {
-          console.log(resp);
-          this.berhasil = true;
-          this.deleted = true;
-          this.isDeleteModal = false;
-          this.$emit("modal-closed");
+          if (resp.status === 204) {
+            this.success = true;
+            this.deleted = true;
+            this.isDeleteModal = false;
+            this.$emit("modal-closed");
+          }
         })
         .catch(err => {
           console.log(err);
-          this.berhasil = false;
+          this.success = false;
         });
     }
   }

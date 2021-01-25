@@ -128,7 +128,7 @@ const routes = [
         meta: {
           requireAuth: true,
           title: "Manajemen Umum",
-          icon: "fas fa-house-damage"
+          icon: "fas fa-info"
         }
       },
       {

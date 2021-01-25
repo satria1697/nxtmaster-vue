@@ -1,5 +1,5 @@
 <template>
-  <transition class="modal" tabindex="-1" role="dialog" v-if="!isLoading">
+  <transition class="modal" tabindex="-1">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-dialog modal-dialog-centered container-md">
@@ -12,31 +12,33 @@
                 @click="closeModal()"
               ></i>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-center" v-if="dataAll === null">
+              <b-spinner></b-spinner>
+            </div>
+            <div class="modal-body" v-else>
               <data-table-level
                 title="User Level"
                 v-if="isLevelModal"
                 @id-selected="levelSelected"
-                @modal-closed="findLevel"
+                @modal-closed="isLevelModal = false"
               />
               <data-table-structure
                 title="User Structure"
                 v-if="isStructureModal"
                 @id-selected="structureSelected"
-                @modal-closed="findStructure"
+                @modal-closed="isStructureModal = false"
               />
               <data-table-rank
                 title="User Rank"
                 v-if="isRankModal"
                 @id-selected="rankSelected"
-                @modal-closed="findRank"
+                @modal-closed="isRankModal = false"
               />
-              <user-modal
-                v-if="isUserModal"
-                :title="textTitle"
-                :textSuccess="berhasil"
-                :textDanger="!berhasil"
-                @modal-closed="closeModal"
+              <info-modal
+                v-if="info.modal"
+                :title="info.text"
+                :success="success"
+                @modal-closed="info.modal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -53,7 +55,7 @@
                           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
                           <img
                             v-else
-                            src="../../assets/image/table/blank_avatar.png"
+                            :src="avatar"
                           />
                           <div class="form-group">
                             <label for="fileInputForm">
@@ -80,7 +82,7 @@
                       </div>
                     </div>
                   </div>
-                  <form class="col-md-9">
+                  <div class="col-md-9">
                     <div class="row">
                       <div class="form form-group col" v-if="!newForm">
                         <label for="formID" class="top top-disabled">ID</label>
@@ -134,7 +136,7 @@
                           <button
                             class="btn btn-default"
                             type="button"
-                            v-on:click="findLevel()"
+                            v-on:click="isLevelModal = true"
                           >
                             <i class="fas fa-search"></i> Cari
                           </button>
@@ -188,7 +190,7 @@
                           <button
                             class="btn btn-default"
                             type="button"
-                            v-on:click="findStructure()"
+                            v-on:click="isStructureModal = true"
                           >
                             <i class="fas fa-search"></i> Cari
                           </button>
@@ -209,7 +211,7 @@
                           <button
                             class="btn btn-default"
                             type="button"
-                            v-on:click="findRank()"
+                            v-on:click="isRankModal = true"
                           >
                             <i class="fas fa-search"></i> Cari
                           </button>
@@ -279,7 +281,7 @@
                         />
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" v-if="dataAkses !== null">
                       <vue-list-picker
                         :left-items="dataAkses"
                         :right-items="confirmedAkses"
@@ -293,14 +295,13 @@
                         height="150px"
                         min-width="100px"
                         :titleCentered="false"
-                        title-class="vue-picker-title-class"
                       />
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
@@ -311,7 +312,7 @@
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button
                 class="btn btn-default float-left"
                 v-on:click="isDeleteModal = true"
@@ -334,13 +335,14 @@
 </template>
 
 <script>
-import Api from "../../api";
-import DataTableLevel from "../Admin/DataTableLevel.vue";
-import DataTableStructure from "../Admin/DataTableStructure.vue";
-import DataTableRank from "../Admin/DataTableRank.vue";
-import passwordMeter from "vue-simple-password-meter";
+  import Api from "../../api";
+  import DataTableLevel from "../Admin/DataTableLevel.vue";
+  import DataTableStructure from "../Admin/DataTableStructure.vue";
+  import DataTableRank from "../Admin/DataTableRank.vue";
+  import passwordMeter from "vue-simple-password-meter";
+  import avatar from "../../assets/image/table/blank_avatar.png";
 
-function initialDataAll() {
+  function initialDataAll() {
   return {
     id: null,
     fullname: "",
@@ -389,13 +391,13 @@ export default {
     }
   },
   data() {
-    //
     return {
+      avatar: avatar,
       isLoading: false,
       newForm: true,
-      dataAll: initialDataAll(),
+      dataAll: null,
       confirmedAkses: [],
-      berhasil: true,
+      success: true,
       nikEn: true,
       image: null,
       levelData: [],
@@ -407,29 +409,32 @@ export default {
       idnotfound: false,
       unauthorized: false,
       isDeleteModal: false,
-      textTitle: "",
-      isUserModal: false,
+      info: {
+        text: null,
+        modal: false
+      },
       dataAkses: [],
       avatarChange: false
     };
   },
   created() {
-    const escapeHandler = e => {
-      if (e.key === "Escape") {
-        this.closeModal();
-      }
-    };
-    document.addEventListener("keydown", escapeHandler);
-    this.$once("hook:destroyed", () => {
-      document.removeEventListener("keydown", escapeHandler);
-    });
+    this.eschandler();
   },
   mounted() {
-    this.isLoading = true;
     this.init();
-    this.isLoading = false;
   },
   methods: {
+    eschandler() {
+      const escapeHandler = e => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      };
+      document.addEventListener("keydown", escapeHandler);
+      this.$once("hook:destroyed", () => {
+        document.removeEventListener("keydown", escapeHandler);
+      });
+    },
     init() {
       this.getAksesData();
       this.checkEdit();
@@ -444,51 +449,19 @@ export default {
           console.log(err);
         });
     },
-    findLevel() {
-      if (this.isLevelModal === false) {
-        this.isLevelModal = true;
-      } else {
-        this.isLevelModal = false;
-      }
-    },
     levelSelected(data) {
-      this.dataAll.levelid = data.id;
-      this.dataAll.level.id = data.id;
-      this.dataAll.level.description = data.description;
-    },
-    findStructure() {
-      if (this.isStructureModal === false) {
-        this.isStructureModal = true;
-      } else {
-        this.isStructureModal = false;
-      }
+      this.dataAll.level = data;
     },
     structureSelected(data) {
-      console.log(data);
-      this.dataAll.structureid = data.id;
-      this.dataAll.structure.id = data.id;
-      this.dataAll.structure.label = data.label;
-    },
-    findRank() {
-      if (this.isRankModal === false) {
-        this.isRankModal = true;
-      } else {
-        this.isRankModal = false;
-      }
+      this.dataAll.structure = data;
     },
     rankSelected(data) {
-      this.dataAll.rankid = data.id;
-      this.dataAll.rank.id = data.id;
-      this.dataAll.rank.description = data.description;
+      this.dataAll.rank = data;
     },
     closeModal() {
-      if (this.berhasil) {
-        this.reset();
-        this.$emit("get-data");
-        this.$emit("modal-closed");
-      } else {
-        this.isUserModal = false;
-      }
+      this.reset();
+      this.$emit("get-data");
+      this.$emit("modal-closed");
     },
     reset() {
       this.dataAll = initialDataAll();
@@ -496,12 +469,12 @@ export default {
       this.avatarChange = false;
     },
     checkEdit() {
-      if (this.editId !== null) {
+      if (this.editId !== 0) {
         Api.user
           .find(this.editId)
           .then(resp => {
             this.dataAll = resp.data.data;
-            this.dataAll.active = this.dataAll.active === 1 ? true : false;
+            this.dataAll.active = this.dataAll.active === 1;
             this.dataAll.akses.forEach(data => {
               this.confirmedAkses.push(data);
             });
@@ -511,9 +484,9 @@ export default {
           })
           .catch(error => {
             console.log(error);
-            // this.reset();
-            // this.unauthorized = true;
           });
+      } else {
+        this.dataAll = initialDataAll();
       }
     },
     deleteData(id) {
@@ -523,80 +496,74 @@ export default {
       });
     },
     register(setup, id) {
-      let jsonAkses = JSON.stringify(this.confirmedAkses);
-      let active = this.dataAll.active === true ? 1 : 0;
       let rawData = {
         username: this.dataAll.username,
         password: this.dataAll.password,
         password_confirmation: this.dataAll.password_confirmation,
         empid: this.dataAll.empid,
         fullname: this.dataAll.fullname,
-        rankid: this.dataAll.rankid,
+        rankid: this.dataAll.rank.id,
         city: this.dataAll.city,
         address: this.dataAll.address,
         email: this.dataAll.email,
         phone: this.dataAll.phone,
-        levelid: this.dataAll.levelid,
+        levelid: this.dataAll.level.id,
         neverexpired: 1,
-        active: active,
-        structureid: this.dataAll.structureid,
+        active: this.dataAll.active === true ? 1 : 0,
+        structureid: this.dataAll.structure.id,
         avatar: this.dataAll.avatar,
-        akses: jsonAkses,
+        akses: JSON.stringify(this.confirmedAkses),
         avatarChange: this.avatarChange
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
       if (setup === "submit") {
         Api.user
-          .register(formData)
+          .register(rawData)
           .then(resp => {
-            if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil disimpan";
-              this.berhasil = true;
-              this.isUserModal = true;
+            if (resp.status === 200) {
+              this.info.text = "Data berhasil disimpan";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.berhasil = false;
-              this.textTitle = "Terjadi kesalahan pada server";
-              this.isUserModal = true;
+              this.info.text = "Terjadi kesalahan pada server";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
-            this.textTitle =
-              err.response.data.error[Object.keys(err.response.data.error)[0]];
-            this.berhasil = false;
-            this.isUserModal = true;
+            console.log(err);
+            this.info.text = "Data gagal disimpan";
+            this.success = false;
+            this.info.modal = true;
           });
       } else {
         Api.user
-          .update(id, formData)
+          .update(id, rawData)
           .then(resp => {
-            if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil diperbaharui";
-              this.berhasil = true;
-              this.isUserModal = true;
+            if (resp.status === 200) {
+              this.info.text = "Data berhasil diunggah";
+              this.success = true;
+              this.info.modal = true;
             } else {
-              this.berhasil = false;
-              this.textTitle = "Terjadi kesalahan pada server";
-              this.isUserModal = true;
+              this.info.text = "Terjadi kesalahan pada server";
+              this.success = false;
+              this.info.modal = true;
             }
           })
           .catch(err => {
-            this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
             console.log(err);
+            this.info.text = "Data gagal diunggah";
+            this.success = false;
+            this.info.modal = true;
           });
       }
     },
     selectImage(e) {
+      let self = this;
       const image = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = function() {
-        let image64 = reader.result;
-        this.dataAll.avatar = image64;
-        this.avatarChange = true;
+        self.dataAll.avatar = reader.result;
+        self.avatarChange = true;
       };
       reader.readAsDataURL(image);
     }
@@ -621,9 +588,6 @@ export default {
 .img-container-fluid {
   text-align: center;
   span {
-    //position: absolute;
-    //bottom: -40px;
-    //left: 90px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -643,10 +607,13 @@ export default {
     height: 200px;
   }
 }
-.akses {
-  ::v-deep .list-picker-item {
-    border: none;
-    padding: 3px;
+::v-deep .list-picker-item {
+  border: none;
+  padding: 3px;
+}
+::v-deep .vue-list-picker {
+  .list-picker-title {
+    color: inherit;
   }
 }
 </style>

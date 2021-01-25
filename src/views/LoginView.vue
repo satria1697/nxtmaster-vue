@@ -2,7 +2,7 @@
   <div class="bg-default login-page container-lg-fluid">
     <span></span>
     <div class="login-container col-md-4">
-      <user-modal
+      <info-modal
         v-if="isUserModal"
         :title="textTitle"
         :textSuccess="berhasil"
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <div class="footer">
+    <div class="fixed-bottom">
       <h1 class="display-1">NXT</h1>
     </div>
   </div>
@@ -71,7 +71,6 @@
 <script>
 import api from "../api";
 import Api from "../api";
-import UserModal from "../components/UserModal.vue";
 import store from "../store";
 
 function initialDataLogin() {
@@ -82,7 +81,6 @@ function initialDataLogin() {
   };
 }
 export default {
-  components: { UserModal },
   data() {
     return {
       dataLogin: initialDataLogin(),

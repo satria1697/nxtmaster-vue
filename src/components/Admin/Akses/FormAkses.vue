@@ -12,16 +12,18 @@
               <i
                 class="fa fa-window-close pull-right pointer-event"
                 aria-hidden="true"
-                @click="closeModal()"
+                @click="closeModal"
               ></i>
             </div>
-            <div class="modal-body">
-              <user-modal
-                v-if="isUserModal"
+            <div class="modal-body text-center" v-if="dataAll === null">
+              <b-spinner></b-spinner>
+            </div>
+            <div class="modal-body" v-else>
+              <info-modal
+                v-if="info.isModal"
                 :title="textTitle"
-                :textSuccess="berhasil"
-                :textDanger="!berhasil"
-                @modal-closed="closeModal"
+                :success="success"
+                @modal-closed="info.isModal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -31,7 +33,7 @@
               />
               <form class="container-fluid">
                 <div class="row">
-                  <div v-if="editId !== null" class="form form-group col-4">
+                  <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
                     <input
                       id="formID"
@@ -64,7 +66,7 @@
                 </div>
               </form>
             </div>
-            <div v-if="editId === null" class="modal-footer">
+            <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
@@ -75,7 +77,7 @@
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
-            <div v-if="editId !== null" class="modal-footer">
+            <div v-if="editId !== 0" class="modal-footer">
               <button
                 class="btn btn-default float-left"
                 v-on:click="isDeleteModal = true"
@@ -100,6 +102,14 @@
 <script>
 import Api from "../../../api";
 
+function initData() {
+  return {
+    id: 0,
+    description: "",
+    active: false
+  };
+}
+
 export default {
   props: {
     editId: {
@@ -111,24 +121,36 @@ export default {
   },
   data() {
     return {
-      dataAll: {
-        id: null,
-        description: "",
-        active: false
-      },
-      berhasil: true,
+      dataAll: null,
+      success: true,
       uploaded: false,
       updated: false,
       deleted: false,
       isDeleteModal: false,
       textTitle: "",
-      isUserModal: false
+      info: {
+        isModal: false
+      }
     };
+  },
+  created() {
+    this.eschandler();
   },
   mounted() {
     this.checkEdit();
   },
   methods: {
+    eschandler() {
+      const escapeHandler = e => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      };
+      document.addEventListener("keydown", escapeHandler);
+      this.$once("hook:destroyed", () => {
+        document.removeEventListener("keydown", escapeHandler);
+      });
+    },
     closeModal() {
       this.reset();
       this.$emit("get-data");
@@ -136,11 +158,10 @@ export default {
     },
     reset() {
       this.dataAll.description = "";
-      this.editId = null;
       this.dataAll.active = false;
     },
     checkEdit() {
-      if (this.editId !== null) {
+      if (this.editId !== 0) {
         Api.akses
           .find(this.editId)
           .then(resp => {
@@ -150,52 +171,49 @@ export default {
             console.log(error);
             this.reset();
           });
+      } else {
+        this.dataAll = initData();
       }
     },
     register(status, id) {
-      let active = this.dataAll.active === true ? 1 : 0;
       let rawData = {
         description: this.dataAll.description,
-        active: active
+        active: this.dataAll.active === true ? 1 : 0
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
       if (status === "submit") {
         Api.akses
-          .register(formData)
+          .register(rawData)
           .then(resp => {
             if (resp.data.status === "success") {
-              this.textTitle = "Data berhasil disimpan";
-              this.berhasil = true;
-              this.isUserModal = true;
+              this.textTitle = "Data berhasi disimpan";
+              this.success = true;
+              this.info.isModal = true;
             } else {
-              this.berhasil = false;
+              this.success = false;
             }
           })
           .catch(err => {
-            this.textTitle =
-              err.response.data.error[Object.keys(err.response.data.error)[0]];
-            this.berhasil = false;
-            this.isUserModal = true;
+            console.log(err);
+            this.textTitle = "Data gagal diunggah";
+            this.success = false;
+            this.info.isModal = true;
           });
       } else {
         Api.akses
-          .update(id, formData)
+          .update(id, rawData)
           .then(resp => {
             if (resp.data.status === "success") {
               this.textTitle = "Data berhasil diperbaharui";
-              this.berhasil = true;
-              this.isUserModal = true;
+              this.success = true;
+              this.info.isModal = true;
             } else {
-              this.berhasil = false;
+              this.success = false;
             }
           })
           .catch(err => {
             this.textTitle = "Input data salah, silahkan cek kembali";
-            this.berhasil = false;
-            this.isUserModal = true;
+            this.success = false;
+            this.info.isModal = true;
             console.log(err);
           });
       }
@@ -205,12 +223,12 @@ export default {
         .delete(id)
         .then(resp => {
           console.log(resp);
-          this.berhasil = true;
+          this.success = true;
           this.deleted = true;
         })
         .catch(err => {
           console.log(err);
-          this.berhasil = false;
+          this.success = false;
         });
     }
   }
