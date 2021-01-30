@@ -56,10 +56,7 @@
               <button class="btn btn-default" v-on:click="reset()">
                 <i class="fas fa-eraser"></i> Reset
               </button>
-              <button
-                class="btn btn-default"
-                v-on:click="submit('register')"
-              >
+              <button class="btn btn-default" v-on:click="submit('register')">
                 <i class="fas fa-save"></i> Simpan
               </button>
             </div>
@@ -86,10 +83,10 @@
 import Api from "../../../api";
 
 function initData() {
-return {
-  id: null,
-  description: ""
-}
+  return {
+    id: null,
+    description: ""
+  };
 }
 
 export default {
@@ -112,7 +109,7 @@ export default {
       uploaded: false,
       updated: false,
       deleted: false,
-      isDeleteModal: false,
+      isDeleteModal: false
     };
   },
   created() {

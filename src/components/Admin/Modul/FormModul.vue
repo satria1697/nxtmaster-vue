@@ -93,7 +93,10 @@
               <button class="btn btn-default" v-on:click="isDeleteModal = true">
                 <i class="fas fa-trash"></i> Delete
               </button>
-              <button class="btn btn-default" v-on:click="submit('update', editId)">
+              <button
+                class="btn btn-default"
+                v-on:click="submit('update', editId)"
+              >
                 <i class="fas fa-save"></i>
                 Simpan Perubahan
               </button>

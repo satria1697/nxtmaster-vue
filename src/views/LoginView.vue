@@ -9,7 +9,7 @@
         :textDanger="!berhasil"
         @modal-closed="isUserModal = false"
       />
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <h1 class="text-dark display-4 col">Login</h1>
       </div>
       <div class="row">

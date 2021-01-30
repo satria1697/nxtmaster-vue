@@ -53,10 +53,7 @@
                       <div class="form-group col">
                         <div class="img-container-fluid">
                           <img v-if="dataAll.avatar" :src="dataAll.avatar" />
-                          <img
-                            v-else
-                            :src="avatar"
-                          />
+                          <img v-else :src="avatar" />
                           <div class="form-group">
                             <label for="fileInputForm">
                               <span class="fa-stack fa-2x pointer-event">
@@ -335,14 +332,14 @@
 </template>
 
 <script>
-  import Api from "../../api";
-  import DataTableLevel from "../Admin/DataTableLevel.vue";
-  import DataTableStructure from "../Admin/DataTableStructure.vue";
-  import DataTableRank from "../Admin/DataTableRank.vue";
-  import passwordMeter from "vue-simple-password-meter";
-  import avatar from "../../assets/image/table/blank_avatar.png";
+import Api from "../../api";
+import DataTableLevel from "../Admin/DataTableLevel.vue";
+import DataTableStructure from "../Admin/DataTableStructure.vue";
+import DataTableRank from "../Admin/DataTableRank.vue";
+import passwordMeter from "vue-simple-password-meter";
+import avatar from "../../assets/image/table/blank_avatar.png";
 
-  function initialDataAll() {
+function initialDataAll() {
   return {
     id: null,
     fullname: "",
