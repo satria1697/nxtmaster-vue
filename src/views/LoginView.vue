@@ -71,7 +71,7 @@
 <script>
 import api from "../api";
 import Api from "../api";
-import store from "../store";
+import loginMixin from "../mixins/loginMixin";
 
 function initialDataLogin() {
   return {
@@ -80,7 +80,9 @@ function initialDataLogin() {
     akses: null
   };
 }
+
 export default {
+  mixins: [loginMixin],
   data() {
     return {
       dataLogin: initialDataLogin(),
@@ -98,7 +100,6 @@ export default {
     login() {
       this.isLoading = true;
       if (this.dataLogin.username === "" || this.dataLogin.password === "") {
-        // this.empty = true;
         this.isUserModal = true;
         this.textTitle = "Username dan Password tidak boleh kosong";
         this.berhasil = false;
@@ -119,41 +120,11 @@ export default {
           .then(resp => {
             if (resp.data.status === "success") {
               this.berhasil = true;
-              // store.commit("setToken", resp.headers.authorization);
               if (localStorage.token) {
                 localStorage.removeItem("token");
               }
               localStorage.setItem("token", resp.headers.authorization);
-              if (localStorage.token) {
-                const secretKey =
-                  "TtGYMF5mRwzAPEJKQ7eYDB0mAQnbdW4ijXBmZMHvpAy5a78dQ4z2lzDDF65uEhQ1";
-                const jwtDecode = this.$jwt.decode(
-                  // store.state.token,
-                  localStorage.getItem("token"),
-                  secretKey
-                );
-                let username = jwtDecode.username;
-                let fullname = jwtDecode.fullname;
-                let levelid = jwtDecode.levelid;
-                let id = jwtDecode.sub;
-                let akses = jwtDecode.akses;
-                store.commit("setLogin", {
-                  username,
-                  fullname,
-                  levelid,
-                  id,
-                  akses
-                });
-                store.commit("authenChange");
-                let tabs = sessionStorage.getItem(
-                  "tab" + ":" + username + ":" + akses
-                );
-                if (tabs === null) {
-                  this.$router.push("/");
-                } else {
-                  this.$router.push(tabs);
-                }
-              }
+              this.loginHandler();
             } else {
               this.berhasil = false;
               this.isUserModal = true;
@@ -163,15 +134,6 @@ export default {
             }
           })
           .catch(() => {
-            // console.log(err.response.data);
-            // if (err.response.data.error === "akses_required") {
-            //   this.errorText = "Tidak Memiliki Akses";
-            // } else if (err.response.data.error === "not_active") {
-            //   this.errorText =
-            //     "Username belum aktif, silahkan hubungi administrator";
-            // } else {
-            //   this.errorText = "Username atau Password yang dimasukan salah";
-            // }
             this.berhasil = false;
             this.isUserModal = true;
             this.textTitle = "Akses Ditolak";

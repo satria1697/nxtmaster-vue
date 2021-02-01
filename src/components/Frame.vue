@@ -250,7 +250,6 @@ export default {
       if (window.outerWidth <= 768) {
         this.sidebarState = false;
       }
-      // if ($(window).width() ===)
     },
     goTo(destination) {
       if (typeof destination === "string") {
