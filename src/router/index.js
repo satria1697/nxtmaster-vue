@@ -7,11 +7,21 @@ import store from "../store";
 
 import { RouterTabRoutes } from "vue-router-tab";
 import Frame from "../components/Frame";
+import Home from "../views/Home";
+import DataUser from "../views/Admin/DataUser";
+import DataLevel from "../views/Admin/DataLevel";
+import DataRank from "../views/Admin/DataRank";
+import DataStructure from "../views/Admin/DataStructure";
+import DataStructureLevel from "../views/Admin/DataStructureLevel";
+import DataAplikasi from "../views/Admin/DataAplikasi";
+import DataModul from "../views/Admin/DataModul";
+import DataAkses from "../views/Admin/DataAkses";
+import DataAksesManager from "../views/Admin/DataAksesManager";
+import Umum from "../views/Admin/Umum";
+import Profile from "../views/Admin/Profile";
+import LoginView from "../views/LoginView";
 
 Vue.use(VueRouter);
-
-const importPage = view => () =>
-  import(/* webpackChunkName: "p-[request]" */ `../views/${view}.vue`);
 
 const routes = [
   {
@@ -22,7 +32,7 @@ const routes = [
       {
         path: "/",
         name: "Home",
-        component: importPage("Home"),
+        component: Home,
         meta: {
           requireAuth: true,
           title: "Home",
@@ -33,7 +43,7 @@ const routes = [
       {
         path: "/admin/datauser",
         name: "datauser",
-        component: importPage("Admin/DataUser"),
+        component: DataUser,
         meta: {
           requireAuth: true,
           title: "Manajemen Pengguna",
@@ -44,7 +54,7 @@ const routes = [
       {
         path: "/admin/datalevel",
         name: "datalevel",
-        component: importPage("Admin/DataLevel"),
+        component: DataLevel,
         meta: {
           requireAuth: true,
           title: "Manajemen Level",
@@ -54,7 +64,7 @@ const routes = [
       {
         path: "/admin/datarank",
         name: "datarank",
-        component: importPage("Admin/DataRank"),
+        component: DataRank,
         meta: {
           requireAuth: true,
           title: "Manajemen Pangkat",
@@ -64,7 +74,7 @@ const routes = [
       {
         path: "/admin/datastructure",
         name: "datastructure",
-        component: importPage("Admin/DataStructure"),
+        component: DataStructure,
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Organisasi",
@@ -74,7 +84,7 @@ const routes = [
       {
         path: "/admin/datastructurelevel",
         name: "datastructurelevel",
-        component: importPage("Admin/DataStructureLevel"),
+        component: DataStructureLevel,
         meta: {
           requireAuth: true,
           title: "Manajemen Struktur Level",
@@ -84,7 +94,7 @@ const routes = [
       {
         path: "/admin/dataaplikasi",
         name: "dataaplikasi",
-        component: importPage("Admin/DataAplikasi"),
+        component: DataAplikasi,
         meta: {
           requireAuth: true,
           title: "Manajemen Aplikasi",
@@ -94,7 +104,7 @@ const routes = [
       {
         path: "/admin/datamodul",
         name: "datamodul",
-        component: importPage("Admin/DataModul"),
+        component: DataModul,
         meta: {
           requireAuth: true,
           title: "Manajemen Modul",
@@ -104,7 +114,7 @@ const routes = [
       {
         path: "/admin/dataakses",
         name: "dataakses",
-        component: importPage("Admin/DataAkses"),
+        component: DataAkses,
         meta: {
           requireAuth: true,
           title: "Hak Akses",
@@ -114,7 +124,7 @@ const routes = [
       {
         path: "/admin/dataaksesmanager",
         name: "dataaksesmanager",
-        component: importPage("Admin/DataAksesManager"),
+        component: DataAksesManager,
         meta: {
           requireAuth: true,
           title: "Manajemen Data Akses",
@@ -124,7 +134,7 @@ const routes = [
       {
         path: "admin/umum",
         name: "umum",
-        component: importPage("Admin/Umum"),
+        component: Umum,
         meta: {
           requireAuth: true,
           title: "Manajemen Umum",
@@ -134,7 +144,7 @@ const routes = [
       {
         path: "admin/profile",
         name: "profile",
-        component: importPage("Admin/Profile"),
+        component: Profile,
         meta: {
           requireAuth: true,
           title: "Profil",
@@ -155,7 +165,7 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: importPage("LoginView")
+    component: LoginView
   },
   {
     path: "*",
@@ -171,7 +181,6 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  //
   if (to.meta.requireAuth) {
     if (store.state.isAuthenticated === false) {
       next("/login");

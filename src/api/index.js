@@ -13,13 +13,6 @@ export const setupInterceptors = () => {
       ...config.headers,
       Authorization: "Bearer " + localStorage.getItem("token")
     };
-    // const regexSiska = /(\/api\/siska\/laporan\/)\w+/g;
-    // if (config.url.match(regexSiska)) {
-    //   config = {
-    //     ...config,
-    //     responseType: "blob"
-    //   };
-    // }
     return config;
   });
   Axios.interceptors.response.use(undefined, error => {

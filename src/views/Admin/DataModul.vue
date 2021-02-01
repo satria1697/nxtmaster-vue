@@ -44,26 +44,23 @@
 </template>
 
 <script>
-import Api from "../../api";
 import Form from "../../components/Admin/Modul/FormModul";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
+import api from "../../api/const";
+import dataTable from "../../mixins/datatableMixin";
 
 export default {
   components: {
     Form
   },
+  mixins: [dataTable],
   data() {
     return {
-      dataAll: {},
-      filter: {
-        page: null,
-        find: "",
-        length: null,
-        orderColumn: "",
-        orderBy: ""
+      url: {
+        get: api.modul.Get,
+        delete: api.modul.Delete
       },
-      isLoading: false,
       columns: [
         {
           label: "ID",
@@ -109,17 +106,7 @@ export default {
           component: actiondelete,
           width: 5
         }
-      ],
-      classes: {
-        table: {
-          "table-sm": true
-        },
-        "t-head": {
-          "span-theme": true
-        }
-      },
-      isModal: false,
-      editId: null
+      ]
     };
   },
   mounted() {
@@ -127,59 +114,7 @@ export default {
   },
   methods: {
     init() {
-      const params = {
-        page: 1,
-        find: "",
-        length: 10,
-        column: "id",
-        dir: "ASC"
-      };
-      this.getData(params);
-    },
-    getData(params) {
-      this.isLoading = true;
-      this.filter.page = params.page;
-      this.filter.find = params.find;
-      this.filter.length = params.length;
-      this.filter.orderColumn = params.orderColumn;
-      this.filter.orderBy = params.orderBy;
-      Api.modul
-        .filter(params)
-        .then(res => {
-          this.dataAll = res.data;
-          this.isLoading = false;
-        })
-        .catch(err => {
-          console.log(err);
-          this.isLoading = false;
-        });
-    },
-    reloadTable(tableProps) {
-      this.getData(tableProps);
-    },
-    edit(data) {
-      this.changeModal(data.id);
-    },
-    changeModal(id) {
-      if (this.isModal === false) {
-        this.editId = id;
-        this.isModal = true;
-      } else {
-        this.getData(this.filter);
-        this.isModal = false;
-      }
-    },
-    deleteData(id) {
-      Api.modul
-        .delete(id)
-        .then(resp => {
-          if (resp.status === 204) {
-            this.getData(this.filter);
-          }
-        })
-        .catch(() => {
-          window.alert("Tidak dapat menghapus Data");
-        });
+      this.getData(this.tableProps);
     }
   }
 };
