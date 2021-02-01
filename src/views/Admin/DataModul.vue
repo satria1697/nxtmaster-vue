@@ -3,6 +3,7 @@
     <Form
       v-if="isModal"
       :editId="editId"
+      :data-app="dataApp"
       title="Form Pengisian Data Pengguna"
       @modal-closed="changeModal"
     ></Form>
@@ -49,6 +50,7 @@ import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import api from "../../api/const";
 import dataTable from "../../mixins/datatableMixin";
+import axios from "axios";
 
 export default {
   components: {
@@ -106,7 +108,8 @@ export default {
           component: actiondelete,
           width: 5
         }
-      ]
+      ],
+      dataApp: null
     };
   },
   mounted() {
@@ -115,6 +118,17 @@ export default {
   methods: {
     init() {
       this.getData(this.tableProps);
+      this.getDataApp();
+    },
+    getDataApp() {
+      axios
+        .get(api.application.Get)
+        .then(resp => {
+          this.dataApp = resp.data.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

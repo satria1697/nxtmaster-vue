@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import Api from "../../api";
-import button from "../../components/Table/ActionButton";
+import Api from "../../../api";
+import button from "../../Table/ActionButton";
 
 export default {
   props: {

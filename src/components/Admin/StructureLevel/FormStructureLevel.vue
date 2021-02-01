@@ -80,7 +80,8 @@
 </template>
 
 <script>
-import Api from "../../../api";
+import formMixin from "../../../mixins/formMixin";
+import api from "../../../api/const";
 
 function initData() {
   return {
@@ -90,6 +91,7 @@ function initData() {
 }
 
 export default {
+  mixins: [formMixin],
   props: {
     editId: {
       type: Number
@@ -100,129 +102,39 @@ export default {
   },
   data() {
     return {
-      dataAll: null,
-      info: {
-        text: null,
-        modal: false
-      },
-      success: true,
-      uploaded: false,
-      updated: false,
-      deleted: false,
-      isDeleteModal: false,
-      textTitle: "",
-      isUserModal: false
+      url: {
+        getId: api.rank.GetId,
+        register: api.rank.Register,
+        update: api.rank.Update,
+        delete: api.rank.Delete
+      }
     };
-  },
-  created() {
-    this.eschandler();
   },
   mounted() {
     this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
     init() {
       this.checkEdit();
-    },
-    closeModal() {
-      this.reset();
-      this.$emit("get-data");
-      this.$emit("modal-closed");
     },
     reset() {
       this.dataAll = initData();
     },
     checkEdit() {
       if (this.editId !== 0) {
-        Api.structurelevel
-          .find(this.editId)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-          })
-          .catch(error => {
-            console.log(error);
-            this.reset();
-          });
+        this.getData(this.editId);
       } else {
         this.dataAll = initData();
       }
     },
     submit(setup, id) {
-      let rawData = {
+      let data = {
         description: this.dataAll.description
       };
-      if (setup === "register") {
-        Api.structurelevel
-          .register(rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil disimpan";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Data gagal disimpan";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            this.info.text = "Data gagal disimpan";
-            this.success = false;
-            this.info.modal = true;
-            console.log(err);
-          });
-      } else {
-        Api.structurelevel
-          .update(id, rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil disimpan";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Data gagal disimpan";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            this.info.text = "Data gagal disimpan";
-            this.success = false;
-            this.info.modal = true;
-            console.log(err);
-          });
-      }
-    },
-    deleteData(id) {
-      Api.structurelevel
-        .delete(id)
-        .then(resp => {
-          console.log(resp);
-          this.success = true;
-          this.deleted = true;
-        })
-        .catch(err => {
-          console.log(err);
-          this.success = false;
-        });
+      this.postData(status, id, data);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.pull-right {
-  margin: 8px 10px 0 0;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -31,7 +31,7 @@
     "vue-navigation-bar": "^4.1.0",
     "vue-nestable": "^2.6.0",
     "vue-pdf": "^4.2.0",
-    "vue-router": "^3.5.0",
+    "vue-router": "^3.5.1",
     "vue-router-tab": "^1.2.4",
     "vue-select": "^3.11.2",
     "vue-simple-password-meter": "0.0.22",
@@ -43,7 +43,7 @@
     "vuedraggable": "^2.24.3",
     "vuejs-jwt": "^1.1.0",
     "vuejs-loading-screen": "^1.0.9",
-    "vuex": "^3.6.0"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.11",

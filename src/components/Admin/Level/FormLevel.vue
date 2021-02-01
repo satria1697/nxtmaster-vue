@@ -84,7 +84,8 @@
 </template>
 
 <script>
-import Api from "../../../api";
+import api from "../../../api/const";
+import formMixin from "../../../mixins/formMixin";
 
 function initData() {
   return {
@@ -94,6 +95,7 @@ function initData() {
 }
 
 export default {
+  mixins: [formMixin],
   props: {
     editId: {
       type: Number
@@ -104,130 +106,37 @@ export default {
   },
   data() {
     return {
-      dataAll: null,
-      info: {
-        text: null,
-        modal: false
-      },
-      success: true,
-      uploaded: false,
-      updated: false,
-      deleted: false,
-      isDeleteModal: false,
-      isUserModal: false
+      url: {
+        getId: api.level.GetId,
+        register: api.level.Register,
+        update: api.level.Update,
+        delete: api.level.Delete
+      }
     };
-  },
-  created() {
-    this.eschandler();
   },
   mounted() {
     this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
     init() {
       this.checkEdit();
     },
-    closeModal() {
-      this.reset();
-      this.$emit("get-data");
-      this.$emit("modal-closed");
-    },
     reset() {
-      this.dataAll.id = null;
-      this.dataAll.description = "";
+      this.dataAll = initData();
     },
     checkEdit() {
       if (this.editId !== 0) {
-        Api.level
-          .find(this.editId)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-          })
-          .catch(error => {
-            console.log(error);
-            this.reset();
-          });
+        this.getData(this.editId);
       } else {
         this.dataAll = initData();
       }
     },
     submit(setup, id) {
-      let rawData = {
+      let data = {
         id: this.dataAll.id,
         description: this.dataAll.description
       };
-      let formData = new FormData();
-      for (let key in rawData) {
-        formData.append(key, rawData[key]);
-      }
-      if (setup === "register") {
-        Api.level
-          .register(formData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil disimpan";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Data gagal disimpan";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            this.info.text = "Data gagal disimpan";
-            this.success = false;
-            this.info.modal = true;
-            console.log(err);
-          });
-      } else {
-        Api.level
-          .update(id, formData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil disimpan";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Data gagal disimpan";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            this.info.text = "Data gagal disimpan";
-            this.success = false;
-            this.info.modal = true;
-            console.log(err);
-          });
-      }
-    },
-    deleteData() {
-      Api.level
-        .delete(this.dataAll.id)
-        .then(resp => {
-          if (resp.status === 204) {
-            this.berhasil = true;
-            this.deleted = true;
-            this.isDeleteModal = false;
-            this.$emit("modal-closed");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.berhasil = false;
-        });
+      this.postData(status, id, data);
     }
   }
 };

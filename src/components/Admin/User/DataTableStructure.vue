@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import Api from "../../api";
-import button from "../../components/Table/ActionButton";
+import Api from "../../../api";
+import button from "../../Table/ActionButton";
 
 export default {
   props: {
@@ -57,7 +57,7 @@ export default {
         },
         {
           label: "Description",
-          name: "description",
+          name: "label",
           orderable: true
         },
         {
@@ -99,7 +99,7 @@ export default {
       this.filter.length = params.length;
       this.filter.orderColumn = params.orderColumn;
       this.filter.orderBy = params.orderBy;
-      Api.rank
+      Api.structure
         .filter(params)
         .then(res => {
           // console.log(res.data.data);

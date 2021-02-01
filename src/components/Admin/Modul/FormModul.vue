@@ -109,7 +109,8 @@
 </template>
 
 <script>
-import Api from "../../../api";
+import formMixin from "../../../mixins/formMixin";
+import api from "../../../api/const";
 
 function initData() {
   return {
@@ -123,157 +124,56 @@ function initData() {
 }
 
 export default {
+  mixins: [formMixin],
   props: {
     editId: {
       type: Number
     },
     title: {
       type: String
+    },
+    dataApp: {
+      type: Array
     }
   },
   data() {
     return {
-      dataAll: null,
-      success: true,
-      uploaded: false,
-      updated: false,
-      deleted: false,
-      isDeleteModal: false,
-      dataApp: [],
-      info: {
-        modal: false,
-        text: ""
+      url: {
+        getId: api.modul.GetId,
+        register: api.modul.Register,
+        update: api.modul.Update,
+        delete: api.modul.Delete
       }
     };
-  },
-  created() {
-    this.eschandler();
   },
   mounted() {
     this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
     init() {
-      this.getDataApp();
       this.checkEdit();
-    },
-    closeModal() {
-      this.reset();
-      this.$emit("get-data");
-      this.$emit("modal-closed");
     },
     reset() {
       this.dataAll = initData();
     },
     checkEdit() {
       if (this.editId !== 0) {
-        Api.modul
-          .find(this.editId)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-          })
-          .catch(error => {
-            console.log(error);
-            this.reset();
-          });
+        this.getData(this.editId);
       } else {
         this.dataAll = initData();
       }
     },
     submit(status, id) {
-      let rawData = {
+      let data = {
         applicationid: this.dataAll.application.id,
         name: this.dataAll.name,
         description: this.dataAll.description,
         path: this.dataAll.path
       };
-      if (status === "register") {
-        Api.modul
-          .register(rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.reset();
-              this.success = true;
-              this.info.modal = true;
-              this.info.text = "Data berhasil di unggah";
-            } else {
-              this.success = false;
-              this.info.modal = true;
-              this.info.text = "Data gagal di unggah";
-            }
-          })
-          .catch(err => {
-            this.success = false;
-            this.info.modal = true;
-            this.info.text = "Data gagal di unggah";
-            console.log(err);
-          });
-      } else {
-        Api.modul
-          .update(id, rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.reset();
-              this.success = true;
-              this.info.modal = true;
-              this.info.text = "Data berhasil di update";
-            } else {
-              this.success = false;
-              this.info.modal = true;
-              this.info.text = "Data gagal di update";
-            }
-          })
-          .catch(err => {
-            this.success = false;
-            this.info.modal = true;
-            this.info.text = "Data gagal di update";
-            console.log(err);
-          });
-      }
-    },
-    deleteData() {
-      Api.modul
-        .delete(this.dataAll.id)
-        .then(resp => {
-          if (resp.status === 204) {
-            this.success = true;
-            this.deleted = true;
-            this.isDeleteModal = false;
-            this.$emit("modal-closed");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.success = false;
-        });
-    },
-    getDataApp(params) {
-      Api.application
-        .filter(params)
-        .then(resp => {
-          this.dataApp = resp.data.data;
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      this.postData(status, id, data);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.pull-right {
-  margin: 8px 10px 0 0;
-}
-</style>
+<style lang="scss" scoped></style>

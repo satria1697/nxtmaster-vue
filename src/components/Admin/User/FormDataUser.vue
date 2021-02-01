@@ -81,7 +81,7 @@
                   </div>
                   <div class="col-md-9">
                     <div class="row">
-                      <div class="form form-group col" v-if="!newForm">
+                      <div class="form form-group col" v-if="editId">
                         <label for="formID" class="top top-disabled">ID</label>
                         <input
                           id="formID"
@@ -332,12 +332,14 @@
 </template>
 
 <script>
-import Api from "../../api";
-import DataTableLevel from "../Admin/DataTableLevel.vue";
-import DataTableStructure from "../Admin/DataTableStructure.vue";
-import DataTableRank from "../Admin/DataTableRank.vue";
+import Api from "../../../api";
+import DataTableLevel from "./DataTableLevel.vue";
+import DataTableStructure from "./DataTableStructure.vue";
+import DataTableRank from "./DataTableRank.vue";
 import passwordMeter from "vue-simple-password-meter";
-import avatar from "../../assets/image/table/blank_avatar.png";
+import avatar from "../../../assets/image/table/blank_avatar.png";
+import formMixin from "../../../mixins/formMixin";
+import api from "../../../api/const";
 
 function initialDataAll() {
   return {
@@ -373,6 +375,7 @@ function initialDataAll() {
 }
 
 export default {
+  mixins: [formMixin],
   components: {
     "data-table-level": DataTableLevel,
     "data-table-structure": DataTableStructure,
@@ -390,48 +393,25 @@ export default {
   data() {
     return {
       avatar: avatar,
-      isLoading: false,
-      newForm: true,
       dataAll: null,
       confirmedAkses: [],
-      success: true,
-      nikEn: true,
-      image: null,
-      levelData: [],
-      updated: false,
-      uploaded: false,
       isRankModal: false,
       isLevelModal: false,
       isStructureModal: false,
-      idnotfound: false,
-      unauthorized: false,
-      isDeleteModal: false,
-      info: {
-        text: null,
-        modal: false
-      },
       dataAkses: [],
-      avatarChange: false
+      avatarChange: false,
+      url: {
+        getId: api.user.userGetId,
+        register: api.user.userRegister,
+        update: api.user.userUpdate,
+        delete: api.user.userDelete
+      }
     };
-  },
-  created() {
-    this.eschandler();
   },
   mounted() {
     this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
     init() {
       this.getAksesData();
       this.checkEdit();
@@ -455,11 +435,6 @@ export default {
     rankSelected(data) {
       this.dataAll.rank = data;
     },
-    closeModal() {
-      this.reset();
-      this.$emit("get-data");
-      this.$emit("modal-closed");
-    },
     reset() {
       this.dataAll = initialDataAll();
       this.confirmedAkses = [];
@@ -467,33 +442,22 @@ export default {
     },
     checkEdit() {
       if (this.editId !== 0) {
-        Api.user
-          .find(this.editId)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-            this.dataAll.active = this.dataAll.active === 1;
-            this.dataAll.akses.forEach(data => {
-              this.confirmedAkses.push(data);
-            });
-            this.dataAkses = this.dataAkses.filter(
-              elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
-            );
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        this.getData(this.editId);
       } else {
         this.dataAll = initialDataAll();
       }
     },
-    deleteData(id) {
-      Api.user.delete(id).then(resp => {
-        console.log(resp);
-        this.closeModal();
+    setData() {
+      this.dataAll.active = this.dataAll.active === 1;
+      this.dataAll.akses.forEach(data => {
+        this.confirmedAkses.push(data);
       });
+      this.dataAkses = this.dataAkses.filter(
+        elem => !this.confirmedAkses.find(({ id }) => elem.id === id)
+      );
     },
     register(setup, id) {
-      let rawData = {
+      let data = {
         username: this.dataAll.username,
         password: this.dataAll.password,
         password_confirmation: this.dataAll.password_confirmation,
@@ -512,47 +476,7 @@ export default {
         akses: JSON.stringify(this.confirmedAkses),
         avatarChange: this.avatarChange
       };
-      if (setup === "submit") {
-        Api.user
-          .register(rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil disimpan";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Terjadi kesalahan pada server";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            this.info.text = "Data gagal disimpan";
-            this.success = false;
-            this.info.modal = true;
-          });
-      } else {
-        Api.user
-          .update(id, rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.info.text = "Data berhasil diunggah";
-              this.success = true;
-              this.info.modal = true;
-            } else {
-              this.info.text = "Terjadi kesalahan pada server";
-              this.success = false;
-              this.info.modal = true;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            this.info.text = "Data gagal diunggah";
-            this.success = false;
-            this.info.modal = true;
-          });
-      }
+      this.postData(status, id, data);
     },
     selectImage(e) {
       let self = this;
@@ -564,12 +488,17 @@ export default {
       };
       reader.readAsDataURL(image);
     }
+  },
+  watch: {
+    dataAll() {
+      this.setData();
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/styles/abstracts/_variables.scss";
+@import "../../../assets/styles/abstracts/variables";
 .modal {
   overflow-y: auto;
 }
@@ -604,13 +533,13 @@ export default {
     height: 200px;
   }
 }
-::v-deep .list-picker-item {
-  border: none;
-  padding: 3px;
-}
-::v-deep .vue-list-picker {
+
+::v-deep div.vue-list-picker {
   .list-picker-title {
     color: inherit;
+  }
+  .list-picker-item {
+    padding: 7px;
   }
 }
 </style>

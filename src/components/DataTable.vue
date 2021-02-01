@@ -190,7 +190,7 @@
 <script>
 import Api from "../api";
 import axios from "axios";
-import Form from "../components/Admin/FormDataUser.vue";
+import Form from "./Admin/User/FormDataUser.vue";
 import pdf from "../components/PdfViewer";
 import store from "../store";
 // import { mapMutations } from "vuex";

@@ -17,10 +17,10 @@
             </div>
             <div class="modal-body" v-else>
               <info-modal
-                v-if="info.isModal"
+                v-if="info.modal"
                 :title="info.text"
                 :success="success"
-                @modal-closed="info.isModal = false"
+                @modal-closed="info.modal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -100,7 +100,8 @@
 </template>
 
 <script>
-import Api from "../../../api";
+import api from "../../../api/const";
+import formMixin from "../../../mixins/formMixin";
 
 function initData() {
   return {
@@ -111,6 +112,7 @@ function initData() {
 }
 
 export default {
+  mixins: [formMixin],
   props: {
     editId: {
       type: Number
@@ -121,130 +123,42 @@ export default {
   },
   data() {
     return {
-      dataAll: null,
-      success: true,
-      uploaded: false,
-      updated: false,
-      deleted: false,
-      isDeleteModal: false,
-      info: {
-        text: null,
-        isModal: null
+      url: {
+        getId: api.application.GetId,
+        register: api.application.Register,
+        update: api.application.Update,
+        delete: api.application.Delete
       }
     };
   },
-  created() {
-    this.eschandler();
-  },
   mounted() {
-    this.checkEdit();
+    this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
-    closeModal() {
-      this.reset();
-      this.$emit("get-data");
-      this.$emit("modal-closed");
+    init() {
+      this.checkEdit();
     },
     reset() {
       this.dataAll = initData();
     },
     checkEdit() {
       if (this.editId !== 0) {
-        Api.application
-          .find(this.editId)
-          .then(resp => {
-            this.dataAll = resp.data.data;
-          })
-          .catch(error => {
-            console.log(error);
-            this.reset();
-          });
+        this.getData(this.editId);
       } else {
         this.dataAll = initData();
       }
     },
     submit(status, id) {
-      let rawData = {
+      let data = {
         id: this.dataAll.id,
         name: this.dataAll.name,
         description: this.dataAll.description,
         path: this.dataAll.path
       };
-      if (status === "register") {
-        Api.application
-          .register(rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.success = true;
-              this.info.text = "Data berhasil di update";
-              this.info.isModal = true;
-            } else {
-              this.success = false;
-              this.info.text = "Data gagal di update";
-              this.info.isModal = true;
-            }
-          })
-          .catch(err => {
-            this.success = false;
-            this.info.text = "Data gagal di update";
-            this.info.isModal = true;
-            console.log(err);
-          });
-      } else {
-        Api.application
-          .update(id, rawData)
-          .then(resp => {
-            if (resp.status === 200) {
-              this.success = true;
-              this.info.text = "Data berhasil di update";
-              this.info.isModal = true;
-            } else {
-              this.success = false;
-              this.info.text = "Data gagal di update";
-              this.info.isModal = true;
-            }
-          })
-          .catch(err => {
-            this.success = false;
-            this.info.text = "Data gagal di update";
-            this.info.isModal = true;
-            console.log(err);
-          });
-      }
-    },
-    deleteData() {
-      Api.application
-        .delete(this.dataAll.id)
-        .then(resp => {
-          if (resp.status === 204) {
-            this.success = true;
-            this.deleted = true;
-            this.isDeleteModal = false;
-            this.$emit("modal-closed");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          this.success = false;
-        });
+      this.postData(status, id, data);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.pull-right {
-  margin: 8px 10px 0 0;
-}
-</style>
+<style lang="scss" scoped></style>

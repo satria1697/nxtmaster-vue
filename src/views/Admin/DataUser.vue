@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Form from "../../components/Admin/FormDataUser";
+import Form from "../../components/Admin/User/FormDataUser";
 import edit from "../../components/Table/ActionEdit";
 import actiondelete from "../../components/Table/ActionDelete";
 import avatar from "../../components/Table/Avatar";

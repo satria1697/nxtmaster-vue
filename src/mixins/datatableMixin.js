@@ -59,7 +59,7 @@ export default {
         this.editId = id;
         this.isModal = true;
       } else {
-        this.getData(this.filter);
+        this.getData(this.tableProps);
         this.isModal = false;
       }
     },
@@ -68,7 +68,7 @@ export default {
         .delete(this.url.delete.replace("{id}", id))
         .then(resp => {
           if (resp.status === 204) {
-            this.getData(this.filter);
+            this.getData(this.tableProps);
           }
         })
         .catch(() => {

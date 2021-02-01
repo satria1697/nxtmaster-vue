@@ -172,11 +172,11 @@
 </template>
 
 <script>
-import Api from "../../api";
+import Api from "../../../api";
 import axios from "axios";
-import Form from "../../components/Admin/FormDataUser.vue";
-import pdf from "../../components/PdfViewer";
-import store from "../../store";
+import Form from "./FormDataUser.vue";
+import pdf from "../../PdfViewer";
+import store from "../../../store";
 
 export default {
   components: {

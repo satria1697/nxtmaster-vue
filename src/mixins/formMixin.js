@@ -7,7 +7,7 @@ export default {
       success: true,
       isDeleteModal: false,
       info: {
-        isModal: false,
+        modal: false,
         text: ""
       },
       url: {
@@ -49,7 +49,7 @@ export default {
           this.reset();
         });
     },
-    register(status, id, data) {
+    postData(status, id, data) {
       if (status === "submit") {
         axios
           .post(this.url.register, data)
@@ -57,18 +57,18 @@ export default {
             if (resp.data.status === "success") {
               this.info.text = "Data berhasi disimpan";
               this.success = true;
-              this.info.isModal = true;
+              this.info.modal = true;
             } else {
               this.info.text = "Input data salah, silahkan cek kembali";
               this.success = false;
-              this.info.isModal = true;
+              this.info.modal = true;
             }
           })
           .catch(err => {
             console.log(err);
             this.info.text = "Input data salah, silahkan cek kembali";
             this.success = false;
-            this.info.isModal = true;
+            this.info.modal = true;
           });
       } else {
         axios
@@ -77,17 +77,17 @@ export default {
             if (resp.data.status === "success") {
               this.info.text = "Data berhasil diperbaharui";
               this.success = true;
-              this.info.isModal = true;
+              this.info.modal = true;
             } else {
               this.info.text = "Input data salah, silahkan cek kembali";
               this.success = false;
-              this.info.isModal = true;
+              this.info.modal = true;
             }
           })
           .catch(err => {
             this.info.text = "Input data salah, silahkan cek kembali";
             this.success = false;
-            this.info.isModal = true;
+            this.info.modal = true;
             console.log(err);
           });
       }
@@ -99,18 +99,18 @@ export default {
           if (resp.status === 204) {
             this.info.text = "Data berhasil dihapus";
             this.success = true;
-            this.info.isModal = true;
+            this.info.modal = true;
           } else {
             this.info.text = "Data gagal dihapus";
             this.success = false;
-            this.info.isModal = true;
+            this.info.modal = true;
           }
         })
         .catch(err => {
           console.log(err);
           this.info.text = "Data gagal dihapus";
           this.success = false;
-          this.info.isModal = true;
+          this.info.modal = true;
         });
     }
   }

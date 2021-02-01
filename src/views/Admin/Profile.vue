@@ -257,7 +257,7 @@
                 />
               </div>
             </div>
-            <div class="row" v-if="false">
+            <div class="row" v-if="this.$store.getters['getId'] === 1">
               <vue-list-picker
                 :left-items="dataAkses"
                 :right-items="confirmedAkses"
@@ -291,9 +291,9 @@
 
 <script>
 import Api from "../../api";
-import DataTableLevel from "../../components/Admin/DataTableLevel.vue";
-import DataTableStructure from "../../components/Admin/DataTableStructure.vue";
-import DataTableRank from "../../components/Admin/DataTableRank.vue";
+import DataTableLevel from "../../components/Admin/User/DataTableLevel.vue";
+import DataTableStructure from "../../components/Admin/User/DataTableStructure.vue";
+import DataTableRank from "../../components/Admin/User/DataTableRank.vue";
 import passwordMeter from "vue-simple-password-meter";
 import avatar from "../../assets/image/table/blank_avatar.png";
 import store from "../../store";
@@ -350,20 +350,13 @@ export default {
     return {
       avatar: avatar,
       isLoading: false,
-      newForm: true,
       dataAll: null,
       confirmedAkses: [],
       success: true,
-      nikEn: true,
-      image: null,
       levelData: [],
-      updated: false,
-      uploaded: false,
       isRankModal: false,
       isLevelModal: false,
       isStructureModal: false,
-      idnotfound: false,
-      unauthorized: false,
       isDeleteModal: false,
       info: {
         text: null,
@@ -373,24 +366,10 @@ export default {
       avatarChange: false
     };
   },
-  created() {
-    this.eschandler();
-  },
   mounted() {
     this.init();
   },
   methods: {
-    eschandler() {
-      const escapeHandler = e => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      };
-      document.addEventListener("keydown", escapeHandler);
-      this.$once("hook:destroyed", () => {
-        document.removeEventListener("keydown", escapeHandler);
-      });
-    },
     init() {
       this.getAksesData();
       this.getData();
@@ -565,7 +544,7 @@ export default {
 }
 ::v-deep .vue-list-picker {
   .list-picker-title {
-    color: inherit;
+    color: inherit !important;
   }
 }
 </style>

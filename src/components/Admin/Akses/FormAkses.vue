@@ -20,10 +20,10 @@
             </div>
             <div class="modal-body" v-else>
               <info-modal
-                v-if="info.isModal"
+                v-if="info.modal"
                 :title="info.text"
                 :success="success"
-                @modal-closed="info.isModal = false"
+                @modal-closed="info.modal = false"
               />
               <delete-modal
                 :data="dataAll"
@@ -31,7 +31,7 @@
                 @modal-closed="isDeleteModal = false"
                 @delete-data="deleteData"
               />
-              <form class="container-fluid">
+              <div class="container-fluid">
                 <div class="row">
                   <div v-if="editId !== 0" class="form form-group col-4">
                     <label for="formID" class="top top-disabled">ID</label>
@@ -64,7 +64,7 @@
                     >
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
             <div v-if="editId === 0" class="modal-footer">
               <button class="btn btn-default" v-on:click="reset()">
@@ -132,9 +132,12 @@ export default {
     };
   },
   mounted() {
-    this.checkEdit();
+    this.init();
   },
   methods: {
+    init() {
+      this.checkEdit();
+    },
     reset() {
       this.dataAll = initData();
     },
@@ -150,7 +153,7 @@ export default {
         description: this.dataAll.description,
         active: this.dataAll.active === true ? 1 : 0
       };
-      this.register(status, id, data);
+      this.postData(status, id, data);
     }
   }
 };
