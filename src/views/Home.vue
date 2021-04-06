@@ -5,7 +5,7 @@
         <h1 class="display-2">
           Halo, {{ this.$store.getters["getFullname"] }}
         </h1>
-        <h1 class="display-4">Selamat datang di aplikasi NXTOffice 4</h1>
+        <h1 class="display-4">Selamat datang di aplikasi Admin</h1>
       </div>
     </div>
   </div>

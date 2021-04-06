@@ -4,7 +4,7 @@
       class="navbar navbar-expand bg-default sticky-top"
       :class="{ navbarClose: !sidebarState }"
     >
-      <div class="navbar-brand">NXTHospital</div>
+      <div class="navbar-brand">Admin</div>
       <!--      <button-->
       <!--        class="navbar-toggler"-->
       <!--        type="button"-->
